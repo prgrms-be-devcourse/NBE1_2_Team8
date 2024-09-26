@@ -1,10 +1,10 @@
-package org.prgrms.ola;
+package org.prgrms.devconnect;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OlaApplicationTests {
+class DevconnectApplicationTests {
 
   @Test
   void contextLoads() {
