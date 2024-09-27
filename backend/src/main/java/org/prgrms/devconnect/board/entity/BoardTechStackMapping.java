@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.techstack.entity.TechStack;
@@ -33,4 +34,20 @@ public class BoardTechStackMapping {
   @JoinColumn(name = "tech_stack_id", nullable = false)
   private TechStack techStack;
 
+  // Builder 패턴 사용
+  @Builder
+  public BoardTechStackMapping(Board board, TechStack techStack) {
+    this.board = board;
+    this.techStack = techStack;
+  }
+
+  // 연관관계 편의 메소드
+  public void setBoard(Board board) {
+    this.board = board;
+  }
+
+  // 연관관계 편의 메소드
+  public void setTechStack(TechStack techStack) {
+    this.techStack = techStack;
+  }
 }
