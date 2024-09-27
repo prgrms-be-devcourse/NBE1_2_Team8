@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(BusinessLogicException.class)
-  public ResponseEntity<ExceptionResponse> handlerBadRequestException(BusinessLogicException e) {
+  @ExceptionHandler(DevConnectException.class)
+  public ResponseEntity<ExceptionResponse> handlerBadRequestException(DevConnectException e) {
 
     log.warn(e.getMessage(), e);
 
