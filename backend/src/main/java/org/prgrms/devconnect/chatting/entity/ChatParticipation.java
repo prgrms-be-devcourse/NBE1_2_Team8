@@ -15,14 +15,15 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.member.entity.Member;
 
 @Entity
 @Table(name = "chat_participation")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatParticipation {
 
   @Id
@@ -38,7 +39,26 @@ public class ChatParticipation {
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
-  @OneToMany(mappedBy = "chatParticipation")
+  @OneToMany(mappedBy = "chatParticipation", fetch = FetchType.LAZY)
   @JsonManagedReference
   private List<Message> messages = new ArrayList<>();
+
+
+  // 채팅방 생성,입장 생성자
+  @Builder
+  public ChatParticipation(ChattingRoom chattingRoom, Member member) {
+    this.chattingRoom = chattingRoom;
+    this.member = member;
+  }
+
+  // 연관관계 편의 메소드
+  public void addMessage(Message message){
+    message.setChatParticipation(this);
+    messages.add(message);
+  }
+
+  // 연관관계 편의 메서드
+  public void setMember(Member member) {
+    this.member = member;
+  }
 }
