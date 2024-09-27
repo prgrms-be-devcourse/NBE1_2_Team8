@@ -12,14 +12,14 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.prgrms.devconnect.common.audit.CreatedTimeStamped;
+import org.prgrms.devconnect.common.audit.CreateTimestamp;
 import org.prgrms.devconnect.member.entity.Member;
 
 @Entity
-@Table(name = "alarms")
+@Table(name = "alarm")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Alarm extends CreatedTimeStamped {
+public class Alarm extends CreateTimestamp {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Alarm extends CreatedTimeStamped {
   private Long alarmId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
   @Column(name = "alert_text", length = 500)

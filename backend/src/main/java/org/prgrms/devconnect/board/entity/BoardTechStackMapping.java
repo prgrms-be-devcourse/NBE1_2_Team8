@@ -30,7 +30,7 @@ public class BoardTechStackMapping {
   private Board board;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "tech_stack_id")
+  @JoinColumn(name = "tech_stack_id", nullable = false)
   private TechStack techStack;
 
 }

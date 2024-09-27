@@ -14,20 +14,19 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.prgrms.devconnect.common.audit.Timestamped;
+import org.prgrms.devconnect.common.audit.Timestamp;
 import org.prgrms.devconnect.member.entity.constant.Interest;
 
 @Entity
-@Table(name = "members")
+@Table(name = "member")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends Timestamped {
+public class Member extends Timestamp {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "member_id")
   private Long memberId;
-
 
   @Column(name = "email", length = 100)
   private String email;
@@ -42,7 +41,7 @@ public class Member extends Timestamped {
   private String affiliation;
 
   @Column(name = "career")
-  private long career;
+  private int career;
 
   @OneToMany(mappedBy = "member")
   private List<MemberTechStackMapping> memberTechStacks = new ArrayList<>();

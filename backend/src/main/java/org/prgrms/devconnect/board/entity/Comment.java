@@ -14,14 +14,14 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.prgrms.devconnect.common.audit.Timestamped;
+import org.prgrms.devconnect.common.audit.Timestamp;
 import org.prgrms.devconnect.member.entity.Member;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "comment")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment extends Timestamped {
+public class Comment extends Timestamp {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,15 +31,15 @@ public class Comment extends Timestamped {
   private String content;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "board_id")
+  @JoinColumn(name = "board_id", nullable = false)
   private Board board;
 
   @ManyToOne
-  @JoinColumn(name = "parent_id")
+  @JoinColumn(name = "parent_id", nullable = false)
   private Comment parent;
 
   @OneToMany(mappedBy = "parent")

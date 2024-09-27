@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.member.entity;
+package org.prgrms.devconnect.member.entity.favoriteboard;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,25 +12,25 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.prgrms.devconnect.jobpost.entity.JobPost;
+import org.prgrms.devconnect.board.entity.Board;
+import org.prgrms.devconnect.member.entity.Member;
 
 @Entity
-@Table(name = "favorite_job_post")
+@Table(name = "favorite_board")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FavoriteJobPost {
+public class FavoriteBoard {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "favorite_job_post_id")
-  private Long favoriteJobPostId;
+  @Column(name = "favorite_board_id")
+  private Long favoriteBoardId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "job_post_id", nullable = false)
-  private JobPost jobPost;
-
+  @JoinColumn(name = "board_id", nullable = false)
+  private Board board;
 }

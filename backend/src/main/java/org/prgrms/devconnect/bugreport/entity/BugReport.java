@@ -14,14 +14,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.bugreport.entity.constant.BugType;
-import org.prgrms.devconnect.common.audit.Timestamped;
+import org.prgrms.devconnect.common.audit.Timestamp;
 import org.prgrms.devconnect.member.entity.Member;
 
 @Entity
 @Table(name = "bug_report")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BugReport extends Timestamped {
+public class BugReport extends Timestamp {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

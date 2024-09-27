@@ -10,29 +10,27 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.prgrms.devconnect.common.audit.CreatedTimeStamped;
-import org.springframework.data.annotation.CreatedDate;
+import org.prgrms.devconnect.common.audit.CreateTimestamp;
 
 @Entity
 @Table(name = "message")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Message extends CreatedTimeStamped {
+public class Message extends CreateTimestamp {
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "message_id")
   private Long messageId;
 
+  @Column(name = "content")
+  private String content;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "chat_part_id")
+  @JoinColumn(name = "chat_part_id", nullable = false)
   @JsonBackReference
   private ChatParticipation chatParticipation;
 }

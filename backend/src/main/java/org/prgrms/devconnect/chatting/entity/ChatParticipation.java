@@ -1,6 +1,6 @@
 package org.prgrms.devconnect.chatting.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,14 +31,14 @@ public class ChatParticipation {
   private Long chatPartId;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "room_id")
+  @JoinColumn(name = "room_id", nullable = false)
   private ChattingRoom chattingRoom;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
   @OneToMany(mappedBy = "chatParticipation")
-  @JsonIdentityReference
+  @JsonManagedReference
   private List<Message> messages = new ArrayList<>();
 }

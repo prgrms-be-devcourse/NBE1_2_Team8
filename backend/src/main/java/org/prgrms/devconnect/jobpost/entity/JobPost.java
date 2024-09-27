@@ -16,7 +16,6 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.prgrms.devconnect.common.audit.Timestamped;
 import org.prgrms.devconnect.jobpost.entity.constant.JobType;
 import org.prgrms.devconnect.jobpost.entity.constant.Status;
 
@@ -79,8 +78,8 @@ public class JobPost {
   private Status status;
 
   @Column(name = "likes")
-  private long likes;
+  private int likes;
 
   @Column(name = "views")
-  private long views;
+  private int views;
 }
