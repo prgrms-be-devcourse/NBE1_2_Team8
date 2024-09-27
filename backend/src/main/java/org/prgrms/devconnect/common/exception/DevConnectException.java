@@ -3,11 +3,10 @@ package org.prgrms.devconnect.common.exception;
 import lombok.Getter;
 
 @Getter
-public class BusinessLogicException extends RuntimeException {
-
+public abstract class DevConnectException extends RuntimeException {
   private final ExceptionCode exceptionCode;
 
-  public BusinessLogicException(ExceptionCode exceptionCode) {
+  public DevConnectException(ExceptionCode exceptionCode) {
     super(exceptionCode.getMessage());
     this.exceptionCode = exceptionCode;
   }
