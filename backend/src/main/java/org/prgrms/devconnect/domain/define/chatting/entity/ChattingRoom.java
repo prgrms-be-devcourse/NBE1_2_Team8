@@ -32,6 +32,9 @@ public class ChattingRoom {
 
   // 채팅방 비활성화 메서드
   public void closeChatRoom() {
+    if(this.status == ChattingRoomStatus.INACTIVE)
+      throw new IllegalStateException("Already INACTIVE Chatting Room");
+
     this.status = ChattingRoomStatus.INACTIVE;
   }
 }
