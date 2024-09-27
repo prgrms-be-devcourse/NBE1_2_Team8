@@ -25,7 +25,13 @@ public class ChattingRoom {
   private Long roomId;
 
 
-  @Column(name = "status")
+  @Column(name = "status", columnDefinition = "VARCHAR(50)")
   @Enumerated(value = EnumType.STRING)
-  private ChattingRoomStatus status;
+  private ChattingRoomStatus status = ChattingRoomStatus.ACTIVE;
+
+
+  // 채팅방 비활성화 메서드
+  public void closeChatRoom() {
+    this.status = ChattingRoomStatus.INACTIVE;
+  }
 }

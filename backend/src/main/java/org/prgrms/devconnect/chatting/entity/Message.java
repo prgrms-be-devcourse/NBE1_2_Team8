@@ -26,11 +26,16 @@ public class Message extends CreateTimestamp {
   @Column(name = "message_id")
   private Long messageId;
 
-  @Column(name = "content")
+  @Column(name = "content", columnDefinition = "TEXT")
   private String content;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chat_part_id", nullable = false)
   @JsonBackReference
   private ChatParticipation chatParticipation;
+
+  // 연관관계 편의 메서드
+  public void setChatParticipation(ChatParticipation chatParticipation) {
+    this.chatParticipation = chatParticipation;
+  }
 }
