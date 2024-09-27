@@ -33,4 +33,8 @@ public class MemberTechStackMapping {
   @JoinColumn(name = "tech_stack_id", nullable = false)
   private TechStack techStack;
 
+  public void setMember(Member member) {
+    this.member = member;
+  }
+
 }
