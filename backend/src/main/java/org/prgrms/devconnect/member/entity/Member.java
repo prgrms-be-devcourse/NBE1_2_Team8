@@ -1,21 +1,17 @@
 package org.prgrms.devconnect.member.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.prgrms.devconnect.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.common.audit.Timestamp;
 import org.prgrms.devconnect.member.entity.constant.Interest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -58,4 +54,26 @@ public class Member extends Timestamp {
   @Enumerated(value = EnumType.STRING)
   @Column(name = "interest", length = 100)
   private Interest interest;
+
+  @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+  @JsonManagedReference
+  List<ChatParticipation> chattinglist = new ArrayList<>();
+
+  public void addChattings(ChatParticipation chatParticipation){
+    chattinglist.add(chatParticipation);
+    chatParticipation.setMember(this);
+  }
+
+  @Builder
+  public Member(String email, String password, String nickname, String affiliation, int career, String selfIntroduction, String blogLink, String githubLink, Interest interest) {
+    this.email = email;
+    this.password = password;
+    this.nickname = nickname;
+    this.affiliation = affiliation;
+    this.career = career;
+    this.selfIntroduction = selfIntroduction;
+    this.blogLink = blogLink;
+    this.githubLink = githubLink;
+    this.interest = interest;
+  }
 }
