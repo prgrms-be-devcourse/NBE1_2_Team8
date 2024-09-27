@@ -16,12 +16,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.board.entity.constant.BoardStatus;
 import org.prgrms.devconnect.common.audit.Timestamp;
 import org.prgrms.devconnect.jobpost.entity.JobPost;
 import org.prgrms.devconnect.member.entity.Member;
+import org.prgrms.devconnect.techstack.entity.TechStack;
 
 @Entity
 @Table(name = "board")
@@ -75,5 +77,17 @@ public class Board extends Timestamp {
 
   @OneToMany(mappedBy = "board")
   private List<BoardTechStackMapping> boardTechStacks = new ArrayList<>();
+
+
+  // 연관관계 편의 메소드
+  public void addTechStack(TechStack techStack) {
+    BoardTechStackMapping mapping = new BoardTechStackMapping(this, techStack);
+    boardTechStacks.add(mapping);
+  }
+
+  // Board의 상태를 변경하는 메소드
+  public void changeStatus(BoardStatus status) {
+    this.status = status;
+  }
 
 }
