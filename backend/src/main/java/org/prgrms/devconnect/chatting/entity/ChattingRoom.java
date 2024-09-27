@@ -1,13 +1,6 @@
 package org.prgrms.devconnect.chatting.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +22,9 @@ public class ChattingRoom {
   @Enumerated(value = EnumType.STRING)
   private ChattingRoomStatus status = ChattingRoomStatus.ACTIVE;
 
+  public ChattingRoom(ChattingRoomStatus status) {
+    this.status = status;
+  }
 
   // 채팅방 비활성화 메서드
   public void closeChatRoom() {
