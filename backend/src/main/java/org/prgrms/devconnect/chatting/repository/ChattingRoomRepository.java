@@ -1,0 +1,9 @@
+package org.prgrms.devconnect.chatting.repository;
+
+import org.prgrms.devconnect.chatting.entity.ChattingRoom;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Long> {
+}
