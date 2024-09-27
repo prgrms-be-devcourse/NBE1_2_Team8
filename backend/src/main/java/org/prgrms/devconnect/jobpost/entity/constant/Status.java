@@ -10,8 +10,7 @@ public enum Status {
 
   RECRUITING("모집중"),
   DEADLINE("마감"),
-  DELETED("삭제됨")
+  DELETED("삭제됨");
 
-  ;
   private final String text;
 }
