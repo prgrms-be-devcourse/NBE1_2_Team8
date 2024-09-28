@@ -26,8 +26,12 @@ public enum ExceptionCode {
   NOT_FOUND_JOB_POST(404, "존재하지 않는 채용공고입니다."),
 
   //MEMBER ERROR
-  NOT_FOUNT_MEMBER(404, "존재하지 않는 멤버입니다.");
+  NOT_FOUND_MEMBER(404, "존재하지 않는 멤버입니다."),
+  EXIST_EMAIL(400, "이미 존재하는 이메일입니다."),
+  INVALID_PASSWORD(400, "일치하지 않는 패스워드입니다."),
 
+  //TECH_STACK ERROR
+  NOT_FOUND_TECH_STACK(404, "존재하지 않는 기술 스택입니다.");
 
   private final int code;
   private final String message;
