@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.domain.define.member.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.domain.define.Timestamp;
@@ -37,13 +39,16 @@ public class Member extends Timestamp {
   @Column(name = "nickname", length = 50)
   private String nickname;
 
+  @Column(name = "job", length = 50)
+  private String job;
+
   @Column(name = "affiliation", length = 100)
   private String affiliation;
 
   @Column(name = "career")
   private int career;
 
-  @OneToMany(mappedBy = "member")
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MemberTechStackMapping> memberTechStacks = new ArrayList<>();
 
   @Column(name = "self_introduction")
@@ -58,4 +63,33 @@ public class Member extends Timestamp {
   @Enumerated(value = EnumType.STRING)
   @Column(name = "interest", length = 100)
   private Interest interest;
+
+  @Builder
+  public Member(String email, String password, String nickname, String job, String affiliation,
+      int career, String selfIntroduction, String blogLink, String githubLink, Interest interest,
+      List<MemberTechStackMapping> memberTechStacks) {
+    this.email = email;
+    this.password = password;
+    this.nickname = nickname;
+    this.job = job;
+    this.affiliation = affiliation;
+    this.career = career;
+    this.selfIntroduction = selfIntroduction;
+    this.blogLink = blogLink;
+    this.githubLink = githubLink;
+    this.interest = interest;
+    if (!memberTechStacks.isEmpty()) {
+      memberTechStacks.forEach(this::addTechStackMapping);
+    }
+  }
+
+  // == 연관관계 편의 메서드 == //
+  public void addTechStackMapping(MemberTechStackMapping memberTechStack) {
+    memberTechStacks.add(memberTechStack);
+    memberTechStack.assignMember(this);
+  }
+
+  public boolean isValidPassword(String password) {
+    return this.password.equals(password);
+  }
 }
