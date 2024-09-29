@@ -1,9 +1,11 @@
 package org.prgrms.devconnect.api.service.board;
 
-import org.prgrms.devconnect.api.controller.board.BoardCreateDTO;
+import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
+import org.prgrms.devconnect.api.service.member.MemberService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.board.BoardException;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
+import org.prgrms.devconnect.domain.define.board.entity.BoardTechStackMapping;
 import org.prgrms.devconnect.domain.define.board.repository.BoardRepository;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.jobpost.repository.JobPostRepository;
@@ -16,40 +18,51 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
 public class BoardService {
+
+  private final BoardRepository boardRepository;
+
+  private final MemberService memberService;
+
+  private final JobPostRepository jobPostRepository;
+
+  private final TechStackRepository techStackRepository;
+
   @Autowired
-  private BoardRepository boardRepository;
-  @Autowired
-  private MemberRepository memberRepository;
-  @Autowired
-  private JobPostRepository jobPostRepsitory;
-  @Autowired
-  private TechStackRepository techStackRepository;
+  public BoardService(BoardRepository boardRepository, MemberService memberService,
+                      JobPostRepository jobPostRepository, TechStackRepository techStackRepository) {
+    this.boardRepository = boardRepository;
+    this.memberService  = memberService ;
+    this.jobPostRepository = jobPostRepository;
+    this.techStackRepository = techStackRepository;
+  }
 
   @Transactional
-  public Long createBoard(BoardCreateDTO boardCreateDTO) {
-    Member member = memberRepository.findById(boardCreateDTO.getMemberId())
-            .orElseThrow(() -> new BoardException(ExceptionCode.NOT_FOUNT_MEMBER));
+  public Long createBoard(BoardCreateRequestDto boardCreateRequestDto) {
+    Member member = memberService.findMemberById(boardCreateRequestDto.memberId());
 
     // JobPost 존재 여부 확인. 없을 경우 null로 처리
     JobPost jobPost = null;
-    if (boardCreateDTO.getJobPostId() != null) {
-      jobPost = jobPostRepsitory.findById(boardCreateDTO.getJobPostId())
+    if (boardCreateRequestDto.jobPostId() != null) {
+      jobPost = jobPostRepository.findById(boardCreateRequestDto.jobPostId())
               .orElse(null); // Optional 처리
     }
 
-    // 조회된 기술 스택의 개수가 사용자가 선택한 ID 리스트와 일치하지 않으면 예외 발생
-    List<TechStack> techStacks = techStackRepository.findAllById(boardCreateDTO.getTechStackIds());
-    if (techStacks.size() != boardCreateDTO.getTechStackIds().size()) {
-      throw new BoardException(ExceptionCode.NOT_FOUND_BOARD_TECH_STACK);
-    }
+    List<BoardTechStackMapping> boardTechStackMappings = boardCreateRequestDto.techStackRequests().stream()
+            .map(requestdto -> {
+              TechStack techStack = techStackRepository.findById(requestdto.techStackId())
+                      .orElseThrow(() -> new BoardException(ExceptionCode.NOT_FOUND_BOARD_TECH_STACK));
+              return requestdto.toEntity(techStack);
+            })
+            .collect(Collectors.toList());
 
-    Board board=boardCreateDTO.toEntity(member,jobPost,techStacks);
-    Board savedBoard=boardRepository.save(board);
+    Board board = boardCreateRequestDto.toEntity(member, jobPost, boardTechStackMappings);
+    boardRepository.save(board);
 
-    return savedBoard.getBoardId();
+    return board.getBoardId();
   }
 }
