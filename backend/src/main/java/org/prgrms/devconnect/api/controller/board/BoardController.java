@@ -1,5 +1,7 @@
 package org.prgrms.devconnect.api.controller.board;
 
+import jakarta.validation.Valid;
+import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
 import org.prgrms.devconnect.api.service.board.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +18,8 @@ public class BoardController {
   private BoardService boardService;
 
   @PostMapping
-  public ResponseEntity<Long> createBoard(@RequestBody BoardCreateDTO boardCreateDTO) {
-    Long boardId = boardService.createBoard(boardCreateDTO);
-    // 201 Created와 함께 생성된 Board ID를 반환
-    return ResponseEntity.status(HttpStatus.CREATED).body(boardId);
+  public ResponseEntity<Long> createBoard(@RequestBody @Valid BoardCreateRequestDto boardCreateRequestDto) {
+    boardService.createBoard(boardCreateRequestDto);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 }
