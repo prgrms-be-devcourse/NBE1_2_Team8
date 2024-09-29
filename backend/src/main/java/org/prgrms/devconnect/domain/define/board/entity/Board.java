@@ -80,16 +80,17 @@ public class Board extends Timestamp {
 
 
   // 연관관계 편의 메소드
-  public void addTechStack(TechStack techStack) {
-    BoardTechStackMapping mapping = new BoardTechStackMapping(this, techStack);
-    boardTechStacks.add(mapping);
+  public void addTechStack(BoardTechStackMapping boardTechStack) {
+    boardTechStacks.add(boardTechStack);
+    boardTechStack.assignBoard(this);
   }
 
 
   //  Board 생성자
   @Builder
   public Board(Member member, JobPost jobPost, String title, String content, String category,
-               int recruitNum, String progressWay, String progressPeriod, LocalDateTime endDate) {
+               int recruitNum, String progressWay, String progressPeriod, LocalDateTime endDate,
+               List<BoardTechStackMapping>boardTechStacks) {
     this.member = member;
     this.jobPost = jobPost;
     this.title = title;
@@ -99,6 +100,9 @@ public class Board extends Timestamp {
     this.progressWay = progressWay;
     this.progressPeriod = progressPeriod;
     this.endDate = endDate;
+    if (!boardTechStacks.isEmpty()) {
+      boardTechStacks.forEach(this::addTechStack);
+    }
   }
 
   // Board의 상태를 변경하는 메소드
