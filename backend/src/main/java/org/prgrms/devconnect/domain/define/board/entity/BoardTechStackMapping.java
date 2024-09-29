@@ -36,18 +36,17 @@ public class BoardTechStackMapping {
 
   // Builder 패턴 사용
   @Builder
-  public BoardTechStackMapping(Board board, TechStack techStack) {
-    this.board = board;
+  public BoardTechStackMapping(TechStack techStack) {
     this.techStack = techStack;
   }
 
   // 연관관계 편의 메소드
-  public void setBoard(Board board) {
+  public void assignBoard(Board board) {
     this.board = board;
   }
 
   // 연관관계 편의 메소드
-  public void setTechStack(TechStack techStack) {
+  public void assignTechStack(TechStack techStack) {
     this.techStack = techStack;
   }
 }
