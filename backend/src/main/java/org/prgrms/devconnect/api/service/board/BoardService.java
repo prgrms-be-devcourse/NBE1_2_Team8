@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.api.service.board;
 
+import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
 import org.prgrms.devconnect.api.service.member.MemberService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
   private final BoardRepository boardRepository;
@@ -32,14 +34,6 @@ public class BoardService {
 
   private final TechStackRepository techStackRepository;
 
-  @Autowired
-  public BoardService(BoardRepository boardRepository, MemberService memberService,
-                      JobPostRepository jobPostRepository, TechStackRepository techStackRepository) {
-    this.boardRepository = boardRepository;
-    this.memberService  = memberService ;
-    this.jobPostRepository = jobPostRepository;
-    this.techStackRepository = techStackRepository;
-  }
 
   @Transactional
   public Long createBoard(BoardCreateRequestDto boardCreateRequestDto) {
