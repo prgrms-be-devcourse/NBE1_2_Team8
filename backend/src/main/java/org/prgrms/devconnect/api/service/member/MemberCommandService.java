@@ -8,13 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberCreateRequestDto;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberTechStackRequestDto;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
-import org.prgrms.devconnect.common.exception.member.MemberException;
 import org.prgrms.devconnect.common.exception.techstack.TechStackException;
+import org.prgrms.devconnect.domain.define.alarm.event.RegisteredEvent;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 import org.prgrms.devconnect.domain.define.techstack.repository.TechStackRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class MemberCommandService {
   private final MemberRepository memberRepository;
   private final TechStackRepository techStackRepository;
   private final MemberQueryService memberQueryService;
+  private final ApplicationEventPublisher publisher;
 
   public void createMember(MemberCreateRequestDto requestDto) {
     memberQueryService.validateDuplicatedEmail(requestDto.email());
@@ -38,6 +40,8 @@ public class MemberCommandService {
 
     Member member = requestDto.toEntity(memberTechStacks);
     memberRepository.save(member);
+
+    publisher.publishEvent(new RegisteredEvent(member.getNickname()));
   }
 
 
