@@ -1,17 +1,7 @@
 package org.prgrms.devconnect.domain.define.board.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +65,7 @@ public class Board extends Timestamp {
   @Column(name = "status", length = 50)
   private BoardStatus status = BoardStatus.RECRUITING;
 
-  @OneToMany(mappedBy = "board")
+  @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = true)
   private List<BoardTechStackMapping> boardTechStacks = new ArrayList<>();
 
 
@@ -84,7 +74,6 @@ public class Board extends Timestamp {
     boardTechStacks.add(boardTechStack);
     boardTechStack.assignBoard(this);
   }
-
 
   //  Board 생성자
   @Builder
@@ -109,5 +98,18 @@ public class Board extends Timestamp {
   public void changeStatus(BoardStatus status) {
     this.status = status;
   }
+
+  // Board 정보를 업데이트하는 메소드
+  public void updateBoardInfo(String title, String content, String category, int recruitNum,
+                              String progressWay, String progressPeriod, LocalDateTime endDate) {
+    this.title = title;
+    this.content = content;
+    this.category = category;
+    this.recruitNum = recruitNum;
+    this.progressWay = progressWay;
+    this.progressPeriod = progressPeriod;
+    this.endDate = endDate;
+  }
+
 
 }
