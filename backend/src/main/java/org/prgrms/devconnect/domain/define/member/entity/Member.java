@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.prgrms.devconnect.api.controller.member.dto.request.MemberUpdateRequestDto;
 import org.prgrms.devconnect.domain.define.Timestamp;
 import org.prgrms.devconnect.domain.define.member.entity.constant.Interest;
 
@@ -91,5 +92,33 @@ public class Member extends Timestamp {
 
   public boolean isValidPassword(String password) {
     return this.password.equals(password);
+  }
+
+  // UpdateDto으로 필드 값 업데이트 (기존 값과 비교해서 다르다면)
+  public void updateFromDto(MemberUpdateRequestDto dto) {
+    if (!dto.nickname().equals(this.nickname)) {
+      this.nickname = dto.nickname();
+    }
+    if (!dto.job().equals(this.job)) {
+      this.job = dto.job();
+    }
+    if (!dto.affiliation().equals(this.affiliation)) {
+      this.affiliation = dto.affiliation();
+    }
+    if (dto.career() != this.career) {
+      this.career = dto.career();
+    }
+    if (!dto.selfIntroduction().equals(this.selfIntroduction)) {
+      this.selfIntroduction = dto.selfIntroduction();
+    }
+    if (!dto.blogLink().equals(this.blogLink)) {
+      this.blogLink = dto.blogLink();
+    }
+    if (!dto.githubLink().equals(this.githubLink)) {
+      this.githubLink = dto.githubLink();
+    }
+    if (!dto.interest().equals(this.interest)) {
+      this.interest = dto.interest();
+    }
   }
 }
