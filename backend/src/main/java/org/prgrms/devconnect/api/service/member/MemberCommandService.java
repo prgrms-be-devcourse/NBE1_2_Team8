@@ -25,9 +25,10 @@ public class MemberCommandService {
 
   private final MemberRepository memberRepository;
   private final TechStackRepository techStackRepository;
+  private final MemberQueryService memberQueryService;
 
   public void createMember(MemberCreateRequestDto requestDto) {
-    validateExistEmail(requestDto.email());
+    memberQueryService.validateDuplicatedEmail(requestDto.email());
 
     List<Long> techStackIds = extractTechStackIds(requestDto);
     Map<Long, TechStack> techStackMap = fetchTechStacks(techStackIds);
@@ -39,12 +40,7 @@ public class MemberCommandService {
     memberRepository.save(member);
   }
 
-  private void validateExistEmail(String email) {
-    memberRepository.findByEmail(email)
-        .ifPresent(member -> {
-          throw new MemberException(ExceptionCode.EXIST_EMAIL);
-        });
-  }
+
 
   private List<Long> extractTechStackIds(MemberCreateRequestDto requestDto) {
     return requestDto.techStackRequests()
