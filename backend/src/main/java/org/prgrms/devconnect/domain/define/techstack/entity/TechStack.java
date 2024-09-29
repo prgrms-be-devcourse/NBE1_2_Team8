@@ -19,7 +19,7 @@ public class TechStack {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "tech_stack_id")
-  private Long id;
+  private Long techStackId;
 
   @Column(name = "name", length = 50)
   private String name;
