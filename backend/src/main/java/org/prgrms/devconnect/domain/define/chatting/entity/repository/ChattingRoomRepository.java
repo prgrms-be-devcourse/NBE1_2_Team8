@@ -1,6 +1,6 @@
-package org.prgrms.devconnect.chatting.repository;
+package org.prgrms.devconnect.domain.define.chatting.entity.repository;
 
-import org.prgrms.devconnect.chatting.entity.ChattingRoom;
+import org.prgrms.devconnect.domain.define.chatting.entity.ChattingRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,14 +1,14 @@
-package org.prgrms.devconnect.chatting.service;
+package org.prgrms.devconnect.api.service.chatting;
 
 
 import lombok.RequiredArgsConstructor;
-import org.prgrms.devconnect.chatting.entity.ChatParticipation;
-import org.prgrms.devconnect.chatting.entity.ChattingRoom;
-import org.prgrms.devconnect.chatting.entity.constant.ChattingRoomStatus;
-import org.prgrms.devconnect.chatting.repository.ChatParticipationRepository;
-import org.prgrms.devconnect.chatting.repository.ChattingRoomRepository;
-import org.prgrms.devconnect.member.entity.Member;
-import org.prgrms.devconnect.member.repository.MemberRepository;
+import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
+import org.prgrms.devconnect.domain.define.chatting.entity.ChattingRoom;
+import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
+import org.prgrms.devconnect.domain.define.chatting.entity.repository.ChatParticipationRepository;
+import org.prgrms.devconnect.domain.define.chatting.entity.repository.ChattingRoomRepository;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
+import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

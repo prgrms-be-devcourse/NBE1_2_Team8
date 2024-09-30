@@ -49,7 +49,7 @@ class BoardServiceTest {
 
     // then
     assertNotNull(savedMember.getMemberId()); // ID가 정상적으로 생성되었는지 확인
-    assertNotNull(savedTechStack.getId()); // ID가 정상적으로 생성되었는지 확인
+    assertNotNull(savedTechStack.getTechStackId()); // ID가 정상적으로 생성되었는지 확인
   }
 
   @Test
