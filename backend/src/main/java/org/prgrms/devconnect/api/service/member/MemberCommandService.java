@@ -33,7 +33,7 @@ public class MemberCommandService {
 
   // TODO MemberTechStack도 업데이트 하는 로직 추후 구현
   public void updateMember(Long memberId, MemberUpdateRequestDto requestDto) {
-    Member member = memberQueryService.getMemberByIdOrThrow(memberId);
+    Member member = memberQueryService.getMemberByIdWithTechStackOrThrow(memberId);
     member.updateFromDto(requestDto);
   }
 

@@ -1,16 +1,11 @@
 package org.prgrms.devconnect.domain.define.chatting.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.prgrms.devconnect.common.exception.ExceptionCode;
+import org.prgrms.devconnect.common.exception.chatting.ChattingException;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
 
 @Entity
@@ -29,9 +24,15 @@ public class ChattingRoom {
   @Enumerated(value = EnumType.STRING)
   private ChattingRoomStatus status = ChattingRoomStatus.ACTIVE;
 
+  public ChattingRoom(ChattingRoomStatus status) {
+    this.status = status;
+  }
 
   // 채팅방 비활성화 메서드
   public void closeChatRoom() {
+    if(this.status == ChattingRoomStatus.INACTIVE)
+      throw new ChattingException(ExceptionCode.CHATROOM_ALREADY_INACTIVE);
+
     this.status = ChattingRoomStatus.INACTIVE;
   }
 }
