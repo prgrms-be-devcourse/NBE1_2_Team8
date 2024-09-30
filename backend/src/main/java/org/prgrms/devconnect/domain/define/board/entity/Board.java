@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.prgrms.devconnect.api.controller.board.dto.request.BoardUpdateRequestDto;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
 import org.prgrms.devconnect.domain.define.Timestamp;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
@@ -79,7 +80,7 @@ public class Board extends Timestamp {
   @Builder
   public Board(Member member, JobPost jobPost, String title, String content, String category,
                int recruitNum, String progressWay, String progressPeriod, LocalDateTime endDate,
-               List<BoardTechStackMapping>boardTechStacks) {
+               List<BoardTechStackMapping> boardTechStacks) {
     this.member = member;
     this.jobPost = jobPost;
     this.title = title;
@@ -100,16 +101,29 @@ public class Board extends Timestamp {
   }
 
   // Board 정보를 업데이트하는 메소드
-  public void updateBoardInfo(String title, String content, String category, int recruitNum,
-                              String progressWay, String progressPeriod, LocalDateTime endDate) {
-    this.title = title;
-    this.content = content;
-    this.category = category;
-    this.recruitNum = recruitNum;
-    this.progressWay = progressWay;
-    this.progressPeriod = progressPeriod;
-    this.endDate = endDate;
+  public void updateFromDto(BoardUpdateRequestDto dto) {
+    if (!dto.title().equals(this.title)) {
+      this.title = dto.title();
+    }
+    if (!dto.content().equals(this.content)) {
+      this.content = dto.content();
+    }
+    if (!dto.category().equals(this.category)) {
+      this.category = dto.category();
+    }
+    if (dto.recruitNum() != this.recruitNum) {
+      this.recruitNum = dto.recruitNum();
+    }
+    if (!dto.progressWay().equals(this.progressWay)) {
+      this.progressWay = dto.progressWay();
+    }
+    if (!dto.progressPeriod().equals(this.progressPeriod)) {
+      this.progressPeriod = dto.progressPeriod();
+    }
+    if (!dto.endDate().equals(this.endDate)) {
+      this.endDate = dto.endDate();
+    }
+
+
   }
-
-
 }
