@@ -31,7 +31,7 @@ public class MemberQueryService {
 
   public Member getMemberByIdOrThrow(Long memberId) {
     return memberRepository.findByMemberId(memberId).orElseThrow(
-        () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
+            () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
     );
   }
 

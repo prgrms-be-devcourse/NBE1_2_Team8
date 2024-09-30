@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,5 +27,11 @@ public class TechStack {
 
   @Column(name = "job_code", length = 50)
   private String code;
+
+  @Builder
+  public TechStack(String name, String code) {
+    this.name = name;
+    this.code = code;
+  }
 
 }
