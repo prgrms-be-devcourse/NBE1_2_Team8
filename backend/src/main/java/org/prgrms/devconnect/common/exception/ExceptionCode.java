@@ -12,6 +12,7 @@ public enum ExceptionCode {
 
   //Board Error
   NOT_FOUND_BOARD(404, "존재하지 않는 게시물입니다."),
+  ALREADY_CLOSED_BOARD(400,"마감된 게시물입니다."),
 
   //BoardTechStack Error
   NOT_FOUND_BOARD_TECH_STACK(404, "존재하지 않는 테크스택입니다."),
