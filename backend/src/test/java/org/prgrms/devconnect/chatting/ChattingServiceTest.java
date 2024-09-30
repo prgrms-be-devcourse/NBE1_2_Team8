@@ -3,20 +3,29 @@ package org.prgrms.devconnect.chatting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
+import org.prgrms.devconnect.api.service.techstack.TechStackQueryService;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChattingRoom;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
-import org.prgrms.devconnect.domain.define.chatting.entity.repository.ChatParticipationRepository;
-import org.prgrms.devconnect.domain.define.chatting.entity.repository.ChattingRoomRepository;
+import org.prgrms.devconnect.domain.define.chatting.repository.ChatParticipationRepository;
+import org.prgrms.devconnect.domain.define.chatting.repository.ChattingRoomRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
+import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
 import org.prgrms.devconnect.domain.define.member.entity.constant.Interest;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
+import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
+import org.prgrms.devconnect.domain.define.techstack.repository.TechStackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,10 +44,32 @@ public class ChattingServiceTest {
   private ChatParticipationRepository chatParticipationRepository;
   @Autowired
   private ChattingRoomRepository chattingRoomRepository;
+  @Autowired
+  private TechStackRepository techStackRepository;
+
+
 
   private ChattingRoom chattingRoom;
   @BeforeEach
   void initData() throws Exception {
+    TechStack techStack = TechStack.builder()
+            .code("100")
+            .name("test")
+            .build();
+    techStackRepository.save(techStack);
+
+    MemberTechStackMapping memberTechStackMapping1 = MemberTechStackMapping.builder()
+            .techStack(techStack)
+            .build();
+    MemberTechStackMapping memberTechStackMapping2 = MemberTechStackMapping.builder()
+            .techStack(techStack)
+            .build();
+
+    List<MemberTechStackMapping> list1 = new ArrayList<>();
+    list1.add(memberTechStackMapping1);
+    List<MemberTechStackMapping> list2 = new ArrayList<>();
+    list2.add(memberTechStackMapping2);
+
     // 테스트 용 사용자 생성
     Member member1 = Member.builder()
             .email("test@naver.com")

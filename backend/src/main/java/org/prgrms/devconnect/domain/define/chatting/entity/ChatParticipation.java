@@ -24,7 +24,7 @@ public class ChatParticipation {
   @Column(name = "chat_part_id")
   private Long chatPartId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "room_id", nullable = false)
   private ChattingRoom chattingRoom;
 
@@ -33,7 +33,7 @@ public class ChatParticipation {
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
-  @OneToMany(mappedBy = "chatParticipation", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "chatParticipation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JsonManagedReference
   private List<Message> messages = new ArrayList<>();
 

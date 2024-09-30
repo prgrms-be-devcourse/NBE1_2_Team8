@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.domain.define.chatting.entity.repository;
+package org.prgrms.devconnect.domain.define.chatting.repository;
 
 
 import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;

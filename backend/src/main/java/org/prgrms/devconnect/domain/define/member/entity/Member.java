@@ -59,10 +59,6 @@ public class Member extends Timestamp {
   @Column(name = "interest", length = 100)
   private Interest interest;
 
-  @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-  @JsonManagedReference
-  List<ChatParticipation> chattinglist = new ArrayList<>();
-
   @Builder
   public Member(String email, String password, String nickname, String job, String affiliation,
       int career, String selfIntroduction, String blogLink, String githubLink, Interest interest,
@@ -118,10 +114,5 @@ public class Member extends Timestamp {
     if (!dto.interest().equals(this.interest)) {
       this.interest = dto.interest();
     }
-  }
-
-  public void addChattings(ChatParticipation chatParticipation){
-    chattinglist.add(chatParticipation);
-    chatParticipation.setMember(this);
   }
 }
