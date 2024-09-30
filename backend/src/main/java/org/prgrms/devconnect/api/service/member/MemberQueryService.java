@@ -2,6 +2,7 @@ package org.prgrms.devconnect.api.service.member;
 
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberLoginRequestDto;
+import org.prgrms.devconnect.api.controller.member.dto.response.MemberResponseDto;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.member.MemberException;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -21,6 +22,11 @@ public class MemberQueryService {
     if (!member.isValidPassword(requestDto.password())) {
       throw new MemberException(ExceptionCode.INVALID_PASSWORD);
     }
+  }
+
+  public MemberResponseDto getMember(Long memberId) {
+    Member member = getMemberByIdOrThrow(memberId);
+    return MemberResponseDto.from(member);
   }
 
   public Member getMemberByIdOrThrow(Long memberId) {
