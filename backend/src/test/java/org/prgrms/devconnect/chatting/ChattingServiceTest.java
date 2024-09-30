@@ -3,7 +3,7 @@ package org.prgrms.devconnect.chatting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.prgrms.devconnect.api.service.chatting.ChattingService;
+import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChattingRoom;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ChattingServiceTest {
 
   @Autowired
-  private ChattingService chattingService;
+  private ChattingCommandService chattingService;
   @Autowired
   private MemberRepository memberRepository;
   @Autowired

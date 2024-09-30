@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ChattingService {
+public class ChattingCommandService {
 
   private final ChattingRoomRepository chattingRoomRepository;
   private final ChatParticipationRepository chatParticipationRepository;
