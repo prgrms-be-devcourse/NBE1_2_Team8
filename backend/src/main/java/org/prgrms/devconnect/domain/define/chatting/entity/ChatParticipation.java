@@ -12,6 +12,9 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "chat_participation")
 @Getter
