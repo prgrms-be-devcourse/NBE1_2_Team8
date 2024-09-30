@@ -1,11 +1,10 @@
-package org.prgrms.devconnect.board.service;
+package org.prgrms.devconnect.api.service.board;
 
 import org.junit.jupiter.api.Test;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardTechStackRequestDto;
-import org.prgrms.devconnect.api.service.board.BoardService;
-import org.prgrms.devconnect.board.MemberFixture;
-import org.prgrms.devconnect.board.TechStackFixture;
+import org.prgrms.devconnect.domain.define.fixture.MemberFixture;
+import org.prgrms.devconnect.domain.define.fixture.TechStackFixture;
 import org.prgrms.devconnect.common.exception.board.BoardException;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.repository.BoardRepository;
