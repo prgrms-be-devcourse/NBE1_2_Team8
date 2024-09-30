@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.board;
+package org.prgrms.devconnect.domain.define.fixture;
 
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 
