@@ -35,7 +35,7 @@ public class BoardService {
 
   @Transactional
   public Long createBoard(BoardCreateRequestDto boardCreateRequestDto) {
-    Member member = memberQueryService.getMemberByIdOrThrow(boardCreateRequestDto.memberId());
+    Member member = memberQueryService.getMemberByIdWithTechStackOrThrow(boardCreateRequestDto.memberId());
 
     // JobPost 존재 여부 확인. 없을 경우 null로 처리
     JobPost jobPost = null;
