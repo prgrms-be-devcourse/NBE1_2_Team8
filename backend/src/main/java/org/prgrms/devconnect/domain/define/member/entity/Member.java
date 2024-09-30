@@ -1,24 +1,18 @@
 package org.prgrms.devconnect.domain.define.member.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberUpdateRequestDto;
 import org.prgrms.devconnect.domain.define.Timestamp;
+import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.domain.define.member.entity.constant.Interest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -64,6 +58,10 @@ public class Member extends Timestamp {
   @Enumerated(value = EnumType.STRING)
   @Column(name = "interest", length = 100)
   private Interest interest;
+
+  @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+  @JsonManagedReference
+  List<ChatParticipation> chattinglist = new ArrayList<>();
 
   @Builder
   public Member(String email, String password, String nickname, String job, String affiliation,
@@ -120,5 +118,10 @@ public class Member extends Timestamp {
     if (!dto.interest().equals(this.interest)) {
       this.interest = dto.interest();
     }
+  }
+
+  public void addChattings(ChatParticipation chatParticipation){
+    chattinglist.add(chatParticipation);
+    chatParticipation.setMember(this);
   }
 }
