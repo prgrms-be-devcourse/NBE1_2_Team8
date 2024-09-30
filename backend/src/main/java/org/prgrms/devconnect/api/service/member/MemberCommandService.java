@@ -41,7 +41,7 @@ public class MemberCommandService {
     Member member = requestDto.toEntity(memberTechStacks);
     memberRepository.save(member);
 
-    publisher.publishEvent(new RegisteredEvent(member.getNickname()));
+    return member;
   }
 
 
