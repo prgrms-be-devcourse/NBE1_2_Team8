@@ -3,7 +3,8 @@ package org.prgrms.devconnect.api.controller.board;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
-import org.prgrms.devconnect.api.service.board.BoardService;
+import org.prgrms.devconnect.api.service.board.BoardCommandService;
+import org.prgrms.devconnect.api.service.board.BoardQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,17 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController {
 
-  private final BoardService boardService;
+  private final BoardCommandService boardCommendService;
+  private final BoardQueryService boardQueryService;
 
   @PostMapping
   public ResponseEntity<Void> createBoard(@RequestBody @Valid BoardCreateRequestDto boardCreateRequestDto) {
-    boardService.createBoard(boardCreateRequestDto);
+    boardCommendService.createBoard(boardCreateRequestDto);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @DeleteMapping("/{boardId}")
   public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId) {
-    boardService.deleteBoard(boardId);
+    boardCommendService.deleteBoard(boardId);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
@@ -31,7 +33,7 @@ public class BoardController {
   public ResponseEntity<Void> updateBoard(
           @PathVariable Long boardId,
           @RequestBody @Valid BoardCreateRequestDto boardCreateRequestDto) {
-    boardService.updateBoard(boardId,boardCreateRequestDto);
+    boardCommendService.updateBoard(boardId,boardCreateRequestDto);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 }
