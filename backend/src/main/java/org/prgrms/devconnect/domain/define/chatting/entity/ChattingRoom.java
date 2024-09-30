@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.prgrms.devconnect.common.exception.ExceptionCode;
+import org.prgrms.devconnect.common.exception.chatting.ChattingException;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
 
 @Entity
@@ -29,7 +31,7 @@ public class ChattingRoom {
   // 채팅방 비활성화 메서드
   public void closeChatRoom() {
     if(this.status == ChattingRoomStatus.INACTIVE)
-      throw new RuntimeException("Already INACTIVE Chatting Room");
+      throw new ChattingException(ExceptionCode.CHATROOM_ALREADY_INACTIVE);
 
     this.status = ChattingRoomStatus.INACTIVE;
   }

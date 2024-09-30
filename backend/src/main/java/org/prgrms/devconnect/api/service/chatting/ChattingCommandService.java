@@ -2,6 +2,9 @@ package org.prgrms.devconnect.api.service.chatting;
 
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devconnect.api.service.member.MemberQueryService;
+import org.prgrms.devconnect.common.exception.ExceptionCode;
+import org.prgrms.devconnect.common.exception.chatting.ChattingException;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChattingRoom;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
@@ -19,7 +22,7 @@ public class ChattingCommandService {
 
   private final ChattingRoomRepository chattingRoomRepository;
   private final ChatParticipationRepository chatParticipationRepository;
-  private final MemberRepository memberRepository;
+  private final MemberQueryService memberQueryService;
 
   /*
     새로운 채팅방을 생성하는 서비스 코드
@@ -27,10 +30,8 @@ public class ChattingCommandService {
 
   */
   public Long createNewChatting(Long sendMemberId, Long receiveMemberId){
-    Member sender = memberRepository.findById(sendMemberId)
-            .orElseThrow(() -> new RuntimeException("Member not found id : " + sendMemberId));
-    Member receivier = memberRepository.findById(receiveMemberId)
-            .orElseThrow(() -> new RuntimeException("Member not found id : " + receiveMemberId));
+    Member sender = memberQueryService.getMemberByIdOrThrow(sendMemberId);
+    Member receivier = memberQueryService.getMemberByIdOrThrow(sendMemberId);
 
     //새로운 채팅방 생성
     ChattingRoom chattingRoom = new ChattingRoom(ChattingRoomStatus.ACTIVE);
@@ -51,7 +52,7 @@ public class ChattingCommandService {
   // 채팅방 비활성화 서비스
   public void closeChattingRoom(Long chatroomId){
     ChattingRoom chattingRoom = chattingRoomRepository.findById(chatroomId)
-            .orElseThrow(() -> new RuntimeException("ChattingRoom not found id : " + chatroomId));
+            .orElseThrow(() -> new ChattingException(ExceptionCode.NOT_FOUND_CHATROOM));
     chattingRoom.closeChatRoom();
     chattingRoomRepository.save(chattingRoom);
   }
