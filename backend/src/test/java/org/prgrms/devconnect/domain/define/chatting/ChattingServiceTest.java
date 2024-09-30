@@ -1,14 +1,11 @@
-package org.prgrms.devconnect.chatting;
+package org.prgrms.devconnect.domain.define.chatting;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatRoomListResponse;
 import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
-import org.prgrms.devconnect.api.service.techstack.TechStackQueryService;
+import org.prgrms.devconnect.api.service.chatting.ChattingQueryService;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChattingRoom;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
@@ -37,19 +34,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ChattingServiceTest {
 
   @Autowired
-  private ChattingCommandService chattingService;
+  private ChattingCommandService chattingCommandService;
+  @Autowired
+  private ChattingQueryService chattingQueryService;
+  @Autowired
+  private ChattingRoomRepository chattingRoomRepository;
   @Autowired
   private MemberRepository memberRepository;
   @Autowired
   private ChatParticipationRepository chatParticipationRepository;
   @Autowired
-  private ChattingRoomRepository chattingRoomRepository;
-  @Autowired
   private TechStackRepository techStackRepository;
 
-
-
-  private ChattingRoom chattingRoom;
   @BeforeEach
   void initData() throws Exception {
     TechStack techStack = TechStack.builder()
@@ -81,6 +77,7 @@ public class ChattingServiceTest {
             .blogLink("blogLink")
             .githubLink("githubLink")
             .interest(Interest.JOBPOST)
+            .memberTechStacks(list1)
             .build();
     Member member2 = Member.builder()
             .email("example@naver.com")
@@ -92,14 +89,11 @@ public class ChattingServiceTest {
             .blogLink("blogLink2")
             .githubLink("githubLink2")
             .interest(Interest.STUDY)
+            .memberTechStacks(list2)
             .build();
 
     memberRepository.save(member1);
     memberRepository.save(member2);
-
-    // 테스트를 위한 채팅방 생성
-    chattingRoom = new ChattingRoom(ChattingRoomStatus.ACTIVE);
-    chattingRoomRepository.save(chattingRoom);
   }
 
   @Test
@@ -109,13 +103,7 @@ public class ChattingServiceTest {
     Member sender = results.get(0);
     Member receiver = results.get(0);
 
-    Long senderChatpartId = chattingService.createNewChatting(sender.getMemberId(), receiver.getMemberId());
-    assertNotNull(senderChatpartId, "채팅 참여 ID는 null이 아니어야 합니다.");
-
-    ChatParticipation result = chatParticipationRepository.findById(senderChatpartId).orElseThrow();
-    assertNotNull(result, "채팅 참여 객체가 존재해야 합니다.");
-
-    Long roomId = result.getChattingRoom().getRoomId();
+    Long roomId = chattingCommandService.createNewChatting(sender.getMemberId(), receiver.getMemberId());
     assertNotNull(roomId, "채팅방 ID는 null이 아니어야 합니다.");
 
     List<ChatParticipation> allByChattingRoomRoomId = chatParticipationRepository.findAllByChattingRoom_RoomId(roomId);
@@ -126,13 +114,45 @@ public class ChattingServiceTest {
   @DisplayName("채팅방 비활성화 테스트")
   void 채팅방_비활성화() throws Exception {
     // given
+    // 테스트를 위한 채팅방 생성
+    ChattingRoom chattingRoom = new ChattingRoom(ChattingRoomStatus.ACTIVE);
+    chattingRoomRepository.save(chattingRoom);
     Long roomId = chattingRoom.getRoomId();
 
     // when
-    chattingService.closeChattingRoom(roomId);
+    chattingCommandService.closeChattingRoom(roomId);
 
     // then
     ChattingRoom updatedRoom = chattingRoomRepository.findById(roomId).orElseThrow();
     assertEquals(ChattingRoomStatus.INACTIVE, updatedRoom.getStatus(), "채팅방 상태는 INACTIVE여야 합니다.");
+  }
+
+  @Test
+  @DisplayName("사용자 ID로 채팅방 조회")
+  void 사용자_채팅방_전체조회() throws Exception {
+      //given
+    List<Member> results = memberRepository.findAll();
+    Member sender = results.get(0);
+    Member receiver = results.get(1);
+
+    Long chattingRoomId1 = chattingCommandService.createNewChatting(sender.getMemberId(), receiver.getMemberId());
+    Long chattingRoomId2 = chattingCommandService.createNewChatting(sender.getMemberId(), receiver.getMemberId());
+
+    //when
+    List<ChatRoomListResponse> allActivateChattingsByMemberId = chattingQueryService.findAllActivateChattingsByMemberId(sender.getMemberId());
+
+    //then
+    assertEquals(2, allActivateChattingsByMemberId.size(), "채팅방 개수는 2개여야 합니다.");
+
+    // 2. 리스트 내 각 ChatRoomListResponse의 memberId가 sender의 memberId와 일치하는지 확인
+    for (ChatRoomListResponse response : allActivateChattingsByMemberId) {
+      System.out.println(response);
+      assertEquals(sender.getMemberId(), response.memberId(), "채팅방의 memberId는 sender의 memberId와 일치해야 합니다.");
+    }
+
+    // 3. 상태가 ACTIVE인지 확인
+    for (ChatRoomListResponse response : allActivateChattingsByMemberId) {
+      assertEquals(ChattingRoomStatus.ACTIVE, response.status(), "채팅방 상태는 ACTIVE여야 합니다.");
+    }
   }
 }

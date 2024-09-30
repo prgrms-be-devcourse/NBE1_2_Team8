@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.chatting.entity;
+package org.prgrms.devconnect.domain.define.chatting.entity;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -50,6 +50,7 @@ public class ChattingCommandService {
     chatParticipationRepository.save(senderChatPart);
     chatParticipationRepository.save(receiverChatPart);
 
+    //roomId 반환
     return chattingRoom.getRoomId();
   }
 
