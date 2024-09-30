@@ -65,7 +65,7 @@ public class Board extends Timestamp {
   @Column(name = "status", length = 50)
   private BoardStatus status = BoardStatus.RECRUITING;
 
-  @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = true)
+  @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
   private List<BoardTechStackMapping> boardTechStacks = new ArrayList<>();
 
 
