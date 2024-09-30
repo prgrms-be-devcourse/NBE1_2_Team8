@@ -21,7 +21,6 @@ public class ChattingCommandService {
 
   private final ChattingRoomRepository chattingRoomRepository;
   private final ChatParticipationRepository chatParticipationRepository;
-//  private final MemberRepository memberRepository;
   private final MemberQueryService memberQueryService;
 
   /*
@@ -30,10 +29,6 @@ public class ChattingCommandService {
 
   */
   public Long createNewChatting(Long sendMemberId, Long receiveMemberId){
-//    Member sender = memberRepository.findById(sendMemberId)
-//            .orElseThrow(() -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER));
-//    Member receivier = memberRepository.findById(receiveMemberId)
-//            .orElseThrow(() -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER));
     Member sender = memberQueryService.getMemberByIdOrThrow(sendMemberId);
     Member receiver = memberQueryService.getMemberByIdOrThrow(receiveMemberId);
 
