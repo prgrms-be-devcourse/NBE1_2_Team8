@@ -3,9 +3,12 @@ package org.prgrms.devconnect.api.service.board;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardTechStackRequestDto;
+import org.prgrms.devconnect.api.controller.board.dto.request.BoardUpdateRequestDto;
 import org.prgrms.devconnect.api.service.jobpost.JobPostQueryService;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.api.service.techstack.TechStackQueryService;
+import org.prgrms.devconnect.common.exception.ExceptionCode;
+import org.prgrms.devconnect.common.exception.board.BoardException;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.BoardTechStackMapping;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
@@ -44,8 +47,14 @@ public class BoardCommandService {
   }
 
 //  게시물 수정은 추후 구현 예정
-  public Long updateBoard(Long boardId, BoardCreateRequestDto boardCreateRequestDto) {
+  public Long updateBoard(Long boardId, BoardUpdateRequestDto requestDto) {
     Board board = boardQueryService.getBoardByIdOrThrow(boardId);
+
+    if (board.getStatus() == BoardStatus.DELETED) {
+      throw new BoardException(ExceptionCode.NOT_FOUND_BOARD);
+    }
+
+    board.updateFromDto(requestDto);
     return board.getBoardId();
   }
 
