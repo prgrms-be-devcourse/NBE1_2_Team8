@@ -19,7 +19,7 @@ public class ChattingControllor {
   @PostMapping("/{memberId}")
   public ResponseEntity<ChatRoomResponse> createChatting(@PathVariable("memberId") Long memberId,
                                                          @RequestBody @Valid ChatRoomRequest request){
-    Long chatroomId = chattingCommandService.createNewChatting(memberId, request.receiver_id());
+    Long chatroomId = chattingCommandService.createNewChatting(memberId, request.receiverId());
     return ResponseEntity.status(HttpStatus.OK).body(new ChatRoomResponse(chatroomId));
   }
 
