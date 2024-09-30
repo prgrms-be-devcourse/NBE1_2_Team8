@@ -36,7 +36,10 @@ public class BoardCommandService {
   public Long createBoard(BoardCreateRequestDto boardCreateRequestDto) {
     Member member = memberQueryService.getMemberByIdOrThrow(boardCreateRequestDto.memberId());
 
-    JobPost jobPost = jobPostQueryService.getJobPostOrThrow(boardCreateRequestDto.jobPostId());
+    JobPost jobPost =null;
+    if(boardCreateRequestDto.jobPostId()!=null){
+      jobPost=jobPostQueryService.getJobPostByIdOrThrow(boardCreateRequestDto.jobPostId());
+    }
 
     List<BoardTechStackMapping> boardTechStackMappings = createBoardTechStackMappings(boardCreateRequestDto);
 

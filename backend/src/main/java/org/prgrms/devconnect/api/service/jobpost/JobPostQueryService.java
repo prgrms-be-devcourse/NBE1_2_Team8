@@ -16,8 +16,7 @@ public class JobPostQueryService {
 
   private final JobPostRepository jobPostRepository;
 
-  public JobPost getJobPostOrThrow(Long jobPostId) {
-    if (jobPostId == null) return null;
+  public JobPost getJobPostByIdOrThrow(Long jobPostId) {
     return jobPostRepository.findById(jobPostId)
             .orElseThrow(() -> new JobPostException(ExceptionCode.NOT_FOUND_JOB_POST));
   }
