@@ -2,7 +2,7 @@ package org.prgrms.devconnect.api.service.board;
 
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
-import org.prgrms.devconnect.api.service.member.MemberService;
+import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.board.BoardException;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
@@ -11,10 +11,8 @@ import org.prgrms.devconnect.domain.define.board.repository.BoardRepository;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.jobpost.repository.JobPostRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
-import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 import org.prgrms.devconnect.domain.define.techstack.repository.TechStackRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +26,7 @@ public class BoardService {
 
   private final BoardRepository boardRepository;
 
-  private final MemberService memberService;
+  private final MemberQueryService memberQueryService;
 
   private final JobPostRepository jobPostRepository;
 
@@ -37,7 +35,7 @@ public class BoardService {
 
   @Transactional
   public Long createBoard(BoardCreateRequestDto boardCreateRequestDto) {
-    Member member = memberService.findMemberById(boardCreateRequestDto.memberId());
+    Member member = memberQueryService.getMemberByIdOrThrow(boardCreateRequestDto.memberId());
 
     // JobPost 존재 여부 확인. 없을 경우 null로 처리
     JobPost jobPost = null;

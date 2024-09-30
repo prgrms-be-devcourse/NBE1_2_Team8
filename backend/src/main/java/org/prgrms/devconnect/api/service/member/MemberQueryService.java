@@ -23,6 +23,12 @@ public class MemberQueryService {
     }
   }
 
+  public Member getMemberByIdOrThrow(Long memberId) {
+    return memberRepository.findByMemberId(memberId).orElseThrow(
+            () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
+    );
+  }
+
   public Member getMemberByEmailOrThrow(String email) {
     return memberRepository.findByEmail(email).orElseThrow(
         () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
