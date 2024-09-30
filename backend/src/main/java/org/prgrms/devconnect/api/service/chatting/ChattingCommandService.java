@@ -27,8 +27,10 @@ public class ChattingCommandService {
 
   */
   public Long createNewChatting(Long sendMemberId, Long receiveMemberId){
-    Member sender = memberRepository.findById(sendMemberId).orElseThrow(() -> new RuntimeException("Member not found id : " + sendMemberId));
-    Member receivier = memberRepository.findById(receiveMemberId).orElseThrow(() -> new RuntimeException("Member not found id : " + receiveMemberId));
+    Member sender = memberRepository.findById(sendMemberId)
+            .orElseThrow(() -> new RuntimeException("Member not found id : " + sendMemberId));
+    Member receivier = memberRepository.findById(receiveMemberId)
+            .orElseThrow(() -> new RuntimeException("Member not found id : " + receiveMemberId));
 
     //새로운 채팅방 생성
     ChattingRoom chattingRoom = new ChattingRoom(ChattingRoomStatus.ACTIVE);
@@ -48,7 +50,8 @@ public class ChattingCommandService {
 
   // 채팅방 비활성화 서비스
   public void closeChattingRoom(Long chatroomId){
-    ChattingRoom chattingRoom = chattingRoomRepository.findById(chatroomId).orElseThrow(() -> new RuntimeException("ChattingRoom not found id : " + chatroomId));
+    ChattingRoom chattingRoom = chattingRoomRepository.findById(chatroomId)
+            .orElseThrow(() -> new RuntimeException("ChattingRoom not found id : " + chatroomId));
     chattingRoom.closeChatRoom();
     chattingRoomRepository.save(chattingRoom);
   }
