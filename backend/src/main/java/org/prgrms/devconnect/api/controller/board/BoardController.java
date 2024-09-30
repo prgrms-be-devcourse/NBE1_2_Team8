@@ -3,6 +3,7 @@ package org.prgrms.devconnect.api.controller.board;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
+import org.prgrms.devconnect.api.controller.board.dto.request.BoardUpdateRequestDto;
 import org.prgrms.devconnect.api.service.board.BoardCommandService;
 import org.prgrms.devconnect.api.service.board.BoardQueryService;
 import org.springframework.http.HttpStatus;
@@ -32,8 +33,8 @@ public class BoardController {
   @PutMapping("/{boardId}")
   public ResponseEntity<Void> updateBoard(
           @PathVariable Long boardId,
-          @RequestBody @Valid BoardCreateRequestDto boardCreateRequestDto) {
-    boardCommendService.updateBoard(boardId,boardCreateRequestDto);
+          @RequestBody @Valid BoardUpdateRequestDto boardUpdateRequestDto) {
+    boardCommendService.updateBoard(boardId,boardUpdateRequestDto);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 }
