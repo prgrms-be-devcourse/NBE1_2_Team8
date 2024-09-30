@@ -4,8 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardTechStackRequestDto;
+import org.prgrms.devconnect.api.controller.board.dto.request.BoardUpdateRequestDto;
 import org.prgrms.devconnect.common.exception.member.MemberException;
 import org.prgrms.devconnect.common.exception.techstack.TechStackException;
+import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
 import org.prgrms.devconnect.domain.define.fixture.MemberFixture;
 import org.prgrms.devconnect.domain.define.fixture.TechStackFixture;
 import org.prgrms.devconnect.common.exception.board.BoardException;
@@ -118,4 +120,47 @@ class BoardCommandServiceTest {
     });
 
   }
+
+  @Test
+  public void 게시판수정_기술스택_제외하고(){
+    // given
+    BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto(
+            "JavaScript 스터디 모집합니다.",
+            "JavaScript 공부할 사람 구해요",
+            "개발",
+            5,
+            "온라인",
+            "5개월",
+            LocalDateTime.now()
+    );
+
+    // when
+    boardCommandService.updateBoard(1L,boardUpdateRequestDto);
+
+    // then
+    Board savedBoard = boardRepository.findById(1L).orElse(null);
+    assertNotNull(savedBoard);
+    assertEquals("JavaScript 스터디 모집합니다.", savedBoard.getTitle());
+    assertEquals("JavaScript 공부할 사람 구해요", savedBoard.getContent());
+    assertEquals(5, savedBoard.getRecruitNum());
+    assertEquals("온라인", savedBoard.getProgressWay());
+    assertEquals("5개월", savedBoard.getProgressPeriod());
+
+  }
+
+  @Test
+  public void 게시판삭제(){
+    // given
+    Long boardId=2L;
+
+    // when
+    boardCommandService.deleteBoard(boardId);
+
+    // then
+    Board deletedBoard = boardRepository.findById(boardId).orElse(null);
+    assertNotNull(deletedBoard);
+    assertEquals(BoardStatus.DELETED, deletedBoard.getStatus());
+
+  }
+
 }
