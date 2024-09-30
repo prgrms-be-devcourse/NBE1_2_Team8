@@ -21,4 +21,8 @@ logging:
     org.hibernate.type.descriptor: trace
     root: info
 
+springdoc:
+  swagger-ui:
+    path: /devconnect
+
 
