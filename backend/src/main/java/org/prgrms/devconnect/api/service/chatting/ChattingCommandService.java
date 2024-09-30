@@ -45,7 +45,7 @@ public class ChattingCommandService {
     chatParticipationRepository.save(senderChatPart);
     chatParticipationRepository.save(receiverChatPart);
 
-    return senderChatPart.getChatPartId();
+    return chattingRoom.getRoomId();
   }
 
   // 채팅방 비활성화 서비스
