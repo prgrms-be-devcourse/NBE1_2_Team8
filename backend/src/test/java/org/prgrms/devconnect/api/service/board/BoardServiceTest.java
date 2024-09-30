@@ -1,8 +1,13 @@
 package org.prgrms.devconnect.api.service.board;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardTechStackRequestDto;
+import org.prgrms.devconnect.api.controller.board.dto.request.BoardUpdateRequestDto;
+import org.prgrms.devconnect.common.exception.member.MemberException;
+import org.prgrms.devconnect.common.exception.techstack.TechStackException;
+import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
 import org.prgrms.devconnect.domain.define.fixture.MemberFixture;
 import org.prgrms.devconnect.domain.define.fixture.TechStackFixture;
 import org.prgrms.devconnect.common.exception.board.BoardException;
@@ -23,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class BoardServiceTest {
+class BoardCommandServiceTest {
 
   @Autowired
-  private BoardService boardService;
+  private BoardCommandService boardCommandService;
 
   @Autowired
   private MemberRepository memberRepository;
@@ -37,25 +42,24 @@ class BoardServiceTest {
   @Autowired
   private TechStackRepository techStackRepository;
 
-  @Test
-  public void 테스트시_필요한_객체_미리생성() {
+  private Member savedMember;
+  private TechStack savedTechStack;
 
+  @BeforeEach
+  public void setUp() {
     // given
-    Member member = MemberFixture.createMember();
-    Member savedMember = memberRepository.saveAndFlush(member);
     TechStack techStack = TechStackFixture.createTechStack();
-    TechStack savedTechStack = techStackRepository.saveAndFlush(techStack);
-
-    // then
-    assertNotNull(savedMember.getMemberId()); // ID가 정상적으로 생성되었는지 확인
-    assertNotNull(savedTechStack.getTechStackId()); // ID가 정상적으로 생성되었는지 확인
+    savedTechStack = techStackRepository.saveAndFlush(techStack);
+    Member member = MemberFixture.createMember(savedTechStack);
+    savedMember = memberRepository.saveAndFlush(member);
   }
+
 
   @Test
   public void 게시글생성() {
     // given
-    Long existingMemberId = 1L;
-    Long existingTechStackId = 1L;
+    Long existingMemberId = savedMember.getMemberId();
+    Long existingTechStackId = savedTechStack.getTechStackId();
 
     BoardCreateRequestDto boardCreateRequestDto = new BoardCreateRequestDto(
             existingMemberId, null,
@@ -66,7 +70,7 @@ class BoardServiceTest {
     );
 
     // when
-    Long result = boardService.createBoard(boardCreateRequestDto);
+    Long result = boardCommandService.createBoard(boardCreateRequestDto);
 
     // then
     Board savedBoard = boardRepository.findById(result).orElse(null);
@@ -80,7 +84,7 @@ class BoardServiceTest {
   public void 멤버ID가_유효하지_않은_경우() {
     // given
     Long invalidMemberId = 999L;
-    Long existingTechStackId = 1L;
+    Long existingTechStackId = savedTechStack.getTechStackId();
 
     BoardCreateRequestDto boardCreateRequestDto = new BoardCreateRequestDto(
             invalidMemberId, null,
@@ -91,15 +95,15 @@ class BoardServiceTest {
     );
 
     // when & then
-    assertThrows(BoardException.class, () -> {
-      boardService.createBoard(boardCreateRequestDto);
+    assertThrows(MemberException.class, () -> {
+      boardCommandService.createBoard(boardCreateRequestDto);
     });
   }
 
   @Test
   public void 기술스택ID가_유효하지_않은_경우() {
     // given
-    Long existingMemberId = 1L;
+    Long existingMemberId = savedMember.getMemberId();
     Long invalidTechStackId = 999L;
 
     BoardCreateRequestDto boardCreateRequestDto = new BoardCreateRequestDto(
@@ -111,9 +115,52 @@ class BoardServiceTest {
     );
 
     // when & then
-    assertThrows(BoardException.class, () -> {
-      boardService.createBoard(boardCreateRequestDto);
+    assertThrows(TechStackException.class, () -> {
+      boardCommandService.createBoard(boardCreateRequestDto);
     });
 
   }
+
+  @Test
+  public void 게시판수정_기술스택_제외하고(){
+    // given
+    BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto(
+            "JavaScript 스터디 모집합니다.",
+            "JavaScript 공부할 사람 구해요",
+            "개발",
+            5,
+            "온라인",
+            "5개월",
+            LocalDateTime.now()
+    );
+
+    // when
+    boardCommandService.updateBoard(1L,boardUpdateRequestDto);
+
+    // then
+    Board savedBoard = boardRepository.findById(1L).orElse(null);
+    assertNotNull(savedBoard);
+    assertEquals("JavaScript 스터디 모집합니다.", savedBoard.getTitle());
+    assertEquals("JavaScript 공부할 사람 구해요", savedBoard.getContent());
+    assertEquals(5, savedBoard.getRecruitNum());
+    assertEquals("온라인", savedBoard.getProgressWay());
+    assertEquals("5개월", savedBoard.getProgressPeriod());
+
+  }
+
+  @Test
+  public void 게시판삭제(){
+    // given
+    Long boardId=2L;
+
+    // when
+    boardCommandService.deleteBoard(boardId);
+
+    // then
+    Board deletedBoard = boardRepository.findById(boardId).orElse(null);
+    assertNotNull(deletedBoard);
+    assertEquals(BoardStatus.DELETED, deletedBoard.getStatus());
+
+  }
+
 }
