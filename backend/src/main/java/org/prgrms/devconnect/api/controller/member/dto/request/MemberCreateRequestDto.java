@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
@@ -41,11 +44,12 @@ public record MemberCreateRequestDto(
     @NotBlank(message = "유효한 블로그 링크를 입력하세요.")
     String blogLink,
 
+    @NotNull(message = "관심 분야는 필수입니다.")
     Interest interest,
 
     @NotEmpty(message = "기술 스택 목록은 비어있을 수 없습니다.")
-    List<MemberTechStackRequestDto> techStackRequests
-
+    @Size(min = 1, message = "기술 스택 ID는 최소 하나 이상이어야 합니다.")
+    List<@Positive(message = "기술 스택 ID는 0보다 커야 합니다.") Long> techStackIds
 ) {
 
   public Member toEntity(List<MemberTechStackMapping> memberTechStacks) {
