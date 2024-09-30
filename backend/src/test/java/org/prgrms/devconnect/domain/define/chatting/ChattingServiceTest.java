@@ -3,7 +3,6 @@ package org.prgrms.devconnect.domain.define.chatting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatRoomListResponse;
 import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
 import org.prgrms.devconnect.api.service.chatting.ChattingQueryService;
@@ -47,9 +46,6 @@ public class ChattingServiceTest {
   @Autowired
   private TechStackRepository techStackRepository;
 
-
-
-  private ChattingRoom chattingRoom;
   @BeforeEach
   void initData() throws Exception {
     TechStack techStack = TechStack.builder()
@@ -98,10 +94,6 @@ public class ChattingServiceTest {
 
     memberRepository.save(member1);
     memberRepository.save(member2);
-
-    // 테스트를 위한 채팅방 생성
-    chattingRoom = new ChattingRoom(ChattingRoomStatus.ACTIVE);
-    chattingRoomRepository.save(chattingRoom);
   }
 
   @Test
@@ -122,6 +114,9 @@ public class ChattingServiceTest {
   @DisplayName("채팅방 비활성화 테스트")
   void 채팅방_비활성화() throws Exception {
     // given
+    // 테스트를 위한 채팅방 생성
+    ChattingRoom chattingRoom = new ChattingRoom(ChattingRoomStatus.ACTIVE);
+    chattingRoomRepository.save(chattingRoom);
     Long roomId = chattingRoom.getRoomId();
 
     // when
