@@ -1,7 +1,7 @@
 package org.prgrms.devconnect.domain.define.alarm.event;
 
 import lombok.RequiredArgsConstructor;
-import org.prgrms.devconnect.api.service.alarm.AlarmService;
+import org.prgrms.devconnect.api.service.alarm.AlarmCommandService;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EventHandler {
 
-  private final AlarmService alarmService;
+  private final AlarmCommandService alarmService;
 
   @EventListener
   public void sendWelcomeMessage(RegisteredWelcomeEvent event) {
