@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.domain.define.Timestamp;
@@ -39,9 +40,27 @@ public class Comment extends Timestamp {
   private Board board;
 
   @ManyToOne
-  @JoinColumn(name = "parent_id", nullable = false)
+  @JoinColumn(name = "parent_id", nullable = true)
   private Comment parent;
 
   @OneToMany(mappedBy = "parent")
   private List<Comment> children;
+
+  @Builder
+  public Comment(Long commentId, String content, Member member, Comment parent) {
+    this.commentId = commentId;
+    this.content = content;
+    this.member = member;
+    this.parent = parent;
+  }
+
+  // 연관관계 편의 메소드
+  public void assignBoard(Board board) {
+    this.board = board;
+  }
+
+  public void addChildComment(Comment comment){
+    children.add(comment);
+    comment.parent = this;
+  }
 }
