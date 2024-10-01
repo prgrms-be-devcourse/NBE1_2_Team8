@@ -2,7 +2,7 @@ package org.prgrms.devconnect.api.service.alarm;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.prgrms.devconnect.api.controller.alarm.response.AlarmsGetResponse;
+import org.prgrms.devconnect.api.controller.alarm.dto.response.AlarmsGetResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
