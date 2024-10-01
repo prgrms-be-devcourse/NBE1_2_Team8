@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.BoardTechStackMapping;
+import org.prgrms.devconnect.domain.define.board.entity.constant.BoardCategory;
+import org.prgrms.devconnect.domain.define.board.entity.constant.ProgressWay;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 
@@ -17,6 +19,7 @@ import java.util.List;
 
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Builder
 public record BoardCreateRequestDto(
         @NotNull(message = "회원 ID는 필수입니다.")
         Long memberId,
@@ -29,14 +32,14 @@ public record BoardCreateRequestDto(
         @NotBlank(message = "내용은 필수입니다.")
         String content,
 
-        @NotBlank(message = "카테고리는 필수입니다.")
-        String category,
+        @NotNull(message = "카테고리는 필수입니다.")
+        BoardCategory category,
 
         @NotNull(message = "모집 인원은 필수입니다.")
         int recruitNum,
 
-        @NotBlank(message = "진행 방식은 필수입니다.")
-        String progressWay,
+        @NotNull(message = "진행 방식은 필수입니다.")
+        ProgressWay progressWay,
 
         @NotBlank(message = "진행 기간은 필수입니다.")
         String progressPeriod,
