@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AlarmService {
+public class AlarmCommandService {
 
   private final AlarmRepository alarmRepository;
 
