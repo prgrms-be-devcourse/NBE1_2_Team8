@@ -53,7 +53,7 @@ public class ChattingCommandService {
     chatParticipationRepository.save(senderChatPart);
     chatParticipationRepository.save(receiverChatPart);
 
-    //roomId 반환
+    //chatpartId, roomId 반환
     return new ChatPartResponse(senderChatPart.getChatPartId(), chattingRoom.getRoomId());
   }
 
