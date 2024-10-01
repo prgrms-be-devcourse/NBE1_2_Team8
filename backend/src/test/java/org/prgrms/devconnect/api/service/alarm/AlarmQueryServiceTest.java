@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +18,8 @@ import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
-import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
 class AlarmQueryServiceTest {
 
   @InjectMocks
@@ -38,11 +33,6 @@ class AlarmQueryServiceTest {
 
   @Mock
   private Member member;
-
-
-  private AlarmsGetResponse alarmsGetResponsesList() {
-    return AlarmsGetResponse.from(alarms());
-  }
 
   private List<Alarm> alarms(){
     List<Alarm> alarms = new ArrayList<>();
