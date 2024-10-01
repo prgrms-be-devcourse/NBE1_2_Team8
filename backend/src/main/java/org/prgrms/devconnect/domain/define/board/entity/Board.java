@@ -43,12 +43,14 @@ public class Board extends Timestamp {
   @Column(name = "content", columnDefinition = "TEXT")
   private String content;
 
+  @Enumerated(value = EnumType.STRING)
   @Column(name = "category", length = 200)
   private BoardCategory category;
 
   @Column(name = "recruit_num")
   private int recruitNum;
 
+  @Enumerated(value = EnumType.STRING)
   @Column(name = "progress_way", length = 50)
   private ProgressWay progressWay;
 
