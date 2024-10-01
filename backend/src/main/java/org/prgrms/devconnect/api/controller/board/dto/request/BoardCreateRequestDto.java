@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.BoardTechStackMapping;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
@@ -14,6 +15,7 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record BoardCreateRequestDto(
         @NotNull(message = "회원 ID는 필수입니다.")
