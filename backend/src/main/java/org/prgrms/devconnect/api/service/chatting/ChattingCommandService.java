@@ -2,14 +2,17 @@ package org.prgrms.devconnect.api.service.chatting;
 
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatPartResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.chatting.ChattingException;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChattingRoom;
+import org.prgrms.devconnect.domain.define.chatting.entity.Message;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
 import org.prgrms.devconnect.domain.define.chatting.repository.ChatParticipationRepository;
 import org.prgrms.devconnect.domain.define.chatting.repository.ChattingRoomRepository;
+import org.prgrms.devconnect.domain.define.chatting.repository.MessageRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +24,14 @@ public class ChattingCommandService {
 
   private final ChattingRoomRepository chattingRoomRepository;
   private final ChatParticipationRepository chatParticipationRepository;
+  private final MessageRepository messageRepository;
   private final MemberQueryService memberQueryService;
 
   /*
     새로운 채팅방을 생성하는 서비스 코드
     1대1 대화를 시작할 때 필요한 사용자 2명의 ID를 가져와서 처리
-
   */
-  public Long createNewChatting(Long sendMemberId, Long receiveMemberId){
+  public ChatPartResponse createNewChatting(Long sendMemberId, Long receiveMemberId){
     Member sender = memberQueryService.getMemberByIdOrThrow(sendMemberId);
     Member receiver = memberQueryService.getMemberByIdOrThrow(receiveMemberId);
 
@@ -51,7 +54,20 @@ public class ChattingCommandService {
     chatParticipationRepository.save(receiverChatPart);
 
     //roomId 반환
-    return chattingRoom.getRoomId();
+    return new ChatPartResponse(senderChatPart.getChatPartId(), chattingRoom.getRoomId());
+  }
+
+  // 메세지를 저장하는 메서드
+  public void sendMessage(Long chatpartId , String content){
+    ChatParticipation chatParticipation = chatParticipationRepository.findById(chatpartId)
+            .orElseThrow(() -> new ChattingException(ExceptionCode.NOT_FOUND_CHATPART));
+
+    Message message = Message.builder()
+            .chatParticipation(chatParticipation)
+            .content(content)
+            .build();
+
+    messageRepository.save(message);
   }
 
   // 채팅방 비활성화 서비스
