@@ -20,8 +20,12 @@ public class BoardQueryService {
   private final BoardRepository boardRepository;
 
   public Board getBoardByIdOrThrow(Long boardId) {
-    return boardRepository.findById(boardId)
+    Board board= boardRepository.findById(boardId)
             .orElseThrow(() -> new BoardException(ExceptionCode.NOT_FOUND_BOARD));
+    if(board.isDeleted()){
+      throw new BoardException(ExceptionCode.NOT_FOUND_BOARD);
+    }
+    return board;
   }
 
   public List<Board> findAllByEndDateAndStatus() {

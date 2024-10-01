@@ -53,7 +53,7 @@ public class BoardCommandService {
   public Long updateBoard(Long boardId, BoardUpdateRequestDto requestDto) {
     Board board = boardQueryService.getBoardByIdOrThrow(boardId);
 
-    if (board.getStatus() == BoardStatus.DELETED) {
+    if (board.isDeleted()) {
       throw new BoardException(ExceptionCode.NOT_FOUND_BOARD);
     }
 
@@ -68,10 +68,10 @@ public class BoardCommandService {
 
   public void closeBoardManually(Long boardId) {
     Board board = boardQueryService.getBoardByIdOrThrow(boardId);
-    if (board.getStatus() == BoardStatus.CLOSED ) {
+    if (board.isClosed()) {
       throw new BoardException(ExceptionCode.ALREADY_CLOSED_BOARD);
     }
-    if (board.getStatus() == BoardStatus.DELETED) {
+    if (board.isDeleted()) {
       throw new BoardException(ExceptionCode.NOT_FOUND_BOARD);
     }
     board.changeStatus(BoardStatus.CLOSED);
