@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberCreateRequestDto;
-import org.prgrms.devconnect.api.service.alarm.AlarmService;
+import org.prgrms.devconnect.api.service.alarm.AlarmCommandService;
 import org.prgrms.devconnect.api.service.member.MemberCommandService;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 class AlarmServiceTest {
 
   @MockBean
-  private AlarmService alarmService;
+  private AlarmCommandService alarmCommandService;
 
   @MockBean
   private MemberCommandService memberCommandService;  // MockBean으로 변경
@@ -35,9 +35,10 @@ class AlarmServiceTest {
     Member member = mock(Member.class);
 
     when(memberCommandService.createMember(memberCreateRequestDto)).thenReturn(member);
-    alarmService.createWelcomeAlarmWhenSignIn(member);
+    alarmCommandService.createWelcomeAlarmWhenSignIn(member);
 
 
-    verify(alarmService, times(1)).createWelcomeAlarmWhenSignIn(member);
+    verify(alarmCommandService, times(1)).createWelcomeAlarmWhenSignIn(member);
   }
+
 }
