@@ -77,18 +77,6 @@ public class BoardCommandService {
     board.changeStatus(BoardStatus.CLOSED);
   }
 
-  @Scheduled(cron = "0 0 0 * * *")
-  public void scheduleAutoClose() {
-    closeExpiredBoardAutomatically();
-  }
-
-  public void closeExpiredBoardAutomatically() {
-    List<Board> expiredBoards = boardQueryService.findAllByEndDateAndStatus();
-    for (Board board : expiredBoards) {
-      board.changeStatus(BoardStatus.CLOSED);
-    }
-  }
-
   private List<BoardTechStackMapping> createBoardTechStackMappings(BoardCreateRequestDto boardCreateRequestDto) {
     List<Long> techStackIds = boardCreateRequestDto.techStackRequests().stream()
             .map(BoardTechStackRequestDto::techStackId)
