@@ -34,6 +34,9 @@ public enum ExceptionCode {
   NOT_FOUND_CHATROOM(404, "존재하지 않는 채팅방 입니다"),
   CHATROOM_ALREADY_INACTIVE(400, "채팅방은 이미 INACTIVE 상태입니다"),
 
+  //CHATPART ERROR
+  NOT_FOUND_CHATPART(404, "채팅에 참여하지 않았습니다"),
+
   //TECH_STACK ERROR
   NOT_FOUND_TECH_STACK(404, "존재하지 않는 기술 스택입니다.");
 
