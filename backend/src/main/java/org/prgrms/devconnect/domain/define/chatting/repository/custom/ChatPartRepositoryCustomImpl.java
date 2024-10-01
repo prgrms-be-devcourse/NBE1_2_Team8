@@ -75,26 +75,26 @@ public class ChatPartRepositoryCustomImpl implements ChatPartRepositoryCustom {
     QChatParticipation chatpart = QChatParticipation.chatParticipation;
     QMessage message = QMessage.message;
 
-    List<MessageResponse> messages = queryFactory.select(Projections.constructor(MessageResponse.class,
+    List<MessageResponse> results = queryFactory.select(Projections.constructor(MessageResponse.class,
                     message.messageId,
                     chatpart.member.memberId,
                     message.content,
                     message.createdAt))
             .from(message)
-            .join(chatpart.messages, message)
+            .join(message.chatParticipation, chatpart)
             .where(chatpart.chattingRoom.roomId.eq(roomId))
             .orderBy(message.createdAt.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
 
-    // 전체 레코드 수 계산
+//     전체 레코드 수 계산
     long total = queryFactory.select(message.count())
             .from(message)
-            .join(chatpart.messages, message)
+            .join(message.chatParticipation, chatpart)
             .where(chatpart.chattingRoom.roomId.eq(roomId))
             .fetchOne();
 
-    return new PageImpl<>(messages, pageable, total);
+    return new PageImpl<>(results, pageable, total);
   }
 }
