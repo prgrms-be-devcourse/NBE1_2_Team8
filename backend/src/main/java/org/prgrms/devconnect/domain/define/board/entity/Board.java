@@ -10,8 +10,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardUpdateRequestDto;
+import org.prgrms.devconnect.domain.define.board.entity.constant.BoardCategory;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
 import org.prgrms.devconnect.domain.define.Timestamp;
+import org.prgrms.devconnect.domain.define.board.entity.constant.ProgressWay;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
@@ -42,13 +44,13 @@ public class Board extends Timestamp {
   private String content;
 
   @Column(name = "category", length = 200)
-  private String category;
+  private BoardCategory category;
 
   @Column(name = "recruit_num")
   private int recruitNum;
 
   @Column(name = "progress_way", length = 50)
-  private String progressWay;
+  private ProgressWay progressWay;
 
   @Column(name = "progress_period", length = 50)
   private String progressPeriod;
@@ -80,8 +82,8 @@ public class Board extends Timestamp {
 
   //  Board 생성자
   @Builder
-  public Board(Member member, JobPost jobPost, String title, String content, String category,
-               int recruitNum, String progressWay, String progressPeriod, LocalDateTime endDate,
+  public Board(Member member, JobPost jobPost, String title, String content, BoardCategory category,
+               int recruitNum, ProgressWay progressWay, String progressPeriod, LocalDateTime endDate,
                List<BoardTechStackMapping> boardTechStacks) {
     this.member = member;
     this.jobPost = jobPost;
