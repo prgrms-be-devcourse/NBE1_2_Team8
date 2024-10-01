@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.api.controller.alarm.response;
+package org.prgrms.devconnect.api.controller.alarm.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
