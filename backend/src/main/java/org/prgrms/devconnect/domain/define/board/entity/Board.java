@@ -69,8 +69,6 @@ public class Board extends Timestamp {
   @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
   private List<BoardTechStackMapping> boardTechStacks = new ArrayList<>();
 
-  @OneToMany(mappedBy = "board",  cascade = CascadeType.ALL)
-  private List<Comment> comments=new ArrayList<>();
 
 
   // 연관관계 편의 메소드
@@ -79,11 +77,6 @@ public class Board extends Timestamp {
     boardTechStack.assignBoard(this);
   }
 
-  // 연관관계 편의 메소드
-  public void addComment(Comment comment) {
-    comments.add(comment);
-    comment.assignBoard(this);
-  }
 
   //  Board 생성자
   @Builder
