@@ -21,7 +21,7 @@ public class InterestQueryService {
 
   public List<BoardInfoResponseDto> getInterestBoards(Long memberId) {
     Member member = memberQueryService.getMemberByIdOrThrow(memberId);
-    List<FavoriteBoard> favoriteBoards = favoriteBoardRepository.findAllByMemberIdWithBoard(
+    List<FavoriteBoard> favoriteBoards = favoriteBoardRepository.findAllByMemberWithBoard(
         member);
 
     return favoriteBoards.stream().map(FavoriteBoard::getBoard)

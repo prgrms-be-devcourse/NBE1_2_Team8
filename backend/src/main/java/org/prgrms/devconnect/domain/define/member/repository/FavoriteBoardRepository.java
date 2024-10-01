@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface FavoriteBoardRepository extends JpaRepository<FavoriteBoard, Long> {
 
   @Query("SELECT fb FROM FavoriteBoard fb left join fetch fb.board WHERE fb.member = :member")
-  List<FavoriteBoard> findAllByMemberIdWithBoard(Member member);
+  List<FavoriteBoard> findAllByMemberWithBoard(Member member);
 
 }
 
