@@ -69,11 +69,20 @@ public class Board extends Timestamp {
   @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
   private List<BoardTechStackMapping> boardTechStacks = new ArrayList<>();
 
+  @OneToMany(mappedBy = "board",  cascade = CascadeType.ALL)
+  private List<Comment> comments=new ArrayList<>();
+
 
   // 연관관계 편의 메소드
   public void addTechStack(BoardTechStackMapping boardTechStack) {
     boardTechStacks.add(boardTechStack);
     boardTechStack.assignBoard(this);
+  }
+
+  // 연관관계 편의 메소드
+  public void addComment(Comment comment) {
+    comments.add(comment);
+    comment.assignBoard(this);
   }
 
   //  Board 생성자
@@ -101,17 +110,11 @@ public class Board extends Timestamp {
   }
 
   public boolean isDeleted(){
-    if(this.status == BoardStatus.DELETED){
-      return true;
-    }
-    return false;
+    return this.status == BoardStatus.DELETED;
   }
 
   public boolean isClosed(){
-    if(this.status == BoardStatus.CLOSED){
-      return true;
-    }
-    return false;
+    return this.status == BoardStatus.CLOSED;
   }
 
   // Board 정보를 업데이트하는 메소드
