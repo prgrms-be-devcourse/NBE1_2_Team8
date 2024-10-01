@@ -100,6 +100,20 @@ public class Board extends Timestamp {
     this.status = status;
   }
 
+  public boolean isDeleted(){
+    if(this.status == BoardStatus.DELETED){
+      return true;
+    }
+    return false;
+  }
+
+  public boolean isClosed(){
+    if(this.status == BoardStatus.CLOSED){
+      return true;
+    }
+    return false;
+  }
+
   // Board 정보를 업데이트하는 메소드
   public void updateFromDto(BoardUpdateRequestDto dto) {
     if (!dto.title().equals(this.title)) {

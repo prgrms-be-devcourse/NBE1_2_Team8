@@ -16,6 +16,7 @@ import org.prgrms.devconnect.domain.define.board.repository.BoardRepository;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class BoardCommandService {
-
   private final BoardRepository boardRepository;
   private final MemberQueryService memberQueryService;
   private final JobPostQueryService jobPostQueryService;
@@ -53,7 +53,7 @@ public class BoardCommandService {
   public Long updateBoard(Long boardId, BoardUpdateRequestDto requestDto) {
     Board board = boardQueryService.getBoardByIdOrThrow(boardId);
 
-    if (board.getStatus() == BoardStatus.DELETED) {
+    if (board.isDeleted()) {
       throw new BoardException(ExceptionCode.NOT_FOUND_BOARD);
     }
 
@@ -64,6 +64,29 @@ public class BoardCommandService {
   public void deleteBoard(Long boardId) {
     Board board = boardQueryService.getBoardByIdOrThrow(boardId);
     board.changeStatus(BoardStatus.DELETED);
+  }
+
+  public void closeBoardManually(Long boardId) {
+    Board board = boardQueryService.getBoardByIdOrThrow(boardId);
+    if (board.isClosed()) {
+      throw new BoardException(ExceptionCode.ALREADY_CLOSED_BOARD);
+    }
+    if (board.isDeleted()) {
+      throw new BoardException(ExceptionCode.NOT_FOUND_BOARD);
+    }
+    board.changeStatus(BoardStatus.CLOSED);
+  }
+
+  @Scheduled(cron = "0 0 0 * * *")
+  public void scheduleAutoClose() {
+    closeExpiredBoardAutomatically();
+  }
+
+  public void closeExpiredBoardAutomatically() {
+    List<Board> expiredBoards = boardQueryService.findAllByEndDateAndStatus();
+    for (Board board : expiredBoards) {
+      board.changeStatus(BoardStatus.CLOSED);
+    }
   }
 
   private List<BoardTechStackMapping> createBoardTechStackMappings(BoardCreateRequestDto boardCreateRequestDto) {
