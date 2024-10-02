@@ -26,3 +26,8 @@ springdoc:
     path: /devconnect
 
 
+## 사람인 api key
+api:
+  key: ${API_KEY}
+
+
