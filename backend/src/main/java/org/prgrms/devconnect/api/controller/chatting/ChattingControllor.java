@@ -3,8 +3,8 @@ package org.prgrms.devconnect.api.controller.chatting;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.chatting.dto.request.ChatRoomRequest;
+import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatPartResponse;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatRoomListResponse;
-import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatRoomResponse;
 import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
 import org.prgrms.devconnect.api.service.chatting.ChattingQueryService;
 import org.springframework.http.HttpStatus;
@@ -22,10 +22,10 @@ public class ChattingControllor {
   private final ChattingQueryService chattingQueryService;
 
   @PostMapping("/member/{memberId}")
-  public ResponseEntity<ChatRoomResponse> createChatting(@PathVariable("memberId") Long memberId,
+  public ResponseEntity<ChatPartResponse> createChatting(@PathVariable("memberId") Long memberId,
                                                          @RequestBody @Valid ChatRoomRequest request){
-    Long chatroomId = chattingCommandService.createNewChatting(memberId, request.receiverId());
-    return ResponseEntity.status(HttpStatus.OK).body(new ChatRoomResponse(chatroomId));
+    ChatPartResponse chatting = chattingCommandService.createNewChatting(memberId, request.receiverId());
+    return ResponseEntity.status(HttpStatus.OK).body(chatting);
   }
 
   @GetMapping("/member/{memberId}")
