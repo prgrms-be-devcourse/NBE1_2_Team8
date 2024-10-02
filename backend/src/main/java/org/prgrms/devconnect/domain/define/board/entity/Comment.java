@@ -45,9 +45,6 @@ public class Comment extends Timestamp {
   @Column(length = 500)
   private String content;
 
-  @OneToMany(mappedBy = "parent")
-  private List<Comment> children= new ArrayList<>();
-
   @Builder
   public Comment(Member member,Board board, Comment parent,String content) {
     this.member = member;
@@ -56,8 +53,4 @@ public class Comment extends Timestamp {
     this.content = content;
   }
 
-  public void addChildComment(Comment comment){
-    children.add(comment);
-    comment.parent = this;
-  }
 }
