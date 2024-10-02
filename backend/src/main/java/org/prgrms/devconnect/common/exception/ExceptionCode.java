@@ -19,6 +19,7 @@ public enum ExceptionCode {
 
   //Comment Error
   NOT_FOUND_COMMENT(404, "존재하지 않는 댓글입니다."),
+  INVALID_PARENT_COMMENT(400, "대댓글은 최상위 댓글에만 작성할 수 있습니다."),
 
   //BugReport Error
   NOT_FOUND_BUG_REPORT(404, "존재하지 않는 버그리포트입니다."),
