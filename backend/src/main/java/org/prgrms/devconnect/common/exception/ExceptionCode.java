@@ -37,6 +37,7 @@ public enum ExceptionCode {
 
   //CHATPART ERROR
   NOT_FOUND_CHATPART(404, "채팅에 참여하지 않았습니다"),
+  ALREADY_JOINED_CHATROOM(400, "이미 참여한 채팅입니다"),
 
   //TECH_STACK ERROR
   NOT_FOUND_TECH_STACK(404, "존재하지 않는 기술 스택입니다.");
