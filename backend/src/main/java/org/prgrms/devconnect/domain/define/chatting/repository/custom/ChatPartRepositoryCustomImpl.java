@@ -9,6 +9,7 @@ import org.prgrms.devconnect.domain.define.chatting.entity.QChatParticipation;
 import org.prgrms.devconnect.domain.define.chatting.entity.QChattingRoom;
 import org.prgrms.devconnect.domain.define.chatting.entity.QMessage;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
+import org.prgrms.devconnect.domain.define.member.entity.QMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -74,21 +75,24 @@ public class ChatPartRepositoryCustomImpl implements ChatPartRepositoryCustom {
   public Page<MessageResponse> findAllMessageByRoomId(Long roomId, Pageable pageable) {
     QChatParticipation chatpart = QChatParticipation.chatParticipation;
     QMessage message = QMessage.message;
+    QMember member = QMember.member;
 
     List<MessageResponse> results = queryFactory.select(Projections.constructor(MessageResponse.class,
                     message.messageId,
                     chatpart.member.memberId,
+                    member.nickname,
                     message.content,
                     message.createdAt))
             .from(message)
             .join(message.chatParticipation, chatpart)
+            .join(chatpart.member, member)
             .where(chatpart.chattingRoom.roomId.eq(roomId))
             .orderBy(message.createdAt.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
 
-//     전체 레코드 수 계산
+//    전체 레코드 수 계산
     long total = queryFactory.select(message.count())
             .from(message)
             .join(message.chatParticipation, chatpart)
