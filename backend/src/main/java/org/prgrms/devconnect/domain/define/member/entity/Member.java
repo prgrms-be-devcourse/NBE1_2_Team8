@@ -1,6 +1,5 @@
 package org.prgrms.devconnect.domain.define.member.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberUpdateRequestDto;
 import org.prgrms.devconnect.domain.define.Timestamp;
-import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.domain.define.member.entity.constant.Interest;
 
 import java.util.ArrayList;
