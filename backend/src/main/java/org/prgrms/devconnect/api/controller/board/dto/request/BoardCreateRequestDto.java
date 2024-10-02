@@ -17,7 +17,6 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
 public record BoardCreateRequestDto(
