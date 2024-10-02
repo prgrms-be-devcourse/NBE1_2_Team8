@@ -45,13 +45,11 @@ public class ChattingControllor {
 
   @GetMapping("/rooms/{roomId}/messages")
   public ResponseEntity<MessageFullResponse> getMessages(
-          @PathVariable Long roomId,
+          @PathVariable("roomId") Long roomId,
           @PageableDefault(size = 20) Pageable pageable) {
 
     // 서비스 레이어에서 메시지를 조회
     MessageFullResponse messages = chattingQueryService.getAllMessagebyRoomId(roomId, pageable);
     return ResponseEntity.status(HttpStatus.OK).body(messages);
   }
-
-
 }
