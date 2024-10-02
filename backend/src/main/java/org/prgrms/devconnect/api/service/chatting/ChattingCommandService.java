@@ -2,6 +2,7 @@ package org.prgrms.devconnect.api.service.chatting;
 
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devconnect.api.controller.chatting.dto.request.MessageRequest;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatPartResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
@@ -58,13 +59,14 @@ public class ChattingCommandService {
   }
 
   // 메세지를 저장하는 메서드
-  public void sendMessage(Long chatpartId , String content){
-    ChatParticipation chatParticipation = chatParticipationRepository.findById(chatpartId)
+  public void sendMessage(MessageRequest messageRequest){
+
+    ChatParticipation chatParticipation = chatParticipationRepository.findById(messageRequest.chatpartId())
             .orElseThrow(() -> new ChattingException(ExceptionCode.NOT_FOUND_CHATPART));
 
     Message message = Message.builder()
             .chatParticipation(chatParticipation)
-            .content(content)
+            .content(messageRequest.content())
             .build();
 
     messageRepository.save(message);
