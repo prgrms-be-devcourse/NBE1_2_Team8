@@ -10,8 +10,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.domain.define.Timestamp;
@@ -27,9 +30,6 @@ public class Comment extends Timestamp {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long commentId;
 
-  @Column(length = 500)
-  private String content;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
@@ -39,9 +39,25 @@ public class Comment extends Timestamp {
   private Board board;
 
   @ManyToOne
-  @JoinColumn(name = "parent_id", nullable = false)
+  @JoinColumn(name = "parent_id", nullable = true)
   private Comment parent;
 
+  @Column(length = 500)
+  private String content;
+
   @OneToMany(mappedBy = "parent")
-  private List<Comment> children;
+  private List<Comment> children= new ArrayList<>();
+
+  @Builder
+  public Comment(Member member,Board board, Comment parent,String content) {
+    this.member = member;
+    this.board = board;
+    this.parent = parent;
+    this.content = content;
+  }
+
+  public void addChildComment(Comment comment){
+    children.add(comment);
+    comment.parent = this;
+  }
 }

@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.domain.define.CreateTimestamp;
@@ -33,6 +34,13 @@ public class Message extends CreateTimestamp {
   @JoinColumn(name = "chat_part_id", nullable = false)
   @JsonBackReference
   private ChatParticipation chatParticipation;
+
+
+  @Builder
+  public Message(String content, ChatParticipation chatParticipation) {
+    this.content = content;
+    this.chatParticipation = chatParticipation;
+  }
 
   // 연관관계 편의 메서드
   public void setChatParticipation(ChatParticipation chatParticipation) {

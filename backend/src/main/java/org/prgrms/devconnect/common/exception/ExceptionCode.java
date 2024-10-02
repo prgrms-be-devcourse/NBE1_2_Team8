@@ -12,6 +12,7 @@ public enum ExceptionCode {
 
   //Board Error
   NOT_FOUND_BOARD(404, "존재하지 않는 게시물입니다."),
+  ALREADY_CLOSED_BOARD(400,"마감된 게시물입니다."),
 
   //BoardTechStack Error
   NOT_FOUND_BOARD_TECH_STACK(404, "존재하지 않는 테크스택입니다."),
@@ -29,6 +30,13 @@ public enum ExceptionCode {
   NOT_FOUND_MEMBER(404, "존재하지 않는 멤버입니다."),
   DUPLICATED_MEMBER_EMAIL(400, "이미 존재하는 이메일입니다."),
   INVALID_PASSWORD(400, "일치하지 않는 패스워드입니다."),
+
+  //CHATTINGROOM ERROR
+  NOT_FOUND_CHATROOM(404, "존재하지 않는 채팅방 입니다"),
+  CHATROOM_ALREADY_INACTIVE(400, "채팅방은 이미 INACTIVE 상태입니다"),
+
+  //CHATPART ERROR
+  NOT_FOUND_CHATPART(404, "채팅에 참여하지 않았습니다"),
 
   //TECH_STACK ERROR
   NOT_FOUND_TECH_STACK(404, "존재하지 않는 기술 스택입니다.");

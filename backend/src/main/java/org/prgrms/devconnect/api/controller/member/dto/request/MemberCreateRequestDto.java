@@ -10,10 +10,12 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import java.util.List;
+import lombok.Builder;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
 import org.prgrms.devconnect.domain.define.member.entity.constant.Interest;
 
+@Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MemberCreateRequestDto(
 

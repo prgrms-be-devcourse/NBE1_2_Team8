@@ -25,12 +25,18 @@ public class MemberQueryService {
   }
 
   public MemberResponseDto getMember(Long memberId) {
-    Member member = getMemberByIdOrThrow(memberId);
+    Member member = getMemberByIdWithTechStackOrThrow(memberId);
     return MemberResponseDto.from(member);
   }
 
-  public Member getMemberByIdOrThrow(Long memberId) {
-    return memberRepository.findByMemberId(memberId).orElseThrow(
+  public Member getMemberByIdWithTechStackOrThrow(Long memberId) {
+    return memberRepository.findByMemberIdWithTechStack(memberId).orElseThrow(
+            () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
+    );
+  }
+
+  public Member getMemberByIdOrThrow(Long memberId){
+    return memberRepository.findById(memberId).orElseThrow(
             () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
     );
   }

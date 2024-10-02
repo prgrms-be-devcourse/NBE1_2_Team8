@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.domain.define.CreateTimestamp;
@@ -39,4 +40,11 @@ public class Alarm extends CreateTimestamp {
   @Column(name = "is_read")
   private boolean isRead;
 
+  @Builder
+  public Alarm(Member member, String alertText, String relatedUrl, boolean isRead) {
+    this.member = member;
+    this.alertText = alertText;
+    this.relatedUrl = relatedUrl;
+    this.isRead = isRead;
+  }
 }
