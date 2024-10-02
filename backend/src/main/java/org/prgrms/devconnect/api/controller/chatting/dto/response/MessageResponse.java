@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public record MessageResponse(
         Long messageId,
         Long senderId,
+        String nickname,
         String content,
         LocalDateTime createdAt
 ) {
