@@ -1,6 +1,8 @@
 package org.prgrms.devconnect.api.service.alarm;
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devconnect.common.exception.ExceptionCode;
+import org.prgrms.devconnect.common.exception.alarm.AlarmException;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -27,5 +29,14 @@ public class AlarmCommandService {
             .relatedUrl(mainPage)
             .build();
     alarmRepository.save(alarm);
+  }
+
+  public Void deleteAlarmByAlarmId(Long alarmId) {
+    try {
+      alarmRepository.deleteById(alarmId);
+      return null;
+    } catch (IllegalArgumentException e) {
+      throw new AlarmException(ExceptionCode.NOT_FOUND_ALARM);
+    }
   }
 }
