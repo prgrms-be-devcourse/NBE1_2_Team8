@@ -56,7 +56,7 @@ class AlarmCommandServiceTest {
   @DisplayName("알림 단일 삭제")
   void deleteAlarm() {
 
-    doNothing().when(alarmRepository).deleteById(any(Long.class));
+    doNothing().when(alarmRepository).deleteById(anyLong());
 
     alarmCommandService.deleteAlarmByAlarmIdAndMemberId(anyLong(), anyLong());
 
@@ -66,9 +66,9 @@ class AlarmCommandServiceTest {
   @Test
   @DisplayName("알림 단일 삭제시 존재하지 않은 알림(혹은 알림은 존재하지만 멤버가 다른 경우)의 예외 처리 테스트")
   void deleteAlarmWhenNotExistAlarmThrowException() {
-    doThrow(new IllegalArgumentException()).when(alarmRepository).deleteById(any(Long.class));
+    doThrow(new IllegalArgumentException()).when(alarmRepository).deleteById(anyLong());
 
-    Assertions.assertThatThrownBy(() -> alarmCommandService.deleteAlarmByAlarmIdAndMemberId(any(Long.class)))
+    Assertions.assertThatThrownBy(() -> alarmCommandService.deleteAlarmByAlarmIdAndMemberId(anyLong(), anyLong()))
             .isInstanceOf(AlarmException.class);
 
     verify(alarmRepository, times(0)).delete(any(Alarm.class));
