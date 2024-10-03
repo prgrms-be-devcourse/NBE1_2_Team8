@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.api.service.alarm;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.alarm.AlarmException;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlarmCommandService {
 
   private final AlarmRepository alarmRepository;
+  private final AlarmQueryService alarmQueryService;
 
   public void createWelcomeAlarmWhenSignIn(Member member) {
 
@@ -31,12 +33,12 @@ public class AlarmCommandService {
     alarmRepository.save(alarm);
   }
 
-  public Void deleteAlarmByAlarmIdAndMemberId(Long memberId, Long alarmId) {
-    try {
-      alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId,memberId);
-      return null;
-    } catch (IllegalArgumentException e) {
+  public Void deleteAlarmByAlarmIdAndMemberId(Long alarmId, Long memberId) {
+      Optional<Alarm> alarm = alarmQueryService.getAlarmByAlarmId(alarmId);
+      if (alarm.isPresent()) {
+        alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId, memberId);
+        return null;
+      }
       throw new AlarmException(ExceptionCode.NOT_FOUND_ALARM);
-    }
   }
 }
