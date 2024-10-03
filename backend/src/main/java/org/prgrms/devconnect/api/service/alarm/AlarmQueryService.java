@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.api.service.alarm;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.alarm.dto.response.AlarmsGetResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
@@ -25,5 +26,9 @@ public class AlarmQueryService {
     List<Alarm> alarms = alarmRepository.findAllByMember(member);
 
     return AlarmsGetResponse.from(alarms);
+  }
+
+  public Optional<Alarm> getAlarmByAlarmId(Long alarmId) {
+    return alarmRepository.findById(alarmId);
   }
 }
