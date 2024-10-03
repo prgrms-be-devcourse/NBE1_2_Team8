@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.api.service.alarm;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -48,29 +49,26 @@ class AlarmCommandServiceTest {
     when(memberCommandService.createMember(memberCreateRequestDto)).thenReturn(member);
     alarmCommandService.createWelcomeAlarmWhenSignIn(member);
 
-
     verify(alarmCommandService, times(1)).createWelcomeAlarmWhenSignIn(member);
   }
 
   @Test
   @DisplayName("알림 단일 삭제")
   void deleteAlarm() {
-    Alarm alarm = mock(Alarm.class);
 
-    when(alarm.getAlarmId()).thenReturn(1L);
     doNothing().when(alarmRepository).deleteById(any(Long.class));
 
-    alarmCommandService.deleteAlarmByAlarmId(alarm.getAlarmId());
+    alarmCommandService.deleteAlarmByAlarmIdAndMemberId(anyLong(), anyLong());
 
     verify(alarmRepository, times(1)).deleteById(any());
   }
 
   @Test
-  @DisplayName("알림 단일 삭제시 존재하지 않은 알림의 예외 처리 테스트")
+  @DisplayName("알림 단일 삭제시 존재하지 않은 알림(혹은 알림은 존재하지만 멤버가 다른 경우)의 예외 처리 테스트")
   void deleteAlarmWhenNotExistAlarmThrowException() {
     doThrow(new IllegalArgumentException()).when(alarmRepository).deleteById(any(Long.class));
 
-    Assertions.assertThatThrownBy(() -> alarmCommandService.deleteAlarmByAlarmId(any(Long.class)))
+    Assertions.assertThatThrownBy(() -> alarmCommandService.deleteAlarmByAlarmIdAndMemberId(any(Long.class)))
             .isInstanceOf(AlarmException.class);
 
     verify(alarmRepository, times(0)).delete(any(Alarm.class));
