@@ -31,9 +31,9 @@ public class AlarmCommandService {
     alarmRepository.save(alarm);
   }
 
-  public Void deleteAlarmByAlarmId(Long alarmId) {
+  public Void deleteAlarmByAlarmIdAndMemberId(Long memberId, Long alarmId) {
     try {
-      alarmRepository.deleteById(alarmId);
+      alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId,memberId);
       return null;
     } catch (IllegalArgumentException e) {
       throw new AlarmException(ExceptionCode.NOT_FOUND_ALARM);
