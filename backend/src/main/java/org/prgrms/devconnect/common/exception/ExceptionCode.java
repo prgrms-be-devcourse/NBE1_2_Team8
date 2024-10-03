@@ -39,7 +39,11 @@ public enum ExceptionCode {
   NOT_FOUND_CHATPART(404, "채팅에 참여하지 않았습니다"),
 
   //TECH_STACK ERROR
-  NOT_FOUND_TECH_STACK(404, "존재하지 않는 기술 스택입니다.");
+  NOT_FOUND_TECH_STACK(404, "존재하지 않는 기술 스택입니다."),
+
+  // INTEREST ERROR
+  DUPLICATED_INTEREST_BOARD(400, "이미 등록된 관심 게시글입니다."),
+  NOT_FOUND_INTEREST_BOARD(404, "존재하지 않는 관심 게시글입니다.");
 
   private final int code;
   private final String message;
