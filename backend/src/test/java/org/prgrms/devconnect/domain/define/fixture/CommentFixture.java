@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.domain.define.fixture;
 
 import org.prgrms.devconnect.api.controller.comment.dto.request.CommentCreateRequestDto;
+import org.prgrms.devconnect.api.controller.comment.dto.request.CommentUpdateRequestDto;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.Comment;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -25,5 +26,9 @@ public class CommentFixture {
             .parentId(1L)
             .content("어떤 프로젝트인가요?")
             .build();
+  }
+
+  public static CommentUpdateRequestDto createCommentUpdateRequestDto(){
+    return CommentUpdateRequestDto.builder().content("댓글 내용 수정 테스트").build();
   }
 }
