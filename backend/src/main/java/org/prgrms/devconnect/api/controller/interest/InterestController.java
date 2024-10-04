@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.response.BoardInfoResponseDto;
 import org.prgrms.devconnect.api.controller.interest.dto.request.InterestBoardRequestDto;
+import org.prgrms.devconnect.api.controller.interest.dto.response.InterestResponseDto;
 import org.prgrms.devconnect.api.service.interest.InterestCommandService;
 import org.prgrms.devconnect.api.service.interest.InterestQueryService;
 import org.springframework.http.HttpStatus;
@@ -26,9 +27,9 @@ public class InterestController {
   private final InterestCommandService interestCommandService;
 
   @GetMapping("/{memberId}")
-  public ResponseEntity<List<BoardInfoResponseDto>> getInterestBoards(@PathVariable Long memberId) {
-    List<BoardInfoResponseDto> interestBoards = interestQueryService.getInterestBoardsByMemberId(memberId);
-    return ResponseEntity.ok(interestBoards);
+  public ResponseEntity<InterestResponseDto> getInterestBoards(@PathVariable Long memberId) {
+    InterestResponseDto responseDto = interestQueryService.getInterestsByMemberId(memberId);
+    return ResponseEntity.ok(responseDto);
   }
 
   @PostMapping("/boards")
