@@ -30,7 +30,7 @@ public class AlarmQueryService {
   }
 
   public Alarm getAlarmByAlarmIdAndMemberIdOrThrow (Long alarmId, Long memberId) {
-    return alarmRepository.findByAlarmIdAndMemberId(alarmId,memberId).orElseThrow(
+    return alarmRepository.findByAlarmIdAndMemberMemberId(alarmId,memberId).orElseThrow(
             () -> new AlarmException(ExceptionCode.NOT_FOUND_ALARM)
     );
   }
