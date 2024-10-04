@@ -5,17 +5,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.prgrms.devconnect.api.controller.comment.dto.response.CommentResponseDto;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.comment.CommentException;
+import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.Comment;
 import org.prgrms.devconnect.domain.define.board.repository.CommentRepository;
+import org.prgrms.devconnect.domain.define.fixture.CommentFixture;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -27,11 +33,19 @@ public class CommentQueryServiceTest {
   @Mock
   private CommentRepository commentRepository;
 
+  @Mock
+  private Comment comment;
+
+  @Mock
+  private Member member;
+
+  @Mock
+  private Board board;
+
   @Test
   void 댓글ID로_댓글_조회_성공(){
     //given
     Long commentId = 1L;
-    Comment comment =mock(Comment.class);
     when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
 
     //when
@@ -39,7 +53,7 @@ public class CommentQueryServiceTest {
 
     //then
     assertNotNull(result);
-    verify(commentRepository,times(1)).findById(commentId);
+    verify(commentRepository).findById(commentId);
   }
 
   @Test
@@ -54,26 +68,32 @@ public class CommentQueryServiceTest {
     });
 
     assertEquals(ExceptionCode.NOT_FOUND_COMMENT, exception.getExceptionCode());
-    verify(commentRepository,times(1)).findById(commentId);
+    verify(commentRepository).findById(commentId);
   }
 
   @Test
-  void 게시판ID로_댓글_페이징_조회_성공(){
+  void 게시물_ID로_댓글_페이징_조회_성공(){
     //given
     Long boardId=1L;
-    Pageable pageable = Pageable.ofSize(10);
-    Comment comment =mock(Comment.class);
-    Page<Comment> comments = new PageImpl<>(Collections.singletonList(comment), pageable, 1);
-    when(commentQueryService.findAllByBoardId(boardId, pageable)).thenReturn(comments);
+    Pageable pageable=Pageable.ofSize(10);
+    List<Comment> commentList = comments();
+    Page<Comment> comments = new PageImpl<>(commentList, pageable, 1);
 
+    when(commentRepository.findAllByBoardId(boardId,pageable)).thenReturn(comments);
     //when
-    Page<Comment>result=commentQueryService.findAllByBoardId(boardId, pageable);
+    Page<CommentResponseDto>result=commentQueryService.getCommentsByBoardId(boardId,pageable);
 
     //then
-    assertNotNull(result);
-    assertEquals(1,result.getTotalElements());
-    verify(commentRepository,times(1)).findAllByBoardId(boardId, pageable);
+    verify(commentRepository).findAllByBoardId(boardId,pageable);
+    assertThat(result.getTotalElements()).isEqualTo(commentList.size());
   }
 
+  private List<Comment> comments(){
+    List<Comment> comments = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      comments.add(CommentFixture.createComment(member, board, "댓글 테스트"));
+    }
+    return comments;
+  }
 
   }

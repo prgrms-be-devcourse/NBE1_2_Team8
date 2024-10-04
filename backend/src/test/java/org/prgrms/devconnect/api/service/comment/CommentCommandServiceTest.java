@@ -60,9 +60,9 @@ public class CommentCommandServiceTest {
     commentCommandService.createComment(commentCreateRequestDto);
 
     //then
-    verify(memberQueryService,times(1)).getMemberByIdOrThrow(any(Long.class));
-    verify(boardQueryService,times(1)).getBoardByIdOrThrow(any(Long.class));
-    verify(commentRepository, times(1)).save(any(Comment.class));
+    verify(memberQueryService).getMemberByIdOrThrow(any(Long.class));
+    verify(boardQueryService).getBoardByIdOrThrow(any(Long.class));
+    verify(commentRepository).save(any(Comment.class));
   }
 
   @Test
@@ -76,7 +76,6 @@ public class CommentCommandServiceTest {
     when(memberQueryService.getMemberByIdOrThrow(any())).thenReturn(member);
     when(boardQueryService.getBoardByIdOrThrow(any())).thenReturn(board);
     when(commentQueryService.getCommentByIdOrThrow(any())).thenReturn(parentComment);
-    when(parentComment.getParent()).thenReturn(mock(Comment.class));
 
     //when
     CommentException commentException=assertThrows(CommentException.class,()->{
@@ -85,43 +84,7 @@ public class CommentCommandServiceTest {
 
     //then
     assertEquals(ExceptionCode.INVALID_PARENT_COMMENT,commentException.getExceptionCode());
-    verify(commentQueryService,times(1)).getCommentByIdOrThrow(any());
+    verify(commentQueryService).getCommentByIdOrThrow(any());
     verify(commentRepository,never()).save(any(Comment.class));
-  }
-
-  @Test
-  void 게시물_ID로_댓글_페이징_조회_성공(){
-    //given
-    Long boardId=1L;
-    Pageable pageable=Pageable.ofSize(10);
-    Member member=mock(Member.class);
-    Comment comment=mock(Comment.class);
-    Comment parentComment=mock(Comment.class);
-
-    when(comment.getMember()).thenReturn(member);
-    when(comment.getParent()).thenReturn(parentComment);
-    when(member.getMemberId()).thenReturn(1L);
-    when(member.getNickname()).thenReturn("사용자");
-    when(comment.getCommentId()).thenReturn(1L);
-    when(comment.getContent()).thenReturn("테스트용 댓글");
-    when(comment.getUpdatedAt()).thenReturn(LocalDateTime.now());
-
-    Page<Comment> comments = new PageImpl<>(Collections.singletonList(comment), pageable, 1);
-
-    when(boardQueryService.getBoardByIdOrThrow(boardId)).thenReturn(mock(Board.class));
-    when(commentQueryService.findAllByBoardId(boardId,pageable)).thenReturn(comments);
-
-    //when
-    Page<CommentResponseDto>result=commentCommandService.getCommentsByBoardId(boardId,pageable);
-
-    //then
-    assertNotNull(result);
-    assertEquals(1, result.getTotalElements());
-    assertEquals(1L, result.getContent().get(0).commentId());
-    assertEquals("사용자", result.getContent().get(0).author());
-    assertEquals("테스트용 댓글", result.getContent().get(0).content());
-
-    verify(boardQueryService,times(1)).getBoardByIdOrThrow(boardId);
-    verify(commentQueryService,times(1)).findAllByBoardId(boardId,pageable);
   }
 }
