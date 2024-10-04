@@ -9,6 +9,7 @@ public enum ExceptionCode {
 
   //Alarm Error
   NOT_FOUND_ALARM(404, "존재하지 않는 알람입니다."),
+  EMPTY_ALARMS(400, "알림이 비어있습니다."),
 
   //Board Error
   NOT_FOUND_BOARD(404, "존재하지 않는 게시물입니다."),
