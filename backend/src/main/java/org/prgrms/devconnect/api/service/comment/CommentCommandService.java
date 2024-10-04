@@ -32,31 +32,12 @@ public class CommentCommandService {
     Comment parentComment = null;
     if (commentCreateRequestDto.parentId() != null) {
       parentComment = commentQueryService.getCommentByIdOrThrow(commentCreateRequestDto.parentId());
-
-      //최상위 댓글은 parent필드가 null이어야함.
-      if(parentComment.getParent()!=null){
+      if(!parentComment.isRootComment()){
         throw new CommentException(ExceptionCode.INVALID_PARENT_COMMENT);
       }
     }
 
     Comment comment = commentCreateRequestDto.toEntity(member, board, parentComment);
     commentRepository.save(comment);
-  }
-
-  public Page<CommentResponseDto> getCommentsByBoardId(Long boardId, Pageable pageable) {
-    boardQueryService.getBoardByIdOrThrow(boardId);
-    Page<Comment> comments  =commentQueryService.findAllByBoardId(boardId,pageable);
-    return comments.map(comment-> {
-              Member member=comment.getMember();
-              Comment parent= comment.getParent();
-              return CommentResponseDto.builder()
-                      .commentId(comment.getCommentId())
-                      .memberId(member.getMemberId())
-                      .author(member.getNickname())
-                      .content(comment.getContent())
-                      .updatedAt(comment.getUpdatedAt())
-                      .parentId(parent != null ? parent.getCommentId() : null)
-                      .build();
-            });
   }
 }
