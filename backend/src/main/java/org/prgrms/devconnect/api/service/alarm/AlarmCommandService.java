@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlarmCommandService {
 
   private final AlarmRepository alarmRepository;
+  private final AlarmQueryService alarmQueryService;
 
   public void createWelcomeAlarmWhenSignIn(Member member) {
 
@@ -27,5 +28,11 @@ public class AlarmCommandService {
             .relatedUrl(mainPage)
             .build();
     alarmRepository.save(alarm);
+  }
+
+  public Void deleteAlarmByAlarmIdAndMemberId(Long alarmId, Long memberId) {
+    alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(alarmId, memberId);
+    alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId, memberId);
+    return null;
   }
 }
