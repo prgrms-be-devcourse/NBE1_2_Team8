@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.prgrms.devconnect.api.controller.comment.dto.request.CommentCreateRequestDto;
-import org.prgrms.devconnect.api.controller.comment.dto.response.CommentResponseDto;
+import org.prgrms.devconnect.api.controller.comment.dto.request.CommentUpdateRequestDto;
 import org.prgrms.devconnect.api.service.board.BoardQueryService;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
@@ -16,12 +16,6 @@ import org.prgrms.devconnect.domain.define.board.entity.Comment;
 import org.prgrms.devconnect.domain.define.board.repository.CommentRepository;
 import org.prgrms.devconnect.domain.define.fixture.CommentFixture;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -87,4 +81,57 @@ public class CommentCommandServiceTest {
     verify(commentQueryService).getCommentByIdOrThrow(any());
     verify(commentRepository,never()).save(any(Comment.class));
   }
+
+  @Test
+  void 댓글_수정_성공() {
+    // given
+    Long commentId = 1L;
+    CommentUpdateRequestDto commentUpdateRequestDto = CommentFixture.createCommentUpdateRequestDto();
+    Comment comment = mock(Comment.class);
+
+    when(commentQueryService.getCommentByIdOrThrow(commentId)).thenReturn(comment);
+
+    // when
+    commentCommandService.updateComment(commentId, commentUpdateRequestDto);
+
+    // then
+    verify(commentQueryService).getCommentByIdOrThrow(commentId);
+    verify(comment).updateFromDto(commentUpdateRequestDto);
+  }
+
+  @Test
+  void 존재하지_않는_댓글_ID가_주어지면_예외를_발생시킨다(){
+    //given
+    Long commentId = 100L;
+    CommentUpdateRequestDto commentUpdateRequestDto = CommentFixture.createCommentUpdateRequestDto();
+
+    when(commentQueryService.getCommentByIdOrThrow(commentId))
+            .thenThrow(new CommentException(ExceptionCode.NOT_FOUND_COMMENT));
+
+    //when
+    CommentException commentException=assertThrows(CommentException.class,()->{
+      commentCommandService.updateComment(commentId,commentUpdateRequestDto);
+    });
+    //then
+    assertEquals(ExceptionCode.NOT_FOUND_COMMENT,commentException.getExceptionCode());
+    verify(commentQueryService).getCommentByIdOrThrow(commentId);
+    verify(commentRepository,never()).save(any(Comment.class));
+  }
+
+  @Test
+  void 댓글_삭제_성공() {
+    // given
+    Long commentId = 1L;
+    Comment comment = mock(Comment.class);
+
+    when(commentQueryService.getCommentByIdOrThrow(commentId)).thenReturn(comment);
+
+    // when
+    commentCommandService.deleteComment(commentId);
+
+    // then
+    verify(commentQueryService).getCommentByIdOrThrow(commentId);
+    verify(commentRepository).delete(comment);
+  }
 }
+
