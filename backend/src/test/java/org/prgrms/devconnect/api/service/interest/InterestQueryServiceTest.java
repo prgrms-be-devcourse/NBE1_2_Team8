@@ -24,6 +24,7 @@ import org.prgrms.devconnect.common.exception.member.MemberException;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.interest.entity.InterestBoard;
 import org.prgrms.devconnect.domain.define.interest.repository.InterestBoardRepository;
+import org.prgrms.devconnect.domain.define.interest.repository.InterestJobPostRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +32,9 @@ class InterestQueryServiceTest {
 
   @Mock
   private InterestBoardRepository interestBoardRepository;
+
+  @Mock
+  private InterestJobPostRepository interestJobPostRepository;
 
   @Mock
   private MemberQueryService memberQueryService;
@@ -57,10 +61,11 @@ class InterestQueryServiceTest {
     when(memberQueryService.getMemberByIdOrThrow(validMemberId)).thenReturn(member);
 
     // when
-    interestQueryService.getInterestBoardsByMemberId(validMemberId);
+    interestQueryService.getInterestsByMemberId(validMemberId);
 
     // then
     verify(interestBoardRepository, times(1)).findAllByMemberWithBoard(member);
+    verify(interestJobPostRepository, times(1)).findAllByMemberWithJobPost(member);
   }
 
   @DisplayName("유효하지않는_멤버아이디가_주어지면_에러가_발생한다")
@@ -74,9 +79,12 @@ class InterestQueryServiceTest {
     );
     // when & then
     assertThatThrownBy(
-        () -> interestQueryService.getInterestBoardsByMemberId(invalidMemberId))
+        () -> interestQueryService.getInterestsByMemberId(invalidMemberId))
         .isInstanceOf(MemberException.class)
         .hasMessage(ExceptionCode.NOT_FOUND_MEMBER.getMessage());
+
+    verify(interestBoardRepository, times(0)).findAllByMemberWithBoard(member);
+    verify(interestJobPostRepository, times(0)).findAllByMemberWithJobPost(member);
   }
 
   @DisplayName("유효한_멤버와_게시글이_주어지면_관심게시글을_반환한다")
