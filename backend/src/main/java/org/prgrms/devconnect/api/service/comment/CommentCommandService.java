@@ -3,7 +3,7 @@ package org.prgrms.devconnect.api.service.comment;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.comment.dto.request.CommentCreateRequestDto;
-import org.prgrms.devconnect.api.controller.comment.dto.response.CommentResponseDto;
+import org.prgrms.devconnect.api.controller.comment.dto.request.CommentUpdateRequestDto;
 import org.prgrms.devconnect.api.service.board.BoardQueryService;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
@@ -39,5 +39,16 @@ public class CommentCommandService {
 
     Comment comment = commentCreateRequestDto.toEntity(member, board, parentComment);
     commentRepository.save(comment);
+  }
+
+  public void updateComment(Long commentId,CommentUpdateRequestDto commentUpdateRequestDto){
+    Comment comment = commentQueryService.getCommentByIdOrThrow(commentId);
+    comment.updateFromDto(commentUpdateRequestDto);
+    commentRepository.save(comment);
+  }
+
+  public void deleteComment(Long commentId){
+    Comment comment = commentQueryService.getCommentByIdOrThrow(commentId);
+    commentRepository.delete(comment);
   }
 }

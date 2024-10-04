@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.prgrms.devconnect.api.controller.comment.dto.request.CommentUpdateRequestDto;
 import org.prgrms.devconnect.api.controller.comment.dto.response.CommentResponseDto;
 import org.prgrms.devconnect.domain.define.Timestamp;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -56,14 +57,9 @@ public class Comment extends Timestamp {
   public boolean isRootComment(){
     return parent == null;
   }
-  public CommentResponseDto toResponseDto() {
-    return CommentResponseDto.builder()
-            .commentId(commentId)
-            .memberId(member.getMemberId())
-            .author(member.getNickname())
-            .content(content)
-            .updatedAt(getUpdatedAt())
-            .parentId(parent != null ? parent.getCommentId() : null)
-            .build();
+
+  public void updateFromDto(CommentUpdateRequestDto dto) {
+    if(!dto.content().equals(this.content))
+    this.content= dto.content();
   }
 }
