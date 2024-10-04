@@ -30,15 +30,15 @@ public class AlarmCommandService {
     alarmRepository.save(alarm);
   }
 
+  public Void deleteAlarmByAlarmIdAndMemberId(Long alarmId, Long memberId) {
+    alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(alarmId, memberId);
+    alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId, memberId);
+    return null;
+  }
+
   public Void deleteAlarmsByMemberId(Long memberId) {
     alarmQueryService.getAlarmsByMemberIdOrThrow(memberId);
     alarmRepository.deleteAllByMemberMemberId(memberId);
     return null;
   }
-
-    public Void deleteAlarmByAlarmIdAndMemberId(Long alarmId, Long memberId) {
-      alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(alarmId, memberId);
-      alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId, memberId);
-      return null;
-    }
-  }
+}
