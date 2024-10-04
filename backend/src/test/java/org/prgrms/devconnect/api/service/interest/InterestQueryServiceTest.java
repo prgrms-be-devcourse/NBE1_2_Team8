@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.prgrms.devconnect.domain.define.fixture.BoardFixture.createBoard;
 import static org.prgrms.devconnect.domain.define.fixture.InterestFixture.createInterestBoard;
+import static org.prgrms.devconnect.domain.define.fixture.JobPostFixture.createJobPost;
 import static org.prgrms.devconnect.domain.define.fixture.MemberFixture.createMember;
 
 import java.util.Optional;
@@ -25,6 +26,7 @@ import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.interest.entity.InterestBoard;
 import org.prgrms.devconnect.domain.define.interest.repository.InterestBoardRepository;
 import org.prgrms.devconnect.domain.define.interest.repository.InterestJobPostRepository;
+import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,12 +46,14 @@ class InterestQueryServiceTest {
 
   private Member member;
   private Board board;
+  private JobPost jobPost;
   private InterestBoard interestBoard;
 
   @BeforeEach
   void setup() {
     member = createMember("test");
     board = createBoard(member);
+    jobPost = createJobPost();
     interestBoard = createInterestBoard(member, board);
   }
 
@@ -143,5 +147,30 @@ class InterestQueryServiceTest {
         () -> interestQueryService.validateDuplicatedInterestBoard(member, board))
         .isInstanceOf(InterestException.class)
         .hasMessage(ExceptionCode.DUPLICATED_INTEREST_BOARD.getMessage());
+  }
+
+  @DisplayName("중복_관심채용공고가_없으면_에러가_발생하지_않는다")
+  @Test
+  void 중복_관심채용공고가_없으면_에러가_발생하지_않는다() {
+    // given
+    when(interestJobPostRepository.existsByMemberAndJobPost(member, jobPost))
+        .thenReturn(false);
+    // when & then
+    assertThatCode(
+        () -> interestQueryService.validateDuplicatedInterestJobPost(member, jobPost)
+    ).doesNotThrowAnyException();
+  }
+
+  @DisplayName("중복_관심채용공고가_있으면_에러가_발생한다")
+  @Test
+  void 중복_관심채용공고가_있으면_에러가_발생한다() {
+    // given
+    when(interestJobPostRepository.existsByMemberAndJobPost(member, jobPost))
+        .thenReturn(true);
+    // when & then
+    assertThatThrownBy(
+        () -> interestQueryService.validateDuplicatedInterestJobPost(member, jobPost))
+        .isInstanceOf(InterestException.class)
+        .hasMessage(ExceptionCode.DUPLICATED_INTEREST_JOB_POST.getMessage());
   }
 }
