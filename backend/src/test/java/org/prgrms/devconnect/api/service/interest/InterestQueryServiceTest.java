@@ -9,9 +9,7 @@ import static org.prgrms.devconnect.domain.define.fixture.BoardFixture.createBoa
 import static org.prgrms.devconnect.domain.define.fixture.InterestFixture.createInterestBoard;
 import static org.prgrms.devconnect.domain.define.fixture.MemberFixture.createMember;
 
-import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.prgrms.devconnect.api.controller.board.dto.response.BoardInfoResponseDto;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.interest.InterestException;
@@ -86,14 +83,16 @@ class InterestQueryServiceTest {
   @Test
   void 유효한_멤버와_게시글이_주어지면_관심게시글을_반환한다() {
     // given
-    when(interestBoardRepository.findByMemberAndBoard(member, board)).thenReturn(
+    Long memberId = 1L;
+    Long boardId = 1L;
+    when(interestBoardRepository.findByMemberIdAndBoardId(memberId, boardId)).thenReturn(
         Optional.of(interestBoard));
     // when
-    InterestBoard findInterestBoard = interestQueryService.getInterestBoardByMemberAndBoardOrThrow(
-        member, board);
+    InterestBoard findInterestBoard = interestQueryService.getInterestBoardByMemberIdAndBoardIdOrThrow(
+        memberId, boardId);
 
     // then
-    verify(interestBoardRepository, times(1)).findByMemberAndBoard(member, board);
+    verify(interestBoardRepository, times(1)).findByMemberIdAndBoardId(memberId, boardId);
 
   }
 
@@ -101,11 +100,14 @@ class InterestQueryServiceTest {
   @Test
   void 유효하지않는_멤버와_게시글이_주어지면_에러가_발생한다() {
     // given
-    when(interestBoardRepository.findByMemberAndBoard(member, board)).thenReturn(
+    Long memberId = 1L;
+    Long boardId = 1L;
+
+    when(interestBoardRepository.findByMemberIdAndBoardId(memberId, boardId)).thenReturn(
         Optional.empty());
     // when & then
     assertThatThrownBy(
-        () -> interestQueryService.getInterestBoardByMemberAndBoardOrThrow(member, board))
+        () -> interestQueryService.getInterestBoardByMemberIdAndBoardIdOrThrow(memberId, boardId))
         .isInstanceOf(InterestException.class)
         .hasMessage(ExceptionCode.NOT_FOUND_INTEREST_BOARD.getMessage());
   }

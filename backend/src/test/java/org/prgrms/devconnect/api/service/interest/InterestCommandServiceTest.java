@@ -103,11 +103,8 @@ class InterestCommandServiceTest {
     Long validMemberId = 1L;
     Long validBoardId = 1L;
 
-    when(memberQueryService.getMemberByIdOrThrow(validMemberId))
-        .thenReturn(member);
-    when(boardQueryService.getBoardByIdOrThrow(validBoardId))
-        .thenReturn(board);
-    when(interestQueryService.getInterestBoardByMemberAndBoardOrThrow(member, board))
+    when(interestQueryService.getInterestBoardByMemberIdAndBoardIdOrThrow(validMemberId,
+        validBoardId))
         .thenReturn(interestBoard);
     // when
     interestCommandService.removeInterestBoard(validMemberId, validBoardId);
@@ -124,12 +121,9 @@ class InterestCommandServiceTest {
     Long validMemberId = 1L;
     Long validBoardId = 1L;
 
-    when(memberQueryService.getMemberByIdOrThrow(validMemberId))
-        .thenReturn(member);
-    when(boardQueryService.getBoardByIdOrThrow(validBoardId))
-        .thenReturn(board);
     doThrow(new InterestException(ExceptionCode.NOT_FOUND_INTEREST_BOARD))
-        .when(interestQueryService).getInterestBoardByMemberAndBoardOrThrow(member, board);
+        .when(interestQueryService)
+        .getInterestBoardByMemberIdAndBoardIdOrThrow(validMemberId, validBoardId);
     // when & then
     assertThatThrownBy(
         () -> interestCommandService.removeInterestBoard(validMemberId, validBoardId))
