@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJpaAuditing
+@EnableScheduling // 스케줄러 활성화
 @EnableAspectJAutoProxy
-@EnableScheduling
 public class DevconnectApplication {
 
   public static void main(String[] args) {

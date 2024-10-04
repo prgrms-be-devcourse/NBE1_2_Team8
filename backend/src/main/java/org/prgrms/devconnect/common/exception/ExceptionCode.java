@@ -20,6 +20,7 @@ public enum ExceptionCode {
 
   //Comment Error
   NOT_FOUND_COMMENT(404, "존재하지 않는 댓글입니다."),
+  INVALID_PARENT_COMMENT(400, "대댓글은 최상위 댓글에만 작성할 수 있습니다."),
 
   //BugReport Error
   NOT_FOUND_BUG_REPORT(404, "존재하지 않는 버그리포트입니다."),
@@ -38,9 +39,16 @@ public enum ExceptionCode {
 
   //CHATPART ERROR
   NOT_FOUND_CHATPART(404, "채팅에 참여하지 않았습니다"),
+  ALREADY_JOINED_CHATROOM(400, "이미 참여한 채팅입니다"),
 
   //TECH_STACK ERROR
-  NOT_FOUND_TECH_STACK(404, "존재하지 않는 기술 스택입니다.");
+  NOT_FOUND_TECH_STACK(404, "존재하지 않는 기술 스택입니다."),
+
+  // INTEREST ERROR
+  DUPLICATED_INTEREST_BOARD(400, "이미 등록된 관심 게시글입니다."),
+  NOT_FOUND_INTEREST_BOARD(404, "존재하지 않는 관심 게시글입니다."),
+  DUPLICATED_INTEREST_JOB_POST(400, "이미 등록된 관심 채용 공고입니다."),
+  NOT_FOUND_INTEREST_JOB_POST(404, "존재하지 않는 관심 채용 공고입니다.");
 
   private final int code;
   private final String message;

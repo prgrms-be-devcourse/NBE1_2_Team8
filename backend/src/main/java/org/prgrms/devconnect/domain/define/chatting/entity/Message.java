@@ -27,13 +27,13 @@ public class Message extends CreateTimestamp {
   @Column(name = "message_id")
   private Long messageId;
 
-  @Column(name = "content", columnDefinition = "TEXT")
-  private String content;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chat_part_id", nullable = false)
   @JsonBackReference
   private ChatParticipation chatParticipation;
+
+  @Column(name = "content", columnDefinition = "TEXT")
+  private String content;
 
 
   @Builder

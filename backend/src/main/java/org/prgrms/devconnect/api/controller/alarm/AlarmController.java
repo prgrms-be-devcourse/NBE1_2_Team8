@@ -33,4 +33,10 @@ public class AlarmController {
     return ResponseEntity.status(NO_CONTENT)
             .body(alarmCommandService.deleteAlarmsByMemberId(memberId));
   }
+
+  @DeleteMapping("/{memberId}/{alarmId}")
+  public ResponseEntity<Void> deleteAlarm(@PathVariable Long memberId, @PathVariable Long alarmId) {
+    return ResponseEntity.status(NO_CONTENT)
+            .body(alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarmId, memberId));
+  }
 }

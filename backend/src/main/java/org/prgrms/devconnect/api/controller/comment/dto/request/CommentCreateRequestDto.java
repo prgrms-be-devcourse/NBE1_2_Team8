@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.api.controller.comment.dto;
+package org.prgrms.devconnect.api.controller.comment.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

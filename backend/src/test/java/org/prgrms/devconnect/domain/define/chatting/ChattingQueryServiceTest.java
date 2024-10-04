@@ -102,7 +102,7 @@ public class ChattingQueryServiceTest {
 
 
     //when
-    MessageFullResponse results = chattingQueryService.findAllMessagebyRoomId(sendchatpart.roomId(), PageRequest.of(0, 10));
+    MessageFullResponse results = chattingQueryService.getAllMessagebyRoomId(sendchatpart.roomId(), PageRequest.of(0, 10));
 
     System.out.println(results);
     for (MessageResponse messageResponse : results.messageList()) {

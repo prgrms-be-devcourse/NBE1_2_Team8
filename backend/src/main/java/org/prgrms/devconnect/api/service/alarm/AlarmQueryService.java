@@ -28,6 +28,13 @@ public class AlarmQueryService {
     if (alarms.isEmpty()) {
       throw new AlarmException(ExceptionCode.EMPTY_ALARMS);
     }
+    alarms.forEach(Alarm::updateAlarmStatusToRead);
     return AlarmsGetResponse.from(alarms);
+  }
+
+  public Alarm getAlarmByAlarmIdAndMemberIdOrThrow (Long alarmId, Long memberId) {
+    return alarmRepository.findByAlarmIdAndMemberMemberId(alarmId,memberId).orElseThrow(
+            () -> new AlarmException(ExceptionCode.NOT_FOUND_ALARM)
+    );
   }
 }

@@ -38,7 +38,7 @@ public class Alarm extends CreateTimestamp {
   private String relatedUrl;
 
   @Column(name = "is_read")
-  private boolean isRead;
+  private boolean isRead = false;
 
   @Builder
   public Alarm(Member member, String alertText, String relatedUrl, boolean isRead) {
@@ -46,5 +46,8 @@ public class Alarm extends CreateTimestamp {
     this.alertText = alertText;
     this.relatedUrl = relatedUrl;
     this.isRead = isRead;
+  }
+  public void updateAlarmStatusToRead() {
+    this.isRead = true;
   }
 }

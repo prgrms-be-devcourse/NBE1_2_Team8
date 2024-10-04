@@ -5,8 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.chatting.dto.request.ChatRoomRequest;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatPartResponse;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatRoomListResponse;
+import org.prgrms.devconnect.api.controller.chatting.dto.response.MessageFullResponse;
 import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
 import org.prgrms.devconnect.api.service.chatting.ChattingQueryService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +37,19 @@ public class ChattingControllor {
     return ResponseEntity.status(HttpStatus.OK).body(allActivateChattingsByMemberId);
   }
 
-
-
   @PutMapping("/{chatroomId}")
   public ResponseEntity<Void> closeChattingRoom(@PathVariable("chatroomId") Long chatroomId){
     chattingCommandService.closeChattingRoom(chatroomId);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
+  @GetMapping("/rooms/{roomId}/messages")
+  public ResponseEntity<MessageFullResponse> getMessages(
+          @PathVariable("roomId") Long roomId,
+          @PageableDefault(size = 20) Pageable pageable) {
+
+    // 서비스 레이어에서 메시지를 조회
+    MessageFullResponse messages = chattingQueryService.getAllMessagebyRoomId(roomId, pageable);
+    return ResponseEntity.status(HttpStatus.OK).body(messages);
+  }
 }
