@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.api.service.comment;
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devconnect.api.controller.comment.dto.response.CommentResponseDto;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.comment.CommentException;
 import org.prgrms.devconnect.domain.define.board.entity.Comment;
@@ -24,5 +25,10 @@ public class CommentQueryService {
 
   public Page<Comment> findAllByBoardId(Long boardId, Pageable pageable){
     return commentRepository.findAllByBoardId(boardId,pageable);
+  }
+
+  public Page<CommentResponseDto> getCommentsByBoardId(Long boardId, Pageable pageable) {
+    Page<Comment> comments=findAllByBoardId(boardId,pageable);
+    return comments.map(comment-> comment.toResponseDto());
   }
 }
