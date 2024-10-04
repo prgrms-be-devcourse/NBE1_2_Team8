@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.domain.define.bugreport.entity.constant.BugType;
@@ -40,4 +41,23 @@ public class BugReport extends Timestamp {
 
   @Enumerated(value = EnumType.STRING)
   private BugType bugType;
+
+  @Builder
+  public BugReport(Member member, String relatedUrl, String content, BugType bugType) {
+    this.member = member;
+    this.relatedUrl = relatedUrl;
+    this.content = content;
+    this.bugType = bugType;
+  }
+
+  // 연관관계 매핑
+  public void setMember(Member member) {
+    this.member = member;
+  }
+
+  // 보고서 업데이트
+  public void updateReport(String content, BugType bugType){
+    this.content = content;
+    this.bugType = bugType;
+  }
 }
