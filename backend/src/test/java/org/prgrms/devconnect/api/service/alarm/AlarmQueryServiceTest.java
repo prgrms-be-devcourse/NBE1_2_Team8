@@ -55,7 +55,7 @@ class AlarmQueryServiceTest {
     doReturn(member).when(memberQueryService).getMemberByIdOrThrow(any(Long.class));
 
     //when
-    final AlarmsGetResponse response = alarmQueryService.getAlarmsByMemberId(member.getMemberId());
+    final AlarmsGetResponse response = alarmQueryService.getAlarmsByMemberIdOrThrow(member.getMemberId());
 
     //then
     assertThat(response.count()).isEqualTo(5);
