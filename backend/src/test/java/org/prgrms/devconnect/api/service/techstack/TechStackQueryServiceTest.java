@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.api.service.techstack;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.prgrms.devconnect.api.controller.techstack.dto.response.TechStackResponseDto;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.techstack.TechStackException;
 import org.prgrms.devconnect.domain.define.fixture.TechStackFixture;
@@ -90,6 +92,18 @@ class TechStackQueryServiceTest {
             () -> techStackQueryService.getTechStacksByIdsOrThrow(techStackIds)
         ).isInstanceOf(TechStackException.class)
         .hasMessage(ExceptionCode.NOT_FOUND_TECH_STACK.getMessage());
+  }
+
+  @DisplayName("기술스택_전체_리스트를_조회할_수_있다")
+  @Test
+  void 기술스택_전체_리스트를_조회할_수_있다() {
+    // given
+
+    // when
+    List<TechStackResponseDto> allTechStacks = techStackQueryService.getAllTechStacks();
+
+    // then
+    verify(techStackRepository, times(1)).findAll();
   }
 
 }
