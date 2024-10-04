@@ -44,6 +44,7 @@ public class CommentCommandService {
   public void updateComment(Long commentId,CommentUpdateRequestDto commentUpdateRequestDto){
     Comment comment = commentQueryService.getCommentByIdOrThrow(commentId);
     comment.updateFromDto(commentUpdateRequestDto);
+    commentRepository.save(comment);
   }
 
   public void deleteComment(Long commentId){
