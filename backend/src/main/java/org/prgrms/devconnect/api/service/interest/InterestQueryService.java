@@ -11,6 +11,7 @@ import org.prgrms.devconnect.domain.define.interest.entity.InterestBoard;
 import org.prgrms.devconnect.domain.define.interest.entity.InterestJobPost;
 import org.prgrms.devconnect.domain.define.interest.repository.InterestBoardRepository;
 import org.prgrms.devconnect.domain.define.interest.repository.InterestJobPostRepository;
+import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,12 @@ public class InterestQueryService {
   public void validateDuplicatedInterestBoard(Member member, Board board) {
     if (interestBoardRepository.existsByMemberAndBoard(member, board)) {
       throw new InterestException(ExceptionCode.DUPLICATED_INTEREST_BOARD);
+    }
+  }
+
+  public void validateDuplicatedInterestJobPost(Member member, JobPost jobPost) {
+    if (interestJobPostRepository.existsByMemberAndJobPost(member, jobPost)) {
+      throw new InterestException(ExceptionCode.DUPLICATED_INTEREST_JOB_POST);
     }
   }
 }
