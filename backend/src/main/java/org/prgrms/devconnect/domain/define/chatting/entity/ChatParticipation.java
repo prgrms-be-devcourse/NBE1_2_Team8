@@ -24,7 +24,7 @@ public class ChatParticipation {
   @Column(name = "chat_part_id")
   private Long chatPartId;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "room_id", nullable = false)
   private ChattingRoom chattingRoom;
 

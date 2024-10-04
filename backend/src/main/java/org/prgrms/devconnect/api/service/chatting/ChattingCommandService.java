@@ -2,8 +2,8 @@ package org.prgrms.devconnect.api.service.chatting;
 
 
 import lombok.RequiredArgsConstructor;
-import org.prgrms.devconnect.api.controller.chatting.dto.request.MessageRequest;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatPartResponse;
+import org.prgrms.devconnect.api.controller.chatting.dto.response.MessageResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.chatting.ChattingException;
@@ -27,6 +27,7 @@ public class ChattingCommandService {
   private final ChatParticipationRepository chatParticipationRepository;
   private final MessageRepository messageRepository;
   private final MemberQueryService memberQueryService;
+  private final ChattingQueryService chattingQueryService;
 
   /*
     새로운 채팅방을 생성하는 서비스 코드
@@ -58,24 +59,62 @@ public class ChattingCommandService {
     return new ChatPartResponse(senderChatPart.getChatPartId(), chattingRoom.getRoomId());
   }
 
-  // 메세지를 저장하는 메서드
-  public void sendMessage(MessageRequest messageRequest){
+  // 채팅방 참여 메서드
+  public ChatPartResponse joinChatRoom(Long memberId, Long chatroomId){
+    // 연관관계 매핑 준비
+    Member member = memberQueryService.getMemberByIdOrThrow(memberId);
+    ChattingRoom chattingRoom = chattingQueryService.getChatRoomById(chatroomId);
 
-    ChatParticipation chatParticipation = chatParticipationRepository.findById(messageRequest.chatpartId())
+    //이미 참여했다면 오류 발생
+    chatParticipationRepository.findByMember_MemberIdAndChattingRoom_RoomId(memberId, chatroomId)
+            .ifPresent(chatParticipation -> {throw new ChattingException(ExceptionCode.ALREADY_JOINED_CHATROOM);});
+
+    //채팅 참여 엔티티 생성
+    ChatParticipation chatParticipation = ChatParticipation.builder()
+            .member(member)
+            .chattingRoom(chattingRoom)
+            .build();
+
+    chatParticipationRepository.save(chatParticipation);
+
+    return new ChatPartResponse(chatParticipation.getChatPartId(), chattingRoom.getRoomId());
+  }
+
+  // 메세지를 저장하는 메서드
+  public MessageResponse sendMessage(Long chatpartId, String content){
+    // 채팅 참여 엔티티 조회
+    ChatParticipation chatParticipation = chatParticipationRepository.findById(chatpartId)
             .orElseThrow(() -> new ChattingException(ExceptionCode.NOT_FOUND_CHATPART));
 
+    // 메세지 생성
     Message message = Message.builder()
             .chatParticipation(chatParticipation)
-            .content(messageRequest.content())
+            .content(content)
             .build();
 
     messageRepository.save(message);
+
+    // 닉네임 조회
+    String nickname = chatParticipation.getMember().getNickname();
+
+    return MessageResponse.builder()
+            .messageId(message.getMessageId())
+            .senderId(chatParticipation.getMember().getMemberId())
+            .nickname(nickname)
+            .content(message.getContent())
+            .createdAt(message.getCreatedAt())
+            .build();
   }
+
+    public void leaveChatRoom(Long chatpartId){
+    chatParticipationRepository.deleteById(chatpartId);
+  }
+
+
 
   // 채팅방 비활성화 서비스
   public void closeChattingRoom(Long chatroomId){
-    ChattingRoom chattingRoom = chattingRoomRepository.findById(chatroomId)
-            .orElseThrow(() -> new ChattingException(ExceptionCode.NOT_FOUND_CHATROOM));
+    ChattingRoom chattingRoom = chattingQueryService.getChatRoomById(chatroomId);
     chattingRoom.closeChatRoom();
     chattingRoomRepository.save(chattingRoom);
   }
