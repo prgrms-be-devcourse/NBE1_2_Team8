@@ -1,23 +1,17 @@
 package org.prgrms.devconnect.domain.define.jobpost.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.domain.define.jobpost.entity.constant.JobType;
 import org.prgrms.devconnect.domain.define.jobpost.entity.constant.Status;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "job_post")
@@ -31,10 +25,7 @@ public class JobPost {
   private Long jobPostId;
 
   @Column(name = "post_id")
-  private String postId;
-
-  @OneToMany(mappedBy = "jobPost")
-  private List<JobPostTechStackMapping> jobPostTechStackMappings = new ArrayList<>();
+  private Long postId;
 
   @Column(name = "job_post_name")
   private String jobPostName;
@@ -82,4 +73,36 @@ public class JobPost {
 
   @Column(name = "views")
   private int views;
+
+  @OneToMany(mappedBy = "jobPost", cascade = CascadeType.PERSIST)
+  private List<JobPostTechStackMapping> jobPostTechStackMappings = new ArrayList<>();
+
+  @Builder
+  public JobPost(Long postId, String jobPostName, String jobPostLink, String companyName,
+                 String companyLink, String companyAddress, LocalDateTime postDate,
+                 LocalDateTime openDate, LocalDateTime endDate, String experienceLevel,
+                 String requiredEducation, String salary, JobType jobType, Status status,
+                 int likes, int views, List<JobPostTechStackMapping> jobPostTechStackMappings) {
+    this.postId = postId;
+    this.jobPostName = jobPostName;
+    this.jobPostLink = jobPostLink;
+    this.companyName = companyName;
+    this.companyLink = companyLink;
+    this.companyAddress = companyAddress;
+    this.postDate = postDate;
+    this.openDate = openDate;
+    this.endDate = endDate;
+    this.experienceLevel = experienceLevel;
+    this.requiredEducation = requiredEducation;
+    this.salary = salary;
+    this.jobType = jobType;
+    this.status = status;
+    this.likes = likes;
+    this.views = views;
+    this.jobPostTechStackMappings = jobPostTechStackMappings != null ? jobPostTechStackMappings : new ArrayList<>();
+  }
+
+  public void addTechStackMapping(JobPostTechStackMapping mapping) {
+    this.jobPostTechStackMappings.add(mapping);
+  }
 }
