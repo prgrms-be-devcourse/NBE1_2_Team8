@@ -57,16 +57,6 @@ public class Comment extends Timestamp {
   public boolean isRootComment(){
     return parent == null;
   }
-  public CommentResponseDto toResponseDto() {
-    return CommentResponseDto.builder()
-            .commentId(commentId)
-            .memberId(member.getMemberId())
-            .author(member.getNickname())
-            .content(content)
-            .updatedAt(getUpdatedAt())
-            .parentId(parent != null ? parent.getCommentId() : null)
-            .build();
-  }
 
   public void updateFromDto(CommentUpdateRequestDto dto) {
     if(!dto.content().equals(this.content))

@@ -29,6 +29,6 @@ public class CommentQueryService {
 
   public Page<CommentResponseDto> getCommentsByBoardId(Long boardId, Pageable pageable) {
     Page<Comment> comments=findAllByBoardId(boardId,pageable);
-    return comments.map(comment-> comment.toResponseDto());
+    return comments.map(CommentResponseDto::from);
   }
 }
