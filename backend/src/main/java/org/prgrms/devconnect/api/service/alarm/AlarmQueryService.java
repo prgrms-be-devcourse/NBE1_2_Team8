@@ -26,6 +26,8 @@ public class AlarmQueryService {
     Member member = memberQueryService.getMemberByIdOrThrow(memberId);
     List<Alarm> alarms = alarmRepository.findAllByMember(member);
 
+    alarms.forEach(Alarm::updateAlarmStatusToRead);
+
     return AlarmsGetResponse.from(alarms);
   }
 
