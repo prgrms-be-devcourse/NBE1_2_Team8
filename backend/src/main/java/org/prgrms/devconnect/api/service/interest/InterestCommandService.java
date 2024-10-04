@@ -32,11 +32,8 @@ public class InterestCommandService {
   }
 
   public void removeInterestBoard(Long memberId, Long boardId) {
-    Member member = memberQueryService.getMemberByIdOrThrow(memberId);
-    Board board = boardQueryService.getBoardByIdOrThrow(boardId);
-
-    InterestBoard interestBoard = interestQueryService.getInterestBoardByMemberAndBoardOrThrow(
-        member, board);
+    InterestBoard interestBoard = interestQueryService.getInterestBoardByMemberIdAndBoardIdOrThrow(
+        memberId, boardId);
 
     interestBoardRepository.delete(interestBoard);
   }

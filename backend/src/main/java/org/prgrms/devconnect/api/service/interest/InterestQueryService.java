@@ -32,8 +32,8 @@ public class InterestQueryService {
         .collect(Collectors.toList());
   }
 
-  public InterestBoard getInterestBoardByMemberAndBoardOrThrow(Member member, Board board) {
-    return interestBoardRepository.findByMemberAndBoard(member, board).orElseThrow(
+  public InterestBoard getInterestBoardByMemberIdAndBoardIdOrThrow(Long memberId, Long boardId) {
+    return interestBoardRepository.findByMemberIdAndBoardId(memberId, boardId).orElseThrow(
         () -> new InterestException(ExceptionCode.NOT_FOUND_INTEREST_BOARD)
     );
   }

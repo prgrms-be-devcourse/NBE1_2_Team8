@@ -13,7 +13,8 @@ public interface InterestBoardRepository extends JpaRepository<InterestBoard, Lo
   @Query("SELECT ib FROM InterestBoard ib left join fetch ib.board WHERE ib.member = :member")
   List<InterestBoard> findAllByMemberWithBoard(Member member);
 
-  Optional<InterestBoard> findByMemberAndBoard(Member member, Board board);
+  @Query("select ib from InterestBoard ib where ib.member.memberId =:memberId and ib.board.boardId = :boardId")
+  Optional<InterestBoard> findByMemberIdAndBoardId(Long memberId, Long boardId);
 
   boolean existsByMemberAndBoard(Member member, Board board);
 }
