@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import static org.prgrms.devconnect.domain.define.fixture.BoardFixture.createBoard;
 import static org.prgrms.devconnect.domain.define.fixture.InterestFixture.createInterestBoard;
 import static org.prgrms.devconnect.domain.define.fixture.InterestFixture.createInterestBoardRequestDto;
+import static org.prgrms.devconnect.domain.define.fixture.InterestFixture.createInterestJobPost;
 import static org.prgrms.devconnect.domain.define.fixture.InterestFixture.createInterestJobPostRequestDto;
 import static org.prgrms.devconnect.domain.define.fixture.JobPostFixture.createJobPost;
 import static org.prgrms.devconnect.domain.define.fixture.MemberFixture.createMember;
@@ -58,6 +59,7 @@ class InterestCommandServiceTest {
   private Board board;
   private JobPost jobPost;
   private InterestBoard interestBoard;
+  private InterestJobPost interestJobPost;
 
   @BeforeEach
   void setup() {
@@ -65,6 +67,7 @@ class InterestCommandServiceTest {
     board = createBoard(member);
     jobPost = createJobPost();
     interestBoard = createInterestBoard(member, board);
+    interestJobPost = createInterestJobPost(member, jobPost);
   }
 
   @DisplayName("관심게시글_추가시_유효한_DTO가_주어지면_관심게시글을_생성한다")
@@ -185,5 +188,38 @@ class InterestCommandServiceTest {
         () -> interestCommandService.addInterestJobPost(dto))
         .isInstanceOf(InterestException.class)
         .hasMessage(ExceptionCode.DUPLICATED_INTEREST_JOB_POST.getMessage());
+  }
+
+  @DisplayName("관심채용공고_삭제시_유효한_멤버아이디와_채용공고아이디가_주어지면_관심채용공고를_제거한다")
+  @Test
+  void 관심채용공고_삭제시_유효한_멤버아이디와_채용공고아이디가_주어지면_관심채용공고를_제거한다() {
+    // given
+    Long memberId = 1L;
+    Long jobPostId = 1L;
+
+    when(interestQueryService.getInterestJobPostByMemberIdAndJobPostIdOrThrow(memberId, jobPostId))
+        .thenReturn(interestJobPost);
+    // when
+    interestCommandService.removeInterestJobPost(memberId, jobPostId);
+
+    // then
+    verify(interestJobPostRepository, times(1)).delete(interestJobPost);
+  }
+
+  @DisplayName("관심채용공고_삭제시_존재하지않으면_에러가_발생한다")
+  @Test
+  void 관심채용공고_삭제시_존재하지않으면_에러가_발생한다() {
+    // given
+    Long memberId = 1L;
+    Long jobPostId = 1L;
+
+    when(interestQueryService.getInterestJobPostByMemberIdAndJobPostIdOrThrow(memberId, jobPostId))
+        .thenThrow(new InterestException(ExceptionCode.NOT_FOUND_INTEREST_JOB_POST));
+    // when & then
+    assertThatThrownBy(
+        () -> interestCommandService.removeInterestJobPost(memberId, jobPostId))
+        .isInstanceOf(InterestException.class)
+        .hasMessage(ExceptionCode.NOT_FOUND_INTEREST_JOB_POST.getMessage());
+    verify(interestJobPostRepository, times(0)).delete(interestJobPost);
   }
 }
