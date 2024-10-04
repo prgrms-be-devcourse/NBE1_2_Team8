@@ -33,6 +33,9 @@ public enum ExceptionCode {
   DUPLICATED_MEMBER_EMAIL(400, "이미 존재하는 이메일입니다."),
   INVALID_PASSWORD(400, "일치하지 않는 패스워드입니다."),
 
+  //BUGREPORT ERROR
+  NOT_FOUND_BUGREPORT(404, "존재하지 않는 버그리포트입니다."),
+
   //CHATTINGROOM ERROR
   NOT_FOUND_CHATROOM(404, "존재하지 않는 채팅방 입니다"),
   CHATROOM_ALREADY_INACTIVE(400, "채팅방은 이미 INACTIVE 상태입니다"),
