@@ -38,6 +38,14 @@ public class InterestController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @DeleteMapping("/boards/{memberId}/{boardId}")
+  public ResponseEntity<Void> removeInterestBoard(@PathVariable Long memberId,
+      @PathVariable Long boardId) {
+    interestCommandService.removeInterestBoard(memberId, boardId);
+
+    return ResponseEntity.noContent().build();
+  }
+
   @PostMapping("/job-posts")
   public ResponseEntity<Void> addInterestJob(
       @Valid @RequestBody InterestJobPostRequestDto requestDto) {
@@ -45,10 +53,10 @@ public class InterestController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @DeleteMapping("/boards/{memberId}/{boardId}")
-  public ResponseEntity<Void> removeInterestBoard(@PathVariable Long memberId,
-      @PathVariable Long boardId) {
-    interestCommandService.removeInterestBoard(memberId, boardId);
+  @DeleteMapping("/job-posts/{memberId}/{jobPostId}")
+  public ResponseEntity<Void> removeInterestJobPost(@PathVariable Long memberId,
+      @PathVariable Long jobPostId) {
+    interestCommandService.removeInterestJobPost(memberId, jobPostId);
 
     return ResponseEntity.noContent().build();
   }

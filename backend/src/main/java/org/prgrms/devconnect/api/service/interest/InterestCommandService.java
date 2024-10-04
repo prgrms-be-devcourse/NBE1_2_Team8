@@ -54,4 +54,12 @@ public class InterestCommandService {
     InterestJobPost interestJobPost = requestDto.toEntity(member, jobPost);
     interestJobPostRepository.save(interestJobPost);
   }
+
+  public void removeInterestJobPost(Long memberId, Long jobPostId) {
+    InterestJobPost interestJobPost = interestQueryService
+        .getInterestJobPostByMemberIdAndJobPostIdOrThrow(memberId, jobPostId);
+
+    interestJobPostRepository.delete(interestJobPost);
+
+  }
 }

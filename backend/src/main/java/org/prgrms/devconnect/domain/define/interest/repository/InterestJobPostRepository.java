@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.domain.define.interest.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.prgrms.devconnect.domain.define.interest.entity.InterestJobPost;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -13,4 +14,8 @@ public interface InterestJobPostRepository extends JpaRepository<InterestJobPost
   List<InterestJobPost> findAllByMemberWithJobPost(Member member);
 
   boolean existsByMemberAndJobPost(Member member, JobPost jobPost);
+
+  @Query("SELECT ij FROM InterestJobPost ij WHERE ij.member.memberId = :memberId And ij.jobPost.jobPostId = :jobPostId")
+  Optional<InterestJobPost> findByMemberIdAndJobPostId(Long memberId, Long jobPostId);
+
 }

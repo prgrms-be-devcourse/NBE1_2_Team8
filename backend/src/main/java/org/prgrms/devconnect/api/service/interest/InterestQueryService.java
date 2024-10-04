@@ -42,6 +42,13 @@ public class InterestQueryService {
     );
   }
 
+  public InterestJobPost getInterestJobPostByMemberIdAndJobPostIdOrThrow(Long memberId,
+      Long jobPostId) {
+    return interestJobPostRepository.findByMemberIdAndJobPostId(memberId, jobPostId).orElseThrow(
+        () -> new InterestException(ExceptionCode.NOT_FOUND_INTEREST_JOB_POST)
+    );
+  }
+
   public void validateDuplicatedInterestBoard(Member member, Board board) {
     if (interestBoardRepository.existsByMemberAndBoard(member, board)) {
       throw new InterestException(ExceptionCode.DUPLICATED_INTEREST_BOARD);
