@@ -1,14 +1,17 @@
 package org.prgrms.devconnect.api.service.alarm;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,9 +26,12 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.ActiveProfiles;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
+@ActiveProfiles("test")
 class AlarmCommandServiceTest {
 
 
@@ -34,6 +40,9 @@ class AlarmCommandServiceTest {
 
   @MockBean
   private AlarmRepository alarmRepository;
+
+  @MockBean
+  private AlarmQueryService alarmQueryService;
 
   @Autowired
   private AlarmCommandService alarmCommandService;
@@ -49,29 +58,37 @@ class AlarmCommandServiceTest {
     when(memberCommandService.createMember(memberCreateRequestDto)).thenReturn(member);
     alarmCommandService.createWelcomeAlarmWhenSignIn(member);
 
-    verify(alarmCommandService, times(1)).createWelcomeAlarmWhenSignIn(member);
+    verify(alarmRepository, times(1)).save(any(Alarm.class));
   }
 
   @Test
   @DisplayName("알림 단일 삭제")
   void deleteAlarm() {
+    Alarm alarm = mock();
+    Member member = mock();
 
-    doNothing().when(alarmRepository).deleteById(anyLong());
+    Optional<Alarm> alarmOptional = Optional.of(alarm);
 
-    alarmCommandService.deleteAlarmByAlarmIdAndMemberId(anyLong(), anyLong());
+    when(alarm.getAlarmId()).thenReturn(1L);
+    when(alarm.getMember()).thenReturn(member);
+    when(member.getMemberId()).thenReturn(1L);
+    when(alarmQueryService.getAlarmByAlarmId(1L)).thenReturn(alarmOptional);
 
-    verify(alarmRepository, times(1)).deleteById(any());
+    alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarm.getAlarmId(), alarm.getMember().getMemberId());
+
+    verify(alarmRepository, times(1)).deleteByAlarmIdAndMemberMemberId(anyLong(), anyLong());
   }
 
   @Test
   @DisplayName("알림 단일 삭제시 존재하지 않은 알림(혹은 알림은 존재하지만 멤버가 다른 경우)의 예외 처리 테스트")
   void deleteAlarmWhenNotExistAlarmThrowException() {
-    doThrow(new IllegalArgumentException()).when(alarmRepository).deleteById(anyLong());
 
-    Assertions.assertThatThrownBy(() -> alarmCommandService.deleteAlarmByAlarmIdAndMemberId(anyLong(), anyLong()))
+    when(alarmRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> alarmCommandService.deleteAlarmByAlarmIdAndMemberId(1L, 2L))
             .isInstanceOf(AlarmException.class);
 
-    verify(alarmRepository, times(0)).delete(any(Alarm.class));
+    verify(alarmRepository, never()).deleteByAlarmIdAndMemberMemberId(anyLong(), anyLong());
   }
 
 }
