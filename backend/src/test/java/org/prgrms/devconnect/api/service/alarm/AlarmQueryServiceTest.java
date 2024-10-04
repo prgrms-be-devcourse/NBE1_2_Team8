@@ -2,11 +2,14 @@ package org.prgrms.devconnect.api.service.alarm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.prgrms.devconnect.api.controller.alarm.dto.response.AlarmsGetResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
+import org.prgrms.devconnect.common.exception.alarm.AlarmException;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -65,4 +69,12 @@ class AlarmQueryServiceTest {
     verify(memberQueryService).getMemberByIdOrThrow(member.getMemberId());
   }
 
+  @Test
+  @DisplayName("한 알림에 대하여 알림아이디와 멤베 아이디가 일치하지 않을 경우 예외 처리")
+  void getAlarmByAlarmIdAndMemberIdOrThrow() {
+    doReturn(Optional.empty()).when(alarmRepository).findByAlarmIdAndMemberId(anyLong(), anyLong());
+
+    Assertions.assertThatThrownBy(() -> alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(anyLong(), anyLong()))
+            .isInstanceOf(AlarmException.class);
+  }
 }

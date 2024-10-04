@@ -1,10 +1,11 @@
 package org.prgrms.devconnect.api.service.alarm;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.alarm.dto.response.AlarmsGetResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
+import org.prgrms.devconnect.common.exception.ExceptionCode;
+import org.prgrms.devconnect.common.exception.alarm.AlarmException;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -28,7 +29,9 @@ public class AlarmQueryService {
     return AlarmsGetResponse.from(alarms);
   }
 
-  public Optional<Alarm> getAlarmByAlarmId(Long alarmId) {
-    return alarmRepository.findById(alarmId);
+  public Alarm getAlarmByAlarmIdAndMemberIdOrThrow (Long alarmId, Long memberId) {
+    return alarmRepository.findByAlarmIdAndMemberId(alarmId,memberId).orElseThrow(
+            () -> new AlarmException(ExceptionCode.NOT_FOUND_ALARM)
+    );
   }
 }

@@ -1,9 +1,6 @@
 package org.prgrms.devconnect.api.service.alarm;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.prgrms.devconnect.common.exception.ExceptionCode;
-import org.prgrms.devconnect.common.exception.alarm.AlarmException;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -34,11 +31,8 @@ public class AlarmCommandService {
   }
 
   public Void deleteAlarmByAlarmIdAndMemberId(Long alarmId, Long memberId) {
-      Optional<Alarm> alarm = alarmQueryService.getAlarmByAlarmId(alarmId);
-      if (alarm.isPresent()) {
-        alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId, memberId);
-        return null;
-      }
-      throw new AlarmException(ExceptionCode.NOT_FOUND_ALARM);
+    alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(alarmId, memberId);
+    alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId, memberId);
+    return null;
   }
 }
