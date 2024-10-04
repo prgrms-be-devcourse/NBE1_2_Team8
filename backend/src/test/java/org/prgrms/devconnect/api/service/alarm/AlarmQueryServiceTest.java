@@ -59,9 +59,10 @@ class AlarmQueryServiceTest {
     doReturn(member).when(memberQueryService).getMemberByIdOrThrow(any(Long.class));
 
     //when
-    final AlarmsGetResponse response = alarmQueryService.getAlarmsByMemberId(member.getMemberId());
+    final AlarmsGetResponse response = alarmQueryService.getAlarmsByMemberIdOrThrow(member.getMemberId());
 
     //then
+    assertThat(alarms.get(0).isRead()).isEqualTo(true);
     assertThat(response.count()).isEqualTo(5);
 
     verify(member).getMemberId();
@@ -72,7 +73,7 @@ class AlarmQueryServiceTest {
   @Test
   @DisplayName("한 알림에 대하여 알림아이디와 멤베 아이디가 일치하지 않을 경우 예외 처리")
   void getAlarmByAlarmIdAndMemberIdOrThrow() {
-    doReturn(Optional.empty()).when(alarmRepository).findByAlarmIdAndMemberId(anyLong(), anyLong());
+    doReturn(Optional.empty()).when(alarmRepository).findByAlarmIdAndMemberMemberId(anyLong(), anyLong());
 
     Assertions.assertThatThrownBy(() -> alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(anyLong(), anyLong()))
             .isInstanceOf(AlarmException.class);

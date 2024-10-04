@@ -35,4 +35,10 @@ public class AlarmCommandService {
     alarmRepository.deleteByAlarmIdAndMemberMemberId(alarmId, memberId);
     return null;
   }
+
+  public Void deleteAlarmsByMemberId(Long memberId) {
+    alarmQueryService.getAlarmsByMemberIdOrThrow(memberId);
+    alarmRepository.deleteAllByMemberMemberId(memberId);
+    return null;
+  }
 }

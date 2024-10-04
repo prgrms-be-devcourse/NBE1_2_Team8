@@ -9,6 +9,7 @@ public enum ExceptionCode {
 
   //Alarm Error
   NOT_FOUND_ALARM(404, "존재하지 않는 알람입니다."),
+  EMPTY_ALARMS(400, "알림이 비어있습니다."),
 
   //Board Error
   NOT_FOUND_BOARD(404, "존재하지 않는 게시물입니다."),
@@ -45,7 +46,9 @@ public enum ExceptionCode {
 
   // INTEREST ERROR
   DUPLICATED_INTEREST_BOARD(400, "이미 등록된 관심 게시글입니다."),
-  NOT_FOUND_INTEREST_BOARD(404, "존재하지 않는 관심 게시글입니다.");
+  NOT_FOUND_INTEREST_BOARD(404, "존재하지 않는 관심 게시글입니다."),
+  DUPLICATED_INTEREST_JOB_POST(400, "이미 등록된 관심 채용 공고입니다."),
+  NOT_FOUND_INTEREST_JOB_POST(404, "존재하지 않는 관심 채용 공고입니다.");
 
   private final int code;
   private final String message;

@@ -21,16 +21,19 @@ public class AlarmQueryService {
 
   private final MemberQueryService memberQueryService;
 
-  public AlarmsGetResponse getAlarmsByMemberId(Long memberId) {
+  public AlarmsGetResponse getAlarmsByMemberIdOrThrow (Long memberId) {
 
     Member member = memberQueryService.getMemberByIdOrThrow(memberId);
     List<Alarm> alarms = alarmRepository.findAllByMember(member);
-
+    if (alarms.isEmpty()) {
+      throw new AlarmException(ExceptionCode.EMPTY_ALARMS);
+    }
+    alarms.forEach(Alarm::updateAlarmStatusToRead);
     return AlarmsGetResponse.from(alarms);
   }
 
   public Alarm getAlarmByAlarmIdAndMemberIdOrThrow (Long alarmId, Long memberId) {
-    return alarmRepository.findByAlarmIdAndMemberId(alarmId,memberId).orElseThrow(
+    return alarmRepository.findByAlarmIdAndMemberMemberId(alarmId,memberId).orElseThrow(
             () -> new AlarmException(ExceptionCode.NOT_FOUND_ALARM)
     );
   }

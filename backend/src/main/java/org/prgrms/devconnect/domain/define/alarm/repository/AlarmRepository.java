@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
   List<Alarm> findAllByMember(Member member);
-  void deleteByAlarmIdAndMemberMemberId(Long alarmId, Long ㅖ);
-  Optional<Alarm> findByAlarmIdAndMemberId(Long alarmId, Long memberId);
+  void deleteAllByMemberMemberId(Long memberId);
+  void deleteByAlarmIdAndMemberMemberId(Long alarmId, Long memberId);
+  Optional<Alarm> findByAlarmIdAndMemberMemberId(Long alarmId, Long memberId);
 }
