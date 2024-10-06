@@ -15,7 +15,7 @@ public class AlarmCommandService {
   private final AlarmRepository alarmRepository;
   private final AlarmQueryService alarmQueryService;
 
-  public void createWelcomeAlarmWhenSignIn(Member member) {
+  public Alarm createWelcomeAlarmWhenSignIn(Member member) {
 
     //TODO: 프론트 메인페이지 url 추가
     String mainPage = "";
@@ -28,6 +28,8 @@ public class AlarmCommandService {
             .relatedUrl(mainPage)
             .build();
     alarmRepository.save(alarm);
+
+    return alarm;
   }
 
   public Void deleteAlarmByAlarmIdAndMemberId(Long alarmId, Long memberId) {
