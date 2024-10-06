@@ -72,21 +72,22 @@ class AlarmCommandServiceTest {
     verify(alarmRepository, only()).deleteAllByMemberMemberId(1L);
   }
 
-    @DisplayName("알림 단일 삭제")
-    void deleteAlarm() {
-      Alarm alarm = mock();
-      Member member = mock();
+  @Test
+  @DisplayName("알림 단일 삭제")
+  void deleteAlarm() {
+    Alarm alarm = mock();
+    Member member = mock();
 
-      Optional<Alarm> alarmOptional = Optional.of(alarm);
+    Optional<Alarm> alarmOptional = Optional.of(alarm);
 
-      when(alarm.getAlarmId()).thenReturn(1L);
-      when(alarm.getMember()).thenReturn(member);
-      when(member.getMemberId()).thenReturn(1L);
-      when(alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(1L,1L)).thenReturn(alarm);
+    when(alarm.getAlarmId()).thenReturn(1L);
+    when(alarm.getMember()).thenReturn(member);
+    when(member.getMemberId()).thenReturn(1L);
+    when(alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(1L, 1L)).thenReturn(alarm);
 
-      alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarm.getAlarmId(), alarm.getMember().getMemberId());
+    alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarm.getAlarmId(), alarm.getMember().getMemberId());
 
-      verify(alarmRepository, times(1)).deleteByAlarmIdAndMemberMemberId(anyLong(), anyLong());
-    }
-
+    verify(alarmRepository, times(1)).deleteByAlarmIdAndMemberMemberId(anyLong(), anyLong());
   }
+
+}
