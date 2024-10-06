@@ -4,8 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardUpdateRequestDto;
+import org.prgrms.devconnect.api.controller.board.dto.response.BoardResponseDto;
 import org.prgrms.devconnect.api.service.board.BoardCommandService;
 import org.prgrms.devconnect.api.service.board.BoardQueryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +48,15 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 
+  @GetMapping("/{boardId}")
+  public ResponseEntity<BoardResponseDto>getBoardById(@PathVariable Long boardId){
+    BoardResponseDto boardResponse = boardQueryService.getBoardById(boardId);
+    return ResponseEntity.status(HttpStatus.OK).body(boardResponse);
+  }
 
+  @GetMapping
+  public ResponseEntity<Page<BoardResponseDto>> getAllBoards(Pageable pageable){
+    Page<BoardResponseDto> boards = boardQueryService.getAllBoards(pageable);
+    return ResponseEntity.status(HttpStatus.OK).body(boards);
+  }
 }
