@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.prgrms.devconnect.domain.define.alarm.event.RegisteredCommentOnBoardEvent;
+import org.prgrms.devconnect.domain.define.alarm.event.RegisteredReplyCommentEvent;
 import org.prgrms.devconnect.domain.define.alarm.event.RegisteredWelcomeEvent;
+import org.prgrms.devconnect.domain.define.board.entity.Comment;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -23,6 +26,15 @@ public class AlarmCreater {
 
     if ("createMember".equals(methodName)) {
       publisher.publishEvent(new RegisteredWelcomeEvent((Member) object));
+    }
+
+    if ("createComment".equals(methodName)) {
+      Comment comment = (Comment) object;
+      if(comment.getParent().isRootComment())
+      {
+        publisher.publishEvent(new RegisteredCommentOnBoardEvent(comment));
+      }
+      publisher.publishEvent(new RegisteredReplyCommentEvent(comment));
     }
     return object;
   }
