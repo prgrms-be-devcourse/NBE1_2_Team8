@@ -16,9 +16,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.prgrms.devconnect.api.controller.alarm.dto.response.AlarmsGetResponse;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberCreateRequestDto;
+import org.prgrms.devconnect.api.service.comment.CommentCommandService;
 import org.prgrms.devconnect.api.service.member.MemberCommandService;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
+import org.prgrms.devconnect.domain.define.board.entity.Board;
+import org.prgrms.devconnect.domain.define.board.entity.Comment;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -40,6 +43,9 @@ class AlarmCommandServiceTest {
 
   @MockBean
   private AlarmRepository alarmRepository;
+
+  @MockBean
+  private CommentCommandService commentCommandService;
 
   @SpyBean
   private AlarmCommandService alarmCommandService;
@@ -89,5 +95,39 @@ class AlarmCommandServiceTest {
 
     verify(alarmRepository, times(1)).deleteByAlarmIdAndMemberMemberId(anyLong(), anyLong());
   }
+
+  @Test
+  @DisplayName("게시물이 작성된 후, (부모) 댓글이 달렸을 때 알림이 생성 되는지 테스트")
+  void createCommentPostedMessageToBoardPoster() {
+    Comment comment = mock();
+    Board board = mock();
+    Member postMember = mock();
+    Member commentMember = mock();
+
+    when(commentCommandService.createComment(mock())).thenReturn(comment);
+    when(comment.getBoard()).thenReturn(board);
+    when(comment.getBoard().getMember()).thenReturn(postMember);
+    when(comment.getMember()).thenReturn(commentMember);
+
+    Alarm alarm = alarmCommandService.createCommentPostedMessageToBoardPoster(comment);
+
+    verify(alarmRepository, times(1)).save(any(Alarm.class));
+  }
+
+  @Test
+  @DisplayName("게시물에 작성된 댓들의 답글이 달렸을 때, 알림이 생성되는 지 테스트")
+  void createReplyCommentReceivedAlarmToParentCommenter() {
+    Comment parent = mock();
+    Comment reply = mock();
+
+    when(reply.getParent()).thenReturn(parent);
+    when(commentCommandService.createComment(mock())).thenReturn(reply);
+    when(reply.getParent()).thenReturn(parent);
+
+    Alarm alarm = alarmCommandService.createReplyCommentReceivedAlarmToParentCommenter(reply);
+
+    verify(alarmRepository,times(1)).save(any(Alarm.class));
+  }
+
 
 }
