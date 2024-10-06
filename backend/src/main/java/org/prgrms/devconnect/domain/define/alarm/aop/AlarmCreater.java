@@ -30,8 +30,7 @@ public class AlarmCreater {
 
     if ("createComment".equals(methodName)) {
       Comment comment = (Comment) object;
-      if(comment.getParent().isRootComment())
-      {
+      if(comment.getParent().isRootComment()) {
         publisher.publishEvent(new RegisteredCommentOnBoardEvent(comment));
       }
       publisher.publishEvent(new RegisteredReplyCommentEvent(comment));
