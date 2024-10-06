@@ -13,8 +13,17 @@ public class EventHandler {
 
   @EventListener
   public void sendWelcomeMessage(RegisteredWelcomeEvent event) {
-    alarmService.createWelcomeAlarmWhenSignIn(event.getMember());
+    alarmService.createWelcomeAlarmWhenSignIn(event.member());
     // TODO: 이메일 전송 메서드
   }
 
+  @EventListener
+  public void sendCommentPostedOnBoardToBoardPoster(RegisteredCommentOnBoardEvent event) {
+    alarmService.createCommentPostedMessageToBoardPoster(event.comment());
+  }
+
+  @EventListener
+  public void sendRegisteredReplyCommentMessageToParentCommenter(RegisteredReplyCommentEvent event) {
+    alarmService.createReplyCommentReceivedAlarmToParentCommenter(event.comment());
+  }
 }
