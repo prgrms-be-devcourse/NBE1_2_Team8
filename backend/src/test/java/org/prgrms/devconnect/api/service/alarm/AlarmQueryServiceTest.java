@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.api.service.alarm;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
@@ -9,7 +10,6 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ class AlarmQueryServiceTest {
   @Mock
   private Member member;
 
-  private List<Alarm> alarms(){
+  private List<Alarm> alarms() {
     List<Alarm> alarms = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
       alarms.add(new Alarm(member, "알림테스트", "테스트유알엘", false));
@@ -75,7 +75,13 @@ class AlarmQueryServiceTest {
   void getAlarmByAlarmIdAndMemberIdOrThrow() {
     doReturn(Optional.empty()).when(alarmRepository).findByAlarmIdAndMemberMemberId(anyLong(), anyLong());
 
-    Assertions.assertThatThrownBy(() -> alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(anyLong(), anyLong()))
+    assertThatThrownBy(() -> alarmQueryService.getAlarmByAlarmIdAndMemberIdOrThrow(anyLong(), anyLong()))
             .isInstanceOf(AlarmException.class);
+  }
+
+  @Test
+  @DisplayName("읽지 않은 알림의 개수 반환")
+  void getUnReadAlarmsCount() {
+    assertThat(alarmQueryService.getUnReadAlarmsCountByMemberId(member.getMemberId())).isInstanceOf(Integer.class);
   }
 }
