@@ -19,7 +19,9 @@ public class AlarmCreater {
   @Around("@annotation(org.prgrms.devconnect.domain.define.alarm.aop.RegisterPublisher)")
   public Object processRegisterPublisherAnnotation(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
     Object object = proceedingJoinPoint.proceed();
-    if (object instanceof Member) {
+    String methodName = proceedingJoinPoint.getSignature().getName();
+
+    if ("createMember".equals(methodName)) {
       publisher.publishEvent(new RegisteredWelcomeEvent((Member) object));
     }
     return object;
