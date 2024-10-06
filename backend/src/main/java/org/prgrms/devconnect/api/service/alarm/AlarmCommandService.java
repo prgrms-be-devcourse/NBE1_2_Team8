@@ -3,6 +3,8 @@ package org.prgrms.devconnect.api.service.alarm;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
+import org.prgrms.devconnect.domain.define.board.entity.Board;
+import org.prgrms.devconnect.domain.define.board.entity.Comment;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,5 +44,44 @@ public class AlarmCommandService {
     alarmQueryService.getAlarmsByMemberIdOrThrow(memberId);
     alarmRepository.deleteAllByMemberMemberId(memberId);
     return null;
+  }
+
+  public Alarm createCommentPostedMessageToBoardPoster(Comment comment) {
+
+    Board postedBoard = comment.getBoard();
+    Member boardedPoster = postedBoard.getMember();
+    Member commenter = comment.getMember();
+
+    String linkedPage = "";
+    String commentPostedMessage = boardedPoster + "님이 포스팅 한 "+ postedBoard.getTitle()+ "에 "+ commenter.getNickname() + "이 댓글을 남겼습니다!";
+
+    Alarm alarm = Alarm.builder()
+            .member(boardedPoster)
+            .alertText(commentPostedMessage)
+            .relatedUrl(linkedPage)
+            .build();
+
+    alarmRepository.save(alarm);
+
+    return alarm;
+  }
+
+  public Alarm createReplyCommentReceivedAlarmToParentCommenter(Comment comment) {
+
+    Member parentCommenter = comment.getParent().getMember();
+    Member replier = comment.getMember();
+
+    String likedPage = "";
+    String replyMessage = parentCommenter + "님이 작성한 댓글 \""+ comment.getContent() + "\"에 답글이 달렸어요!";
+
+    Alarm alarm = Alarm.builder()
+            .member(parentCommenter)
+            .alertText(replyMessage)
+            .relatedUrl(likedPage)
+            .build();
+
+    alarmRepository.save(alarm);
+
+    return alarm;
   }
 }

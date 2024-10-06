@@ -1,14 +1,7 @@
 package org.prgrms.devconnect.domain.define.alarm.event;
 
-import lombok.Getter;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 
-@Getter
-public class RegisteredWelcomeEvent {
+public record RegisteredWelcomeEvent(Member member) {
 
-  private Member member;
-
-  public RegisteredWelcomeEvent(Member member) {
-    this.member = member;
-  }
 }
