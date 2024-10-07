@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.prgrms.devconnect.api.controller.bugreport.dto.response.BugReportResponse;
 import org.prgrms.devconnect.domain.define.bugreport.entity.BugReport;
 import org.prgrms.devconnect.domain.define.bugreport.repository.BugReportRepository;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,7 +57,7 @@ public class BugReportQueryServiceTest {
     when(bugReportRepository.findAll()).thenReturn(bugReports);
 
     // When
-    List<BugReport> result = bugReportQueryService.getAllBugReport();
+    List<BugReportResponse> result = bugReportQueryService.getAllBugReport();
 
     // Then
     assertEquals(3, result.size());
@@ -74,7 +75,7 @@ public class BugReportQueryServiceTest {
     when(bugReportRepository.findAllByMember_MemberId(memberId)).thenReturn(bugReports);
 
     // When
-    List<BugReport> result = bugReportQueryService.getAllBugReportByMemberId(memberId);
+    List<BugReportResponse> result = bugReportQueryService.getAllBugReportByMemberId(memberId);
 
     // Then
     assertEquals(1, result.size());
