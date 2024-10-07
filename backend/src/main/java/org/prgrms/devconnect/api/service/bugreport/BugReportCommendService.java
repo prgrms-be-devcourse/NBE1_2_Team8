@@ -19,7 +19,7 @@ public class BugReportCommendService {
   private final MemberQueryService memberQueryService;
 
   // 버그리포트 생성
-  public BugReport createBugReport(Long memberId, String url, String content, BugType bugType){
+  public BugReport createBugReport(Long memberId, String url, String content, BugType bugType) {
     Member member = memberQueryService.getMemberByIdOrThrow(memberId);
 
     BugReport bugReport = BugReport.builder()
@@ -40,9 +40,11 @@ public class BugReportCommendService {
   }
 
   // 버그 리포트 수정
-  public void updateBugReport(Long bugReportId, String url, String content, BugType bugType) {
+  public BugReport updateBugReport(Long bugReportId, String url, String content, BugType bugType) {
     BugReport bugReport = bugReportQueryService.getBugReport(bugReportId);
     bugReport.updateReport(url, content, bugType);
     bugReportRepository.save(bugReport);
+
+    return bugReport;
   }
 }
