@@ -86,8 +86,8 @@ public class JwtService {
 
   public Optional<String> extractAccessToken(HttpServletRequest request) {
     return Optional.ofNullable(request.getHeader(accessHeader))
-        .filter(refreshToken -> refreshToken.startsWith(BEARER))
-        .map(refreshToken -> refreshToken.replace(BEARER, ""));
+        .filter(accessToken -> accessToken.startsWith(BEARER))
+        .map(accessToken -> accessToken.replace(BEARER, ""));
   }
 
   public Optional<String> extractUsername(String accessToken) {

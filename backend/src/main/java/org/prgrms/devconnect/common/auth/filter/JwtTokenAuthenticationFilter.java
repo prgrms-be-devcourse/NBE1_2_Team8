@@ -83,12 +83,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private void saveAuthentication(Member member) {
-    UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-        .username(member.getEmail())
-        .password(member.getPassword())
-        .build();
-
-    Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null);
+    Authentication authentication = new UsernamePasswordAuthenticationToken(member, null, null);
     SecurityContextHolder.getContext().setAuthentication(authentication);
     logger.info("인증 유저: {}", member.getEmail());
   }
