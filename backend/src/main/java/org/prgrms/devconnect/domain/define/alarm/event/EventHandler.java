@@ -26,4 +26,9 @@ public class EventHandler {
   public void sendRegisteredReplyCommentMessageToParentCommenter(RegisteredReplyCommentEvent event) {
     alarmService.createReplyCommentReceivedAlarmToParentCommenter(event.comment());
   }
+
+  @EventListener
+  public void sendBoardUrgentAlarm(RegisteredUrgentEvent event) {
+    alarmService.createUrgentAlarmAboutInterestBoard(event.interestBoard());
+  }
 }
