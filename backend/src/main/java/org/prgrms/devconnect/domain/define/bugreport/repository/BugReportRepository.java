@@ -10,4 +10,7 @@ import java.util.List;
 public interface BugReportRepository extends JpaRepository<BugReport, Long> {
 
   List<BugReport> findAllByMember_MemberId(Long memberId);
+
+  // 내림차순 정렬
+  List<BugReport> findAllByOrderByBugReportIdDesc();
 }
