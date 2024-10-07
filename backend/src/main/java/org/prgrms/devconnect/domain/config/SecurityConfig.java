@@ -62,7 +62,7 @@ public class SecurityConfig {
 
         );
 
-    http.addFilterAfter(customUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
+    http.addFilterAfter(loginAuthenticationFilter(), LogoutFilter.class);
     http.addFilterBefore(jwtAuthenticationFilter(), LoginAuthenticationFilter.class);
     http.addFilterAfter(logoutAuthenticationFilter(), JwtTokenAuthenticationFilter.class);
     return http.build();
@@ -92,7 +92,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  LoginAuthenticationFilter customUsernamePasswordAuthenticationFilter() {
+  LoginAuthenticationFilter loginAuthenticationFilter() {
     LoginAuthenticationFilter customUsernamePasswordAuthenticationFilter
         = new LoginAuthenticationFilter(objectMapper);
     customUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());

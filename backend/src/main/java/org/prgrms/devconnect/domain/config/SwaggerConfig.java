@@ -23,13 +23,7 @@ public class SwaggerConfig {
                 new SecurityScheme()
                     .type(SecurityScheme.Type.HTTP)
                     .scheme("bearer")
-                    .bearerFormat("JWT"))
-            .addSecuritySchemes("bearer-refresh",
-                new SecurityScheme()
-                    .type(SecurityScheme.Type.HTTP)
-                    .scheme("bearer")
                     .bearerFormat("JWT")))
-        .addSecurityItem(new SecurityRequirement().addList("bearer-jwt"))
-        .addSecurityItem(new SecurityRequirement().addList("bearer-refresh"));
+        .addSecurityItem(new SecurityRequirement().addList("bearer-jwt"));
   }
 }
