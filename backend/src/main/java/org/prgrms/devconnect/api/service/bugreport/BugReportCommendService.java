@@ -41,11 +41,13 @@ public class BugReportCommendService {
   }
 
   // 버그 리포트 수정
-  public BugReport updateBugReport(Long bugReportId, String url, String content, BugType bugType) {
+  public BugReportResponse updateBugReport(Long bugReportId, String url, String content, BugType bugType) {
     BugReport bugReport = bugReportQueryService.getBugReport(bugReportId);
     bugReport.updateReport(url, content, bugType);
     bugReportRepository.save(bugReport);
 
-    return bugReport;
+    return BugReportResponse.toDTO(bugReport);
   }
+
+
 }

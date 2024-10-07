@@ -62,30 +62,29 @@ public class BugReportController {
   @Operation(summary = "특정 버그 리포트 조회", description = "버그 리포트 ID로 버그 리포트의 상세 정보를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "버그 리포트 상세 정보를 성공적으로 반환합니다.",
           content = @Content(schema = @Schema(implementation = BugReport.class)))
-  @Parameter(name = "reportId", description = "조회할 버그 리포트의 ID", required = true)
   @GetMapping("/{reportId}")
-  public ResponseEntity<BugReport> getBugReportById(@PathVariable Long reportId) {
+  public ResponseEntity<BugReportResponse> getBugReportById(@PathVariable("reportId") Long reportId) {
     BugReport bugReport = bugReportQueryService.getBugReport(reportId);
-    return ResponseEntity.status(OK).body(bugReport);
+    BugReportResponse response = BugReportResponse.toDTO(bugReport);
+    return ResponseEntity.status(OK).body(response);
   }
 
   @Operation(summary = "버그 리포트 수정", description = "특정 버그 리포트를 수정합니다.")
-  @ApiResponse(responseCode = "200", description = "버그 리포트가 성공적으로 수정되었습니다.",
-          content = @Content(schema = @Schema(implementation = BugReport.class)))
+  @ApiResponse(responseCode = "200", description = "버그 리포트가 성공적으로 수정되었습니다.")
   @Parameter(name = "reportId", description = "수정할 버그 리포트의 ID", required = true)
   @PutMapping("/{reportId}")
-  public ResponseEntity<BugReport> updateBugReport(@PathVariable Long reportId,
+  public ResponseEntity<BugReportResponse> updateBugReport(@PathVariable("reportId") Long reportId,
                                                    @RequestBody @Valid BugReportUpdateRequest dto) {
-    BugReport bugReport = bugReportCommendService.updateBugReport(reportId, dto.url(), dto.content(), dto.bugType());
+    BugReportResponse response = bugReportCommendService.updateBugReport(reportId, dto.url(), dto.content(), dto.bugType());
 
-    return ResponseEntity.status(OK).body(bugReport);
+    return ResponseEntity.status(OK).body(response);
   }
 
   @Operation(summary = "버그 리포트 삭제", description = "특정 버그 리포트를 삭제합니다.")
   @ApiResponse(responseCode = "204", description = "버그 리포트가 성공적으로 삭제되었습니다.")
-  @Parameter(name = "reportId", description = "삭제할 버그 리포트의 ID", required = true)
   @DeleteMapping("/{reportId}")
-  public ResponseEntity<Object> deleteBugReport(@PathVariable Long reportId) {
+  public ResponseEntity<Object> deleteBugReport(@PathVariable("reportId") Long reportId) {
+    System.out.println("reportId = " + reportId);
     bugReportCommendService.removeBug(reportId);
 
     return ResponseEntity.status(NO_CONTENT).build();
