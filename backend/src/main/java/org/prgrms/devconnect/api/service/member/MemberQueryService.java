@@ -6,9 +6,14 @@ import org.prgrms.devconnect.api.controller.member.dto.response.MemberResponseDt
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.member.MemberException;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
+import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
+import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +38,13 @@ public class MemberQueryService {
     return memberRepository.findByMemberIdWithTechStack(memberId).orElseThrow(
             () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
     );
+  }
+
+  public List<TechStack> getTechStacksByMemberId(Long memberId) {
+    Member member = getMemberByIdWithTechStackOrThrow(memberId);
+    return member.getMemberTechStacks().stream()
+            .map(MemberTechStackMapping::getTechStack)
+            .collect(Collectors.toList());
   }
 
   public Member getMemberByIdOrThrow(Long memberId){
