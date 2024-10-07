@@ -14,11 +14,12 @@ import org.prgrms.devconnect.api.controller.bugreport.dto.response.BugReportResp
 import org.prgrms.devconnect.api.service.bugreport.BugReportCommendService;
 import org.prgrms.devconnect.api.service.bugreport.BugReportQueryService;
 import org.prgrms.devconnect.domain.define.bugreport.entity.BugReport;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class BugReportController {
             dto.content(),
             dto.bugType());
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(bugReport);
+    return ResponseEntity.status(CREATED).body(bugReport);
   }
 
   @Operation(summary = "모든 버그 리포트 조회", description = "모든 버그 리포트를 조회합니다.")
@@ -53,9 +54,9 @@ public class BugReportController {
     List<BugReportResponse> results = bugReportQueryService.getAllBugReport();
 
     if (results.isEmpty())
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      return ResponseEntity.status(NO_CONTENT).build();
 
-    return ResponseEntity.status(HttpStatus.OK).body(results);
+    return ResponseEntity.status(OK).body(results);
   }
 
   @Operation(summary = "특정 버그 리포트 조회", description = "버그 리포트 ID로 버그 리포트의 상세 정보를 조회합니다.")
@@ -65,7 +66,7 @@ public class BugReportController {
   @GetMapping("/{reportId}")
   public ResponseEntity<BugReport> getBugReportById(@PathVariable Long reportId) {
     BugReport bugReport = bugReportQueryService.getBugReport(reportId);
-    return ResponseEntity.status(HttpStatus.OK).body(bugReport);
+    return ResponseEntity.status(OK).body(bugReport);
   }
 
   @Operation(summary = "버그 리포트 수정", description = "특정 버그 리포트를 수정합니다.")
@@ -77,7 +78,7 @@ public class BugReportController {
                                                    @RequestBody @Valid BugReportUpdateRequest dto) {
     BugReport bugReport = bugReportCommendService.updateBugReport(reportId, dto.url(), dto.content(), dto.bugType());
 
-    return ResponseEntity.status(HttpStatus.OK).body(bugReport);
+    return ResponseEntity.status(OK).body(bugReport);
   }
 
   @Operation(summary = "버그 리포트 삭제", description = "특정 버그 리포트를 삭제합니다.")
@@ -87,7 +88,7 @@ public class BugReportController {
   public ResponseEntity<Object> deleteBugReport(@PathVariable Long reportId) {
     bugReportCommendService.removeBug(reportId);
 
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    return ResponseEntity.status(NO_CONTENT).build();
   }
 
   @Operation(summary = "특정 사용자의 모든 버그 리포트 조회", description = "특정 사용자의 모든 버그 리포트를 조회합니다.")
@@ -100,8 +101,8 @@ public class BugReportController {
     List<BugReportResponse> results = bugReportQueryService.getAllBugReportByMemberId(memberId);
 
     if (results.isEmpty())
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      return ResponseEntity.status(NO_CONTENT).build();
 
-    return ResponseEntity.status(HttpStatus.OK).body(results);
+    return ResponseEntity.status(OK).body(results);
   }
 }

@@ -15,11 +15,12 @@ import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
 import org.prgrms.devconnect.api.service.chatting.ChattingQueryService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class ChattingControllor {
   public ResponseEntity<ChatPartResponse> createChatting(@PathVariable("memberId") Long memberId,
                                                          @RequestBody @Valid ChatRoomRequest request) {
     ChatPartResponse chatting = chattingCommandService.createNewChatting(memberId, request.receiverId());
-    return ResponseEntity.status(HttpStatus.CREATED).body(chatting);
+    return ResponseEntity.status(CREATED).body(chatting);
   }
 
   @GetMapping("/member/{memberId}")
@@ -58,7 +59,7 @@ public class ChattingControllor {
   })
   public ResponseEntity<List<ChatRoomListResponse>> createChatting(@PathVariable("memberId") Long memberId) {
     List<ChatRoomListResponse> results = chattingQueryService.findAllActivateChattingsByMemberId(memberId);
-    return ResponseEntity.status(HttpStatus.OK).body(results);
+    return ResponseEntity.status(OK).body(results);
   }
 
   @PutMapping("/{chatroomId}")
@@ -71,7 +72,7 @@ public class ChattingControllor {
   })
   public ResponseEntity<Void> closeChattingRoom(@PathVariable("chatroomId") Long chatroomId) {
     chattingCommandService.closeChattingRoom(chatroomId);
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    return ResponseEntity.status(NO_CONTENT).build();
   }
 
   @GetMapping("/rooms/{roomId}/messages")
@@ -88,6 +89,6 @@ public class ChattingControllor {
 
     // 서비스 레이어에서 메시지를 조회
     MessageFullResponse messages = chattingQueryService.getAllMessagebyRoomId(roomId, pageable);
-    return ResponseEntity.status(HttpStatus.OK).body(messages);
+    return ResponseEntity.status(OK).body(messages);
   }
 }
