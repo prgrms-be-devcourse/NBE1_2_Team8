@@ -17,17 +17,20 @@ public class BugReportQueryService {
 
   private final BugReportRepository bugReportRepository;
 
+  // 버그리포트 상세 조회
   public BugReport getBugReport(Long bugreportId){
     return bugReportRepository.findById(bugreportId)
             .orElseThrow(()-> new BugReportException(ExceptionCode.NOT_FOUND_BUG_REPORT));
   }
 
+  // 모든 버그리포트 확인
   public List<BugReport> getAllBugReport(){
     return bugReportRepository.findAll();
   }
 
+
+  // 사용자가 생성한 모든 버그리포트 확인
   public List<BugReport> getAllBugReportByMemberId(Long memberId){
-    List<BugReport> results = bugReportRepository.findAllByMember_MemberId(memberId);
-    return results;
+    return bugReportRepository.findAllByMember_MemberId(memberId);
   }
 }
