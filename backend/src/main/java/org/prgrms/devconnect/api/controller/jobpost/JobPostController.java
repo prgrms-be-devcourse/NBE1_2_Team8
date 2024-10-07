@@ -2,13 +2,13 @@ package org.prgrms.devconnect.api.controller.jobpost;
 
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devconnect.api.controller.jobpost.dto.response.JobPostInfoResponseDto;
 import org.prgrms.devconnect.api.service.jobpost.JobPostCommandService;
 import org.prgrms.devconnect.api.service.jobpost.JobPostQueryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +23,19 @@ public class JobPostController {
 
     jobPostCommandService.deleteJobPost(jobPostId);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/")
+  public ResponseEntity<Page<JobPostInfoResponseDto>> getAllJobPosts(Pageable pageable) {
+
+    Page<JobPostInfoResponseDto> jobPosts = jobPostQueryService.getAllJobPosts(pageable);
+    return ResponseEntity.ok().body(jobPosts);
+  }
+
+  @GetMapping("/{jobPostId}")
+  public ResponseEntity<JobPostInfoResponseDto> getJobPost(@PathVariable Long jobPostId) {
+
+    JobPostInfoResponseDto jobPost = jobPostQueryService.getJobPost(jobPostId);
+    return ResponseEntity.ok().body(jobPost);
   }
 }
