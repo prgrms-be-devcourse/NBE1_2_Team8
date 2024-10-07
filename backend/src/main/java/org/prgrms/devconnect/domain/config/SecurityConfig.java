@@ -57,8 +57,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/members/login", "/api/v1/members/signup").permitAll()
                 .requestMatchers("/static/**").permitAll()
                 .requestMatchers("/templates/**").permitAll()
-                .requestMatchers("/api/v1/members/logout").authenticated()
-                .anyRequest().authenticated()
+                .requestMatchers("/api/v1/members/logout", "/api/v1/members").authenticated()
+                .anyRequest().permitAll()
 
         );
 
