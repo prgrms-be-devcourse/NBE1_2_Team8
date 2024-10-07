@@ -26,7 +26,10 @@ public record BugReportResponse(
         BugType bugType,
 
         @Schema(description = "생성 시간", example = "2024-10-04T10:15:30")
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+
+        @Schema(description = "수정 시간", example = "2024-10-04T10:15:30")
+        LocalDateTime updatedAt
 ) {
   public static BugReportResponse toDTO(BugReport bugReport) {
     return BugReportResponse.builder()
@@ -35,6 +38,7 @@ public record BugReportResponse(
             .relatedUrl(bugReport.getRelatedUrl())
             .bugType(bugReport.getBugType())
             .createdAt(bugReport.getCreatedAt())
+            .updatedAt(bugReport.getUpdatedAt())
             .build();
   }
 }

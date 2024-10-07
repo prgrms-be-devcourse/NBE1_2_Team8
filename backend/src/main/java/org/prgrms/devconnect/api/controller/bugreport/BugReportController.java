@@ -36,13 +36,13 @@ public class BugReportController {
   @ApiResponse(responseCode = "201", description = "버그 리포트가 성공적으로 생성되었습니다.",
           content = @Content(schema = @Schema(implementation = BugReport.class)))
   @PostMapping
-  public ResponseEntity<BugReport> createBugReport(@RequestBody @Valid BugReportRequest dto) {
-    BugReport bugReport = bugReportCommendService.createBugReport(dto.memberId(),
+  public ResponseEntity<BugReportResponse> createBugReport(@RequestBody @Valid BugReportRequest dto) {
+    BugReportResponse response = bugReportCommendService.createBugReport(dto.memberId(),
             dto.url(),
             dto.content(),
             dto.bugType());
 
-    return ResponseEntity.status(CREATED).body(bugReport);
+    return ResponseEntity.status(CREATED).body(response);
   }
 
   @Operation(summary = "모든 버그 리포트 조회", description = "모든 버그 리포트를 조회합니다.")

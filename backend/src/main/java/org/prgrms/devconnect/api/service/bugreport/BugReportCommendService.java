@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.api.service.bugreport;
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devconnect.api.controller.bugreport.dto.response.BugReportResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.domain.define.bugreport.entity.BugReport;
 import org.prgrms.devconnect.domain.define.bugreport.entity.constant.BugType;
@@ -19,7 +20,7 @@ public class BugReportCommendService {
   private final MemberQueryService memberQueryService;
 
   // 버그리포트 생성
-  public BugReport createBugReport(Long memberId, String url, String content, BugType bugType) {
+  public BugReportResponse createBugReport(Long memberId, String url, String content, BugType bugType) {
     Member member = memberQueryService.getMemberByIdOrThrow(memberId);
 
     BugReport bugReport = BugReport.builder()
@@ -31,7 +32,7 @@ public class BugReportCommendService {
 
     bugReportRepository.save(bugReport);
 
-    return bugReport;
+    return BugReportResponse.toDTO(bugReport);
   }
 
   // 버그리포트 삭제

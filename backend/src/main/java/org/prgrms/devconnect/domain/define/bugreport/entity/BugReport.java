@@ -20,7 +20,7 @@ public class BugReport extends Timestamp {
   @Column(name = "bug_report_id")
   private Long bugReportId;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
