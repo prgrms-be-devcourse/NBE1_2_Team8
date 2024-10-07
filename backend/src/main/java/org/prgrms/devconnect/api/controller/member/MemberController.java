@@ -8,8 +8,11 @@ import org.prgrms.devconnect.api.controller.member.dto.request.MemberUpdateReque
 import org.prgrms.devconnect.api.controller.member.dto.response.MemberResponseDto;
 import org.prgrms.devconnect.api.service.member.MemberCommandService;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +29,9 @@ public class MemberController {
   private final MemberCommandService memberCommandService;
   private final MemberQueryService memberQueryService;
 
-  @GetMapping("/{memberId}")
-  public ResponseEntity<MemberResponseDto> getMember(@PathVariable Long memberId) {
-    MemberResponseDto responseDto = memberQueryService.getMember(memberId);
+  @GetMapping
+  public ResponseEntity<MemberResponseDto> getMember(@AuthenticationPrincipal Member member) {
+    MemberResponseDto responseDto = memberQueryService.getMember(member.getMemberId());
     return ResponseEntity.ok(responseDto);
   }
 
@@ -39,9 +42,11 @@ public class MemberController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<Void> login(@RequestBody @Valid MemberLoginRequestDto dto) {
-    memberQueryService.loginMember(dto);
-    return ResponseEntity.ok().build();
+  public void login(@RequestBody @Valid MemberLoginRequestDto dto) {
+  }
+
+  @PostMapping("/logout")
+  public void logout() {
   }
 
   @PutMapping("/{memberId}")

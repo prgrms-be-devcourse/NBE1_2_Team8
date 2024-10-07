@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.api.service.member;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberLoginRequestDto;
 import org.prgrms.devconnect.api.controller.member.dto.response.MemberResponseDto;
@@ -45,6 +46,10 @@ public class MemberQueryService {
     return memberRepository.findByEmail(email).orElseThrow(
         () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
     );
+  }
+
+  public Optional<Member> getMemberByEmail(String email) {
+    return memberRepository.findByEmail(email);
   }
 
   public void validateDuplicatedEmail(String email) {

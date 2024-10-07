@@ -11,6 +11,7 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberCommandService {
 
   private final MemberRepository memberRepository;
+  private final PasswordEncoder passwordEncoder;
   private final TechStackQueryService techStackQueryService;
   private final MemberQueryService memberQueryService;
 
@@ -30,6 +32,7 @@ public class MemberCommandService {
     List<MemberTechStackMapping> memberTechStacks = getTechStackMappings(requestDto.techStackIds());
 
     Member member = requestDto.toEntity(memberTechStacks);
+    member.passwordEncode(passwordEncoder);
     memberRepository.save(member);
 
     return member;
