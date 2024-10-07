@@ -5,7 +5,9 @@ import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.prgrms.devconnect.domain.define.board.repository.custom.BoardRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, BoardRepositoryCustom {
   @Query("SELECT b FROM Board b WHERE b.endDate< :currentDate AND b.status=:status")
   List<Board> findAllByEndDateAndStatus(@Param("currentDate") LocalDateTime currentDate,
                                         @Param("status") BoardStatus status);
@@ -26,4 +28,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
   @Query("SELECT b FROM Board b WHERE b.boardId = :boardId AND b.status != 'DELETED'")
   Optional<Board> findByIdAndStatusNotDeleted(@Param("boardId") Long boardId);
+
+  @Modifying
+  @Query("UPDATE Board b SET b.views = b.views + 1 WHERE b.boardId = :boardId")
+  void incrementViews(@Param("boardId") Long boardId);
 }
