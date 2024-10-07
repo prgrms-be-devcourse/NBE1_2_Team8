@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,5 +40,11 @@ public class InterestBoard {
   public InterestBoard(Member member, Board board) {
     this.member = member;
     this.board = board;
+  }
+
+  public boolean isUrgent() {
+    LocalDate today = LocalDate.now();
+    LocalDate endDate = this.board.getEndDate().toLocalDate();
+    return endDate.isBefore(today.plusDays(3L));
   }
 }
