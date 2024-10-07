@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.prgrms.devconnect.domain.define.alarm.repository.AlarmRepository;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.Comment;
+import org.prgrms.devconnect.domain.define.interest.entity.InterestBoard;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -119,10 +121,13 @@ class AlarmCommandServiceTest {
   void createReplyCommentReceivedAlarmToParentCommenter() {
     Comment parent = mock();
     Comment reply = mock();
+    Member parentMember = mock();
+    Member replyMember = mock();
 
     when(reply.getParent()).thenReturn(parent);
+    when(reply.getParent().getMember()).thenReturn(parentMember);
+    when(reply.getMember()).thenReturn(replyMember);
     when(commentCommandService.createComment(mock())).thenReturn(reply);
-    when(reply.getParent()).thenReturn(parent);
 
     Alarm alarm = alarmCommandService.createReplyCommentReceivedAlarmToParentCommenter(reply);
 
@@ -130,4 +135,19 @@ class AlarmCommandServiceTest {
   }
 
 
+  @Test
+  @DisplayName("마감 임박 알림 저장 되는지 확인")
+  void createUrgentAlarmAboutInterestBoard() {
+    InterestBoard interestBoard = mock();
+    Member member = mock();
+    Board board = mock();
+
+    when(board.getEndDate()).thenReturn(LocalDateTime.MAX);
+    when(interestBoard.getMember()).thenReturn(member);
+    when(interestBoard.getBoard()).thenReturn(board);
+
+    alarmCommandService.createUrgentAlarmAboutInterestBoard(interestBoard);
+
+    verify(alarmRepository, times(1)).save(any(Alarm.class));
+  }
 }
