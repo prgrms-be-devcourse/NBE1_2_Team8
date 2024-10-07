@@ -11,10 +11,8 @@ import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,10 +47,10 @@ public class MemberController {
   public void logout() {
   }
 
-  @PutMapping("/{memberId}")
-  public ResponseEntity<Void> updateMember(@PathVariable Long memberId,
+  @PutMapping()
+  public ResponseEntity<Void> updateMember(@AuthenticationPrincipal Member member,
       @RequestBody @Valid MemberUpdateRequestDto dto) {
-    memberCommandService.updateMember(memberId, dto);
+    memberCommandService.updateMember(member.getMemberId(), dto);
     return ResponseEntity.ok().build();
   }
 
