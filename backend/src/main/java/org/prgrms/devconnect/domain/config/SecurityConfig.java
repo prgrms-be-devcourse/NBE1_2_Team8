@@ -1,7 +1,6 @@
 package org.prgrms.devconnect.domain.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.models.PathItem;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.common.auth.CustomerMemberDetailsService;
 import org.prgrms.devconnect.common.auth.JwtService;
@@ -9,7 +8,6 @@ import org.prgrms.devconnect.common.auth.filter.JwtTokenAuthenticationFilter;
 import org.prgrms.devconnect.common.auth.filter.LoginAuthenticationFilter;
 import org.prgrms.devconnect.common.auth.handler.LoginFailureHandler;
 import org.prgrms.devconnect.common.auth.handler.LoginSuccessHandler;
-import org.prgrms.devconnect.common.auth.redis.RefreshTokenRepository;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -73,8 +71,8 @@ public class SecurityConfig {
                 // 관심
                 .requestMatchers("/api/v1/interests/**").authenticated()
                 // 채용 공고
-                .requestMatchers(HttpMethod.DELETE,"/api/v1/job-posts/**").authenticated()
-                .requestMatchers( "/api/v1/job-posts/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/job-posts/**").authenticated()
+                .requestMatchers("/api/v1/job-posts/**").permitAll()
                 .anyRequest().permitAll()
         );
 
