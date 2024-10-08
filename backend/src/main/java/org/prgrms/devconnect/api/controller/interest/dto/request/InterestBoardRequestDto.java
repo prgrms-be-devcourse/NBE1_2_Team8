@@ -16,11 +16,11 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 public record InterestBoardRequestDto(
 
         @NotNull(message = "사용자 ID는 필수입니다.")
-        @Schema(description = "사용자 ID", example = "2", requiredMode = RequiredMode.REQUIRED)
+        @Schema(description = "사용자 ID", example = "2")
         Long memberId,
 
         @NotNull(message = "게시물 ID는 필수입니다.")
-        @Schema(description = "게시물 ID", example = "1", requiredMode = RequiredMode.REQUIRED)
+        @Schema(description = "게시물 ID", example = "1")
         Long boardId
 ) {
 
