@@ -86,8 +86,8 @@ public class MemberCommandService {
     List<MemberTechStackMapping> mappingsToDelete = memberTechStackMappingRepository
             .findAllByMember_MemberIdAndTechStack_TechStackIdIn(member.getMemberId(), deleteTechIds);
 
-    for (MemberTechStackMapping mapping : mappingsToDelete) {
-      memberTechStackMappingRepository.delete(mapping);
+    if(!mappingsToDelete.isEmpty()) {
+      memberTechStackMappingRepository.deleteAll(mappingsToDelete);
     }
   }
 
@@ -95,13 +95,17 @@ public class MemberCommandService {
   private void addTechStacksToMember(Member member, List<Long> addTechIds) {
     List<TechStack> techStacks = techStackRepository.findAllByTechStackIdIn(addTechIds);
 
-    for (TechStack techStack : techStacks) {
-      MemberTechStackMapping newMapping = MemberTechStackMapping.builder()
-              .techStack(techStack)
-              .build();
-      newMapping.assignMember(member);
+    if(! techStacks.isEmpty()){
+      List<MemberTechStackMapping> mappingToSave = techStacks.stream()
+              .map(techStack -> {
+                MemberTechStackMapping mapping = MemberTechStackMapping.builder()
+                        .techStack(techStack)
+                        .build();
+                mapping.assignMember(member);
+                return mapping;
+              }).collect(Collectors.toList());
 
-      memberTechStackMappingRepository.save(newMapping);
+      memberTechStackMappingRepository.saveAll(mappingToSave);
     }
   }
   public void logout(String email) {

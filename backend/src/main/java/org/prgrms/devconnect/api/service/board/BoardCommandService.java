@@ -83,12 +83,12 @@ public class BoardCommandService {
 
   // 기술 스택 삭제 메서드
   private void deleteTechStacksFromBoard(Board board, List<Long> deleteTechIds) {
-    List<BoardTechStackMapping> techStacks
+    List<BoardTechStackMapping> mappingToDelete
             = boardTechStackMappingRepository
                     .findAllByBoard_BoardIdAndTechStack_TechStackIdIn(board.getBoardId(), deleteTechIds);
 
-    for (BoardTechStackMapping mapping : techStacks) {
-      boardTechStackMappingRepository.delete(mapping);
+    if(!mappingToDelete.isEmpty()){
+      boardTechStackMappingRepository.deleteAll(mappingToDelete);
     }
   }
 
@@ -96,13 +96,17 @@ public class BoardCommandService {
   private void addTechStacksFromBoard(Board board, List<Long> addTechIds) {
     List<TechStack> techStacks = techStackRepository.findAllByTechStackIdIn(addTechIds);
 
-    for (TechStack techStack : techStacks) {
-      BoardTechStackMapping mapping = BoardTechStackMapping.builder()
-              .techStack(techStack)
-              .build();
-      mapping.assignBoard(board);
+    if(!techStacks.isEmpty()){
+      List<BoardTechStackMapping> mappingToSave = techStacks.stream().map(techStack -> {
+        BoardTechStackMapping mapping = BoardTechStackMapping
+                .builder()
+                .techStack(techStack)
+                .build();
+        mapping.assignBoard(board);
+        return mapping;
+      }).collect(Collectors.toList());
 
-      boardTechStackMappingRepository.save(mapping);
+      boardTechStackMappingRepository.saveAll(mappingToSave);
     }
   }
 
