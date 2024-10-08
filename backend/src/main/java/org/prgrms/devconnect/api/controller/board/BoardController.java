@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.api.controller.board;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,7 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
+  @Operation(summary = "게시물 수정", description = "게시물 ID를 기반으로 게시물을 수정합니다.")
   @PutMapping("/{boardId}")
   public ResponseEntity<Void> updateBoard(@PathVariable Long boardId,
       @RequestBody @Valid BoardUpdateRequestDto boardUpdateRequestDto) {
