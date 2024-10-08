@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.prgrms.devconnect.api.controller.bugreport.dto.response.BugReportResponse;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.domain.define.bugreport.entity.BugReport;
 import org.prgrms.devconnect.domain.define.bugreport.entity.constant.BugType;
@@ -50,12 +51,11 @@ public class BugReportCommendServiceTest {
     when(bugReportRepository.save(any(BugReport.class))).thenReturn(bugReport);
 
     // When
-    BugReport result = bugReportCommendService.createBugReport(memberId, url, content, bugType);
+    BugReportResponse result = bugReportCommendService.createBugReport(memberId, url, content, bugType);
 
     // Then
     assertNotNull(result);
-    assertEquals(url, result.getRelatedUrl());
-    assertEquals(content, result.getContent());
+    assertEquals(url, result.relatedUrl());
     verify(bugReportRepository, times(1)).save(any(BugReport.class));
   }
 

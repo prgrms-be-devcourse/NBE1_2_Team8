@@ -11,9 +11,12 @@ public enum ExceptionCode {
   NOT_FOUND_ALARM(404, "존재하지 않는 알람입니다."),
   EMPTY_ALARMS(400, "알림이 비어있습니다."),
 
+  //Email Error
+  EMAIL_SERVER_ERROR(500, "이메일을 전송하던 중에 오류가 발생했습니다."),
   //Board Error
   NOT_FOUND_BOARD(404, "존재하지 않는 게시물입니다."),
   ALREADY_CLOSED_BOARD(400,"마감된 게시물입니다."),
+  ALREADY_DELETED_BOARD(400,"이미 삭제된 게시물입니다."),
 
   //BoardTechStack Error
   NOT_FOUND_BOARD_TECH_STACK(404, "존재하지 않는 테크스택입니다."),
