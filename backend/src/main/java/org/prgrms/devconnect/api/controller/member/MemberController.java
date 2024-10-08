@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.api.controller.member;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberCreateRequestDto;
@@ -8,10 +9,12 @@ import org.prgrms.devconnect.api.controller.member.dto.request.MemberUpdateReque
 import org.prgrms.devconnect.api.controller.member.dto.response.MemberResponseDto;
 import org.prgrms.devconnect.api.service.member.MemberCommandService;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
+import org.prgrms.devconnect.common.auth.JwtService;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,6 +29,7 @@ public class MemberController {
 
   private final MemberCommandService memberCommandService;
   private final MemberQueryService memberQueryService;
+  private final JwtService jwtService;
 
   @GetMapping
   public ResponseEntity<MemberResponseDto> getMember(@AuthenticationPrincipal Member member) {
@@ -44,7 +48,10 @@ public class MemberController {
   }
 
   @PostMapping("/logout")
-  public void logout() {
+  public ResponseEntity<Void> logout(
+      @CookieValue(value = "Authorization-refresh", defaultValue = "") String refreshToken) {
+    memberCommandService.logout(refreshToken);
+    return ResponseEntity.ok().build();
   }
 
   @PutMapping()
@@ -54,4 +61,11 @@ public class MemberController {
     return ResponseEntity.ok().build();
   }
 
+  @GetMapping("/reissue")
+  public ResponseEntity<Void> reissueAccessToken(
+      @CookieValue(value = "Authorization-refresh", defaultValue = "") String refreshToken,
+      HttpServletResponse response) {
+    jwtService.reIssueAccessToken(response, refreshToken);
+    return ResponseEntity.ok().build();
+  }
 }
