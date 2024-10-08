@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Alarm Notification</title>
+</head>
+<body>
+<div class="alarm">
+    <h3>DevConnector로부터 알림이 도착했어요!!</h3>
+    <p th:text="${alertText}">Default Alarm Text</p>
+    <a th:href="${relatedUrl}" th:text="${relatedUrl}">Click here for details</a>
+</div>
+
+</body>
+</html>
