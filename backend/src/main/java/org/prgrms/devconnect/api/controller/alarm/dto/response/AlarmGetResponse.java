@@ -9,7 +9,7 @@ import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "알림 전체 조회 정보")
+@Schema(description = "단일 알림 응답 정보")
 public record AlarmGetResponse(
 
         @Schema(description = "알림 수신자 닉네임", example = "홍길동")
