@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.api.service.board;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardCreateRequestDto;
 import org.prgrms.devconnect.api.controller.board.dto.request.BoardTechStackRequestDto;
@@ -13,9 +14,11 @@ import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.BoardTechStackMapping;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
 import org.prgrms.devconnect.domain.define.board.repository.BoardRepository;
+import org.prgrms.devconnect.domain.define.board.repository.BoardTechStackMappingRepository;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
+import org.prgrms.devconnect.domain.define.techstack.repository.TechStackRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +34,9 @@ public class BoardCommandService {
   private final JobPostQueryService jobPostQueryService;
   private final TechStackQueryService techStackQueryService;
   private final BoardQueryService boardQueryService;
+  private final BoardTechStackMappingRepository boardTechStackMappingRepository;
+  private final TechStackRepository techStackRepository;
+  private final EntityManager em;
 
   public Long createBoard(BoardCreateRequestDto boardCreateRequestDto) {
     Member member = memberQueryService.getMemberByIdOrThrow(boardCreateRequestDto.memberId());
@@ -48,16 +54,55 @@ public class BoardCommandService {
     return board.getBoardId();
   }
 
-//  게시물 수정은 추후 구현 예정
   public Long updateBoard(Long boardId, BoardUpdateRequestDto requestDto) {
     Board board = boardQueryService.getBoardByIdOrThrow(boardId);
 
     if (board.isDeleted()) {
-      throw new BoardException(ExceptionCode.NOT_FOUND_BOARD);
+      throw new BoardException(ExceptionCode.ALREADY_DELETED_BOARD);
+    }
+    board.updateFromDto(requestDto);
+
+    // 삭제할 TechStack 처리
+    List<Long> deleteTechIds = requestDto.deleteTechStacks();
+    if (deleteTechIds != null){
+      deleteTechStacksFromBoard(board, deleteTechIds);
     }
 
-    board.updateFromDto(requestDto);
+    // 추가할 TechStack 처리
+    List<Long> addTechIds = requestDto.addTechStacks();
+    if (addTechIds != null){
+      addTechStacksFromBoard(board, addTechIds);
+    }
+
+    em.flush();
+    em.clear();
+
     return board.getBoardId();
+  }
+
+  // 기술 스택 삭제 메서드
+  private void deleteTechStacksFromBoard(Board board, List<Long> deleteTechIds) {
+    List<BoardTechStackMapping> techStacks
+            = boardTechStackMappingRepository
+                    .findAllByBoard_BoardIdAndTechStack_TechStackIdIn(board.getBoardId(), deleteTechIds);
+
+    for (BoardTechStackMapping mapping : techStacks) {
+      boardTechStackMappingRepository.delete(mapping);
+    }
+  }
+
+  // 기술 스택 추가 메서드
+  private void addTechStacksFromBoard(Board board, List<Long> addTechIds) {
+    List<TechStack> techStacks = techStackRepository.findAllByTechStackIdIn(addTechIds);
+
+    for (TechStack techStack : techStacks) {
+      BoardTechStackMapping mapping = BoardTechStackMapping.builder()
+              .techStack(techStack)
+              .build();
+      mapping.assignBoard(board);
+
+      boardTechStackMappingRepository.save(mapping);
+    }
   }
 
   public void deleteBoard(Long boardId) {
