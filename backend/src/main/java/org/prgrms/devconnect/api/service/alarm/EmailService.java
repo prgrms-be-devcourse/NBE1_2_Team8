@@ -3,6 +3,8 @@ package org.prgrms.devconnect.api.service.alarm;
 import groovy.util.logging.Slf4j;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devconnect.common.exception.ExceptionCode;
+import org.prgrms.devconnect.common.exception.alarm.EmailException;
 import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +40,7 @@ public class EmailService {
       log.info("Succeeded to send Email");
     } catch (Exception e) {
       log.info("Failed to send Email");
-      throw new RuntimeException(e);
+      throw new EmailException(ExceptionCode.EMAIL_SERVER_ERROR);
     }
   }
 
