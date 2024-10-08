@@ -3,6 +3,7 @@ package org.prgrms.devconnect.domain.define.board.repository;
 
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
+import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.prgrms.devconnect.domain.define.board.repository.custom.BoardRepositoryCustom;
@@ -28,6 +29,21 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
 
   @Query("SELECT b FROM Board b WHERE b.boardId = :boardId AND b.status != 'DELETED'")
   Optional<Board> findByIdAndStatusNotDeleted(@Param("boardId") Long boardId);
+
+  @Query("SELECT b FROM Board b WHERE b.jobPost.jobPostId = :jobPostId AND b.status != 'DELETED'")
+  List<Board> findAllByJobPostId(@Param("jobPostId") Long jobPostId);
+
+  @Query("SELECT b FROM Board b WHERE b.createdAt BETWEEN :startOfWeek AND :endOfWeek AND b.views >= 500 AND b.status != 'DELETED'")
+  List<Board> findBoardsWithPopularTagCondition(@Param("startOfWeek") LocalDateTime startOfWeek, @Param("endOfWeek") LocalDateTime endOfWeek);
+
+  @Query("SELECT b FROM Board b WHERE b.endDate BETWEEN :currentDate AND :deadlineDate AND b.status != 'DELETED'")
+  List<Board> findBoardsWithDeadlineApproaching(@Param("currentDate") LocalDateTime currentDate, @Param("deadlineDate") LocalDateTime deadlineDate);
+
+  @Query("SELECT DISTINCT b FROM Board b JOIN b.boardTechStacks ts JOIN ts.techStack t WHERE t IN :techStacks AND b.status = :status")
+  List<Board> findAllByTechStacks(
+          @Param("techStacks") List<TechStack> techStacks,
+          @Param("status") BoardStatus status
+  );
 
   @Modifying
   @Query("UPDATE Board b SET b.views = b.views + 1 WHERE b.boardId = :boardId")

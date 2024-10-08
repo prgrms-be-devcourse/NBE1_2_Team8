@@ -38,23 +38,6 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
   }
 
   @Override
-  public List<Board> findAllByTechStacks(List<TechStack> techStacks) {
-    QBoard board = QBoard.board;
-    QBoardTechStackMapping boardTechStackMapping= QBoardTechStackMapping.boardTechStackMapping;
-    QTechStack techStack = QTechStack.techStack;
-
-    return queryFactory
-            .select(board)
-            .from(board)
-            .join(board.boardTechStacks,boardTechStackMapping)
-            .join(boardTechStackMapping.techStack,techStack)
-            .where(techStack.in(techStacks).and(board.status.eq(BoardStatus.RECRUITING)))
-            .distinct()
-            .fetch();
-
-  }
-
-  @Override
   public Page<Board> findByFilter(BoardFilterDto filterDto, Pageable pageable) {
     QBoard board=QBoard.board;
     JPAQuery<Board> query = queryFactory
