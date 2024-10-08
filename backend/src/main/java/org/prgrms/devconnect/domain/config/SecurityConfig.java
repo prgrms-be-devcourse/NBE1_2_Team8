@@ -1,6 +1,7 @@
 package org.prgrms.devconnect.domain.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.models.PathItem;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.common.auth.CustomerMemberDetailsService;
 import org.prgrms.devconnect.common.auth.JwtService;
@@ -71,6 +72,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/comments/**").authenticated()
                 // 관심
                 .requestMatchers("/api/v1/interests/**").authenticated()
+                // 채용 공고
+                .requestMatchers(HttpMethod.DELETE,"/api/v1/job-posts/**").authenticated()
+                .requestMatchers( "/api/v1/job-posts/**").permitAll()
                 .anyRequest().permitAll()
         );
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/jobPosts")
+@RequestMapping("/api/v1/job-posts")
 public class JobPostController {
 
   private final JobPostQueryService jobPostQueryService;
@@ -42,7 +42,7 @@ public class JobPostController {
   @PatchMapping("/{jobPostId}/likes")
   public ResponseEntity<Void> JobPostLikes(@PathVariable Long jobPostId) {
 
-    jobPostQueryService.jobPostLikes(jobPostId);
+    jobPostCommandService.jobPostLikes(jobPostId);
     return ResponseEntity.ok().build();
   }
 }
