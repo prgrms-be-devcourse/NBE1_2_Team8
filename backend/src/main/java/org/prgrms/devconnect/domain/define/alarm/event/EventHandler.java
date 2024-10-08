@@ -2,6 +2,8 @@ package org.prgrms.devconnect.domain.define.alarm.event;
 
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.service.alarm.AlarmCommandService;
+import org.prgrms.devconnect.api.service.alarm.EmailService;
+import org.prgrms.devconnect.domain.define.alarm.entity.Alarm;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -10,25 +12,29 @@ import org.springframework.stereotype.Component;
 public class EventHandler {
 
   private final AlarmCommandService alarmService;
+  private final EmailService emailService;
 
   @EventListener
   public void sendWelcomeMessage(RegisteredWelcomeEvent event) {
-    alarmService.createWelcomeAlarmWhenSignIn(event.member());
-    // TODO: 이메일 전송 메서드
+    Alarm alarm = alarmService.createWelcomeAlarmWhenSignIn(event.member());
+    emailService.sendEmail(alarm);
   }
 
   @EventListener
   public void sendCommentPostedOnBoardToBoardPoster(RegisteredCommentOnBoardEvent event) {
-    alarmService.createCommentPostedMessageToBoardPoster(event.comment());
+    Alarm alarm = alarmService.createCommentPostedMessageToBoardPoster(event.comment());
+    emailService.sendEmail(alarm);
   }
 
   @EventListener
   public void sendRegisteredReplyCommentMessageToParentCommenter(RegisteredReplyCommentEvent event) {
-    alarmService.createReplyCommentReceivedAlarmToParentCommenter(event.comment());
+    Alarm alarm = alarmService.createReplyCommentReceivedAlarmToParentCommenter(event.comment());
+    emailService.sendEmail(alarm);
   }
 
   @EventListener
   public void sendBoardUrgentAlarm(RegisteredUrgentEvent event) {
-    alarmService.createUrgentAlarmAboutInterestBoard(event.interestBoard());
+    Alarm alarm = alarmService.createUrgentAlarmAboutInterestBoard(event.interestBoard());
+    emailService.sendEmail(alarm);
   }
 }
