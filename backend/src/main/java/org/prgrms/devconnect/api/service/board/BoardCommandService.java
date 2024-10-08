@@ -83,13 +83,13 @@ public class BoardCommandService {
 
   // 기술 스택 삭제 메서드
   private void deleteTechStacksFromBoard(Board board, List<Long> deleteTechIds) {
-    List<BoardTechStackMapping> mappingToDelete
-            = boardTechStackMappingRepository
-                    .findAllByBoard_BoardIdAndTechStack_TechStackIdIn(board.getBoardId(), deleteTechIds);
+    List<Long> idsToDelete = boardTechStackMappingRepository
+            .findAllByBoard_BoardIdAndTechStack_TechStackIdIn(board.getBoardId(), deleteTechIds)
+            .stream()
+            .map(BoardTechStackMapping::getId)
+            .collect(Collectors.toList());
 
-    if(!mappingToDelete.isEmpty()){
-      boardTechStackMappingRepository.deleteAll(mappingToDelete);
-    }
+    boardTechStackMappingRepository.deleteAllByIds(idsToDelete);
   }
 
   // 기술 스택 추가 메서드
@@ -97,14 +97,13 @@ public class BoardCommandService {
     List<TechStack> techStacks = techStackRepository.findAllByTechStackIdIn(addTechIds);
 
     if(!techStacks.isEmpty()){
-      List<BoardTechStackMapping> mappingToSave = techStacks.stream().map(techStack -> {
-        BoardTechStackMapping mapping = BoardTechStackMapping
-                .builder()
-                .techStack(techStack)
-                .build();
-        mapping.assignBoard(board);
-        return mapping;
-      }).collect(Collectors.toList());
+      List<BoardTechStackMapping> mappingToSave = techStacks.stream()
+              .map(techStack -> BoardTechStackMapping.builder()
+                      .techStack(techStack)
+                      .build()
+              ).collect(Collectors.toList());
+
+      mappingToSave.forEach(boardTechStackMapping -> boardTechStackMapping.assignBoard(board));
 
       boardTechStackMappingRepository.saveAll(mappingToSave);
     }

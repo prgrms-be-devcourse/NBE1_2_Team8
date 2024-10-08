@@ -69,8 +69,8 @@ public class MemberCommandService {
     }
 
     // 1차 캐시 초기화
-    em.flush();
-    em.clear();
+//    em.flush();
+//    em.clear();
   }
 
   private List<MemberTechStackMapping> getTechStackMappings(List<Long> techStackIds) {
@@ -82,28 +82,30 @@ public class MemberCommandService {
 
 
   // 기술 스택 삭제 기능
-  private void deleteTechStacksFromMember(Member member, List<Long> deleteTechIds) {
-    List<MemberTechStackMapping> mappingsToDelete = memberTechStackMappingRepository
-            .findAllByMember_MemberIdAndTechStack_TechStackIdIn(member.getMemberId(), deleteTechIds);
+  public void deleteTechStacksFromMember(Member member, List<Long> deleteTechIds) {
+    List<Long> idsToDelete = memberTechStackMappingRepository
+            .findAllByMember_MemberIdAndTechStack_TechStackIdIn(member.getMemberId(), deleteTechIds)
+            .stream()
+            .map(MemberTechStackMapping::getId)
+            .collect(Collectors.toList());
 
-    if(!mappingsToDelete.isEmpty()) {
-      memberTechStackMappingRepository.deleteAll(mappingsToDelete);
-    }
+    memberTechStackMappingRepository.deleteAllByIds(idsToDelete);
   }
 
   // 기술 스택 추가 기능
-  private void addTechStacksToMember(Member member, List<Long> addTechIds) {
+  public void addTechStacksToMember(Member member, List<Long> addTechIds) {
     List<TechStack> techStacks = techStackRepository.findAllByTechStackIdIn(addTechIds);
 
-    if(! techStacks.isEmpty()){
+
+    if(!techStacks.isEmpty()){
       List<MemberTechStackMapping> mappingToSave = techStacks.stream()
-              .map(techStack -> {
-                MemberTechStackMapping mapping = MemberTechStackMapping.builder()
-                        .techStack(techStack)
-                        .build();
-                mapping.assignMember(member);
-                return mapping;
-              }).collect(Collectors.toList());
+              .map(techStack -> MemberTechStackMapping.builder()
+                      .techStack(techStack)
+                      .build())
+              .collect(Collectors.toList());
+
+//      em.merge(member);
+      mappingToSave.forEach(mapping -> mapping.assignMember(member));
 
       memberTechStackMappingRepository.saveAll(mappingToSave);
     }
