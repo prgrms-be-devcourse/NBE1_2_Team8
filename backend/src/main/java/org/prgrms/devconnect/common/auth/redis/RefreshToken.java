@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Index;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
@@ -15,9 +16,9 @@ import org.springframework.data.redis.core.index.Indexed;
 public class RefreshToken {
 
   @Id
-  @Indexed
   private String refreshToken;
 
+  @Indexed
   private String authKey;
 
   @TimeToLive

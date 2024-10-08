@@ -48,9 +48,8 @@ public class MemberController {
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<Void> logout(
-      @CookieValue(value = "Authorization-refresh", defaultValue = "") String refreshToken) {
-    memberCommandService.logout(refreshToken);
+  public ResponseEntity<Void> logout(@AuthenticationPrincipal Member member) {
+    memberCommandService.logout(member.getEmail());
     return ResponseEntity.ok().build();
   }
 

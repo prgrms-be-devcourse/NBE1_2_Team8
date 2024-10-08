@@ -58,14 +58,12 @@ public class MemberCommandService {
         .collect(Collectors.toList());
   }
 
-  public void logout(String refreshToken) {
-    log.info("[REDIS] Refresh Token 삭제 시도: {}", refreshToken);
-    RefreshToken token = refreshTokenRepository.findByRefreshToken(refreshToken)
-        .orElseThrow(
-            () -> new RefreshTokenException(ExceptionCode.NOT_FOUND_REFRESH_TOKEN)
-        );
-
+  public void logout(String email) {
+    log.info("[REDIS] Refresh Token 삭제 시도: {}", email);
+    RefreshToken token = refreshTokenRepository.findByAuthKey(email).orElseThrow(
+        () -> new RefreshTokenException(ExceptionCode.NOT_FOUND_REFRESH_TOKEN)
+    );
     refreshTokenRepository.delete(token);
-    log.info("[REDIS] Refresh Token 삭제 성공: {}", refreshToken);
+    log.info("[REDIS] Refresh Token 삭제 성공: {}", email);
   }
 }
