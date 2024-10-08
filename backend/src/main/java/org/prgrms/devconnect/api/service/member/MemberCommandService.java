@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.api.service.member;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberCreateRequestDto;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberUpdateRequestDto;
@@ -27,6 +28,7 @@ public class MemberCommandService {
   private final MemberQueryService memberQueryService;
   private final MemberTechStackMappingRepository memberTechStackMappingRepository;
   private final TechStackRepository techStackRepository;
+  private final EntityManager em;
 
   @RegisterPublisher
   public Member createMember(MemberCreateRequestDto requestDto) {
@@ -46,15 +48,18 @@ public class MemberCommandService {
 
     // 삭제할 TechStack 처리
     List<Long> deleteTechIds = requestDto.deleteTechStacks();
-    if (!deleteTechIds.isEmpty()) {
+    if (deleteTechIds != null) {
       deleteTechStacksFromMember(member, deleteTechIds);
     }
 
     // 추가할 TechStack 처리
     List<Long> addTechIds = requestDto.addTechStacks();
-    if (!addTechIds.isEmpty()) {
+    if (addTechIds != null) {
       addTechStacksToMember(member, addTechIds);
     }
+
+    em.flush();
+    em.clear();
   }
 
   private List<MemberTechStackMapping> getTechStackMappings(List<Long> techStackIds) {
