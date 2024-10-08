@@ -74,6 +74,7 @@ public class BoardCommandService {
       addTechStacksFromBoard(board, addTechIds);
     }
 
+    // 1차 캐시 초기화
     em.flush();
     em.clear();
 
