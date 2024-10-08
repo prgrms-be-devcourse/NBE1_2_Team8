@@ -14,13 +14,7 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,7 +47,7 @@ public class MemberController {
     return ResponseEntity.ok().build();
   }
 
-  @PutMapping()
+  @PutMapping
   public ResponseEntity<Void> updateMember(@AuthenticationPrincipal Member member,
       @RequestBody @Valid MemberUpdateRequestDto dto) {
     memberCommandService.updateMember(member.getMemberId(), dto);
