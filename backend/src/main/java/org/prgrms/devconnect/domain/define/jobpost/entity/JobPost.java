@@ -105,4 +105,9 @@ public class JobPost {
   public void addTechStackMapping(JobPostTechStackMapping mapping) {
     this.jobPostTechStackMappings.add(mapping);
   }
+
+  // 공고 상태 변경
+  public void updateStatus(Status status) {
+    this.status = status;
+  }
 }

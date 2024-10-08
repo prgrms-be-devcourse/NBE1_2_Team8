@@ -4,6 +4,7 @@ package org.prgrms.devconnect.api.service.jobpost;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPostTechStackMapping;
+import org.prgrms.devconnect.domain.define.jobpost.entity.constant.Status;
 import org.prgrms.devconnect.domain.define.jobpost.repository.JobPostRepository;
 import org.prgrms.devconnect.domain.define.jobpost.repository.JobPostTechStackRepository;
 import org.prgrms.devconnect.external.saramin.JobPostApi;
@@ -59,6 +60,15 @@ public class JobPostCommandService {
     }
 
     jobPostTechStackRepository.saveAll(mappings);
+  }
+
+  // 공고 삭제
+  public void deleteJobPost(Long jobPostId) {
+
+    // 공고 조회
+    JobPost jobPost = jobPostQueryService.getJobPostByIdOrThrow(jobPostId);
+
+    jobPost.updateStatus(Status.DELETED);
   }
 
 }
