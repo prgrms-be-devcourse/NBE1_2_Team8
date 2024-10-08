@@ -9,7 +9,7 @@ import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record BoardTechStackRequestDto(
-        @Schema(description = "기술 스택 ID", example = "1", required = true)
+        @Schema(description = "기술 스택 ID", example = "1")
         @Positive(message = "기술 스택 ID는 0 이상이어야 합니다.")
         Long techStackId
 ) {
