@@ -41,7 +41,20 @@ public class JobPostQueryService {
 
     // 공고 조회
     JobPost jobPost = getJobPostByIdOrThrow(jobPostId);
+
+    // 조회수 증가
+    jobPost.incrementViews();
     return JobPostInfoResponseDto.from(jobPost);
+  }
+
+
+  // 공고 좋아요 증가
+  public void jobPostLikes(Long jobPostId) {
+
+    // 공고 조회
+    JobPost jobPost = getJobPostByIdOrThrow(jobPostId);
+
+    jobPost.incrementLikes();
   }
 }
 
