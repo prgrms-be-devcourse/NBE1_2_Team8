@@ -1,5 +1,7 @@
 package org.prgrms.devconnect.api.controller.member;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberCreateRequestDto;
@@ -45,7 +47,8 @@ public class MemberController {
   }
 
   @PutMapping("/{memberId}")
-  public ResponseEntity<Void> updateMember(@PathVariable Long memberId,
+  @Operation(summary = "회원 정보 수정", description = "회원 ID를 기반으로 회원 정보를 수정합니다.")
+  public ResponseEntity<Void> updateMember(@PathVariable("memberId") Long memberId,
       @RequestBody @Valid MemberUpdateRequestDto dto) {
     memberCommandService.updateMember(memberId, dto);
     return ResponseEntity.ok().build();
