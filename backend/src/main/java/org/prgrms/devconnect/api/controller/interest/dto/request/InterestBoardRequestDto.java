@@ -3,6 +3,7 @@ package org.prgrms.devconnect.api.controller.interest.dto.request;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
@@ -15,11 +16,11 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 public record InterestBoardRequestDto(
 
         @NotNull(message = "사용자 ID는 필수입니다.")
-        @Schema(description = "사용자 ID", example = "2")
+        @Schema(description = "사용자 ID", example = "2", requiredMode = RequiredMode.REQUIRED)
         Long memberId,
 
         @NotNull(message = "게시물 ID는 필수입니다.")
-        @Schema(description = "게시물 ID", example = "1")
+        @Schema(description = "게시물 ID", example = "1", requiredMode = RequiredMode.REQUIRED)
         Long boardId
 ) {
 
