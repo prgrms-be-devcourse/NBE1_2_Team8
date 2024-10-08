@@ -37,4 +37,8 @@ public class AlarmQueryService {
             () -> new AlarmException(ExceptionCode.NOT_FOUND_ALARM)
     );
   }
+
+  public int getUnReadAlarmsCountByMemberId(Long memberId) {
+    return alarmRepository.countUnreadAlarmsByMemberId(memberId);
+  }
 }

@@ -39,4 +39,10 @@ public class AlarmController {
     return ResponseEntity.status(NO_CONTENT)
             .body(alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarmId, memberId));
   }
+
+  @GetMapping("/counts/{memberId}")
+  public ResponseEntity<Integer> getUnReadAlarmsCount(@PathVariable Long memberId) {
+    return ResponseEntity.status(OK)
+            .body(alarmQueryService.getUnReadAlarmsCountByMemberId(memberId));
+  }
 }
