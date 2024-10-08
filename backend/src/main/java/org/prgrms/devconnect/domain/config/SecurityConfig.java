@@ -6,7 +6,6 @@ import org.prgrms.devconnect.common.auth.CustomerMemberDetailsService;
 import org.prgrms.devconnect.common.auth.JwtService;
 import org.prgrms.devconnect.common.auth.filter.JwtTokenAuthenticationFilter;
 import org.prgrms.devconnect.common.auth.filter.LoginAuthenticationFilter;
-import org.prgrms.devconnect.common.auth.filter.LogoutAuthenticationFilter;
 import org.prgrms.devconnect.common.auth.handler.LoginFailureHandler;
 import org.prgrms.devconnect.common.auth.handler.LoginSuccessHandler;
 import org.prgrms.devconnect.common.auth.redis.RefreshTokenRepository;
@@ -54,9 +53,8 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorize -> authorize
                 .requestMatchers("/", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/api/v1/members/login", "/api/v1/members/signup").permitAll()
-                .requestMatchers("/static/**").permitAll()
-                .requestMatchers("/templates/**").permitAll()
+                .requestMatchers("/static/**", "/templates/**").permitAll()
+                .requestMatchers("/api/v1/members/login", "/api/v1/members/signup", "/api/v1/members/reissue").permitAll()
                 .requestMatchers("/api/v1/members/logout", "/api/v1/members").authenticated()
                 .anyRequest().permitAll()
 
@@ -64,7 +62,6 @@ public class SecurityConfig {
 
     http.addFilterAfter(loginAuthenticationFilter(), LogoutFilter.class);
     http.addFilterBefore(jwtAuthenticationFilter(), LoginAuthenticationFilter.class);
-    http.addFilterAfter(logoutAuthenticationFilter(), JwtTokenAuthenticationFilter.class);
     return http.build();
   }
 
@@ -82,13 +79,8 @@ public class SecurityConfig {
   }
 
   @Bean
-  public LogoutAuthenticationFilter logoutAuthenticationFilter() {
-    return new LogoutAuthenticationFilter(jwtService, refreshTokenRepository);
-  }
-
-  @Bean
   JwtTokenAuthenticationFilter jwtAuthenticationFilter() {
-    return new JwtTokenAuthenticationFilter(jwtService, refreshTokenRepository, memberRepository);
+    return new JwtTokenAuthenticationFilter(jwtService, memberRepository);
   }
 
   @Bean
