@@ -66,8 +66,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/boards/**").authenticated()
                 // 버그 리포트
                 .requestMatchers("/api/v1/bug-report/**").authenticated()
+                // 댓글
+                .requestMatchers(HttpMethod.GET, "/api/v1/comments/**").permitAll()
+                .requestMatchers("/api/v1/comments/**").authenticated()
                 .anyRequest().permitAll()
-
         );
 
     http.addFilterAfter(loginAuthenticationFilter(), LogoutFilter.class);
