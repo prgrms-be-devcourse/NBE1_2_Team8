@@ -57,8 +57,8 @@ public class BoardController {
   @GetMapping("/{boardId}")
   public ResponseEntity<BoardResponseDto>getBoardById(@PathVariable Long boardId){
     // 게시물을 조회하면서 조회수 증가를 동시에 처리
-    BoardResponseDto boardResponse = boardQueryService.getBoardById(boardId);
     boardCommandService.increaseViews(boardId); // 조회수 증가 호출
+    BoardResponseDto boardResponse = boardQueryService.getBoardById(boardId);
     return ResponseEntity.status(HttpStatus.OK).body(boardResponse);
   }
 
@@ -76,13 +76,7 @@ public class BoardController {
           @RequestParam(required = false) ProgressWay progressWay,
           Pageable pageable
   ){
-    BoardFilterDto filterDto =  BoardFilterDto.builder()
-            .category(category)
-            .status(status)
-            .techStackIds(techStackIds)
-            .progressWay(progressWay)
-            .build();
-    Page<BoardResponseDto> boards = boardQueryService.getBoardsByFilter(pageable, filterDto);
+    Page<BoardResponseDto> boards = boardQueryService.getBoardsByFilter(category, status, techStackIds, progressWay, pageable);
     return ResponseEntity.status(HttpStatus.OK).body(boards);
   }
 
@@ -96,5 +90,26 @@ public class BoardController {
   public ResponseEntity<List<BoardResponseDto>>getBoardsByMemberInterests(@PathVariable Long memberId){
     List<BoardResponseDto> boards = boardQueryService.getBoardsByMemberInterests(memberId);
     return ResponseEntity.status(HttpStatus.OK).body(boards);
+  }
+
+  // jobPostId와 연관된 모든 게시물들을 조회
+  @GetMapping("/jobpost/{jobPostId}")
+  public ResponseEntity<List<BoardResponseDto>> getBoardsByJobPostId(@PathVariable Long jobPostId) {
+    List<BoardResponseDto> boards = boardQueryService.getBoardsByJobPostId(jobPostId);
+    return ResponseEntity.status(HttpStatus.OK).body(boards);
+  }
+
+  // 인기 태그 조건에 맞는 게시물 조회
+  @GetMapping("/popular-tag")
+  public ResponseEntity<List<BoardResponseDto>> getBoardsWithPopularTagCondition() {
+    List<BoardResponseDto> popularTaggedBoards = boardQueryService.getBoardsWithPopularTagCondition();
+    return ResponseEntity.status(HttpStatus.OK).body(popularTaggedBoards);
+  }
+
+  // 마감 임박 태그 조건에 맞는 게시물 조회
+  @GetMapping("/deadline-approaching")
+  public ResponseEntity<List<BoardResponseDto>> getBoardsWithDeadlineApproaching() {
+    List<BoardResponseDto> deadlineApproachingBoards = boardQueryService.getBoardsWithDeadlineApproaching();
+    return ResponseEntity.status(HttpStatus.OK).body(deadlineApproachingBoards);
   }
 }

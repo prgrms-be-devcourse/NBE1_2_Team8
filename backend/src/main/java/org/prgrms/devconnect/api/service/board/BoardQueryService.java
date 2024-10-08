@@ -7,7 +7,9 @@ import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.board.BoardException;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
+import org.prgrms.devconnect.domain.define.board.entity.constant.BoardCategory;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
+import org.prgrms.devconnect.domain.define.board.entity.constant.ProgressWay;
 import org.prgrms.devconnect.domain.define.board.repository.BoardRepository;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 import org.springframework.data.domain.Page;
@@ -47,7 +49,13 @@ public class BoardQueryService {
     return boardRepository.findAllByEndDateAndStatus(LocalDateTime.now(), BoardStatus.RECRUITING);
   }
 
-  public Page<BoardResponseDto> getBoardsByFilter(Pageable pageable, BoardFilterDto filterDto){
+  public Page<BoardResponseDto> getBoardsByFilter(BoardCategory category, BoardStatus status, List<Long> techStackIds, ProgressWay progressWay, Pageable pageable){
+    BoardFilterDto filterDto = BoardFilterDto.builder()
+            .category(category)
+            .status(status)
+            .techStackIds(techStackIds)
+            .progressWay(progressWay)
+            .build();
     if (filterDto.isEmpty()) {
       return getAllBoards(pageable);
     }
@@ -70,6 +78,29 @@ public class BoardQueryService {
     return boards.stream().map(BoardResponseDto::from).collect(Collectors.toList());
   }
 
+  public List<BoardResponseDto> getBoardsByJobPostId(Long jobPostId) {
+    List<Board> boards = boardRepository.findAllByJobPostId(jobPostId);
+    return boards.stream()
+            .map(BoardResponseDto::from)
+            .collect(Collectors.toList());
+  }
 
+  public List<BoardResponseDto> getBoardsWithPopularTagCondition() {
+    LocalDateTime startOfWeek = LocalDateTime.now().with(DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
+    LocalDateTime endOfWeek = LocalDateTime.now().with(DayOfWeek.SUNDAY).toLocalDate().atTime(23, 59, 59);
+    List<Board> boards = boardRepository.findBoardsWithPopularTagCondition(startOfWeek, endOfWeek);
+    return boards.stream()
+            .map(BoardResponseDto::from)
+            .collect(Collectors.toList());
+  }
+
+  public List<BoardResponseDto> getBoardsWithDeadlineApproaching() {
+    LocalDateTime currentDate = LocalDateTime.now();
+    LocalDateTime deadlineDate = currentDate.plusDays(2);
+    List<Board> boards = boardRepository.findBoardsWithDeadlineApproaching(currentDate, deadlineDate);
+    return boards.stream()
+            .map(BoardResponseDto::from)
+            .collect(Collectors.toList());
+  }
 }
 
