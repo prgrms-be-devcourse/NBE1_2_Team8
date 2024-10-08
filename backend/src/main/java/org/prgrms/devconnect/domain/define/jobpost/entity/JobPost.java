@@ -110,4 +110,13 @@ public class JobPost {
   public void updateStatus(Status status) {
     this.status = status;
   }
+
+  // 조회수 1 증가
+  public void incrementViews() {
+    this.views += 1;
+  }
+
+  public void incrementLikes() {
+    this.likes += 1;
+  }
 }

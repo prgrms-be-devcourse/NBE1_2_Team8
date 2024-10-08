@@ -11,6 +11,7 @@ import org.prgrms.devconnect.domain.define.member.entity.constant.Interest;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "member")
@@ -112,5 +113,9 @@ public class Member extends Timestamp {
     if (!dto.interest().equals(this.interest)) {
       this.interest = dto.interest();
     }
+  }
+
+  public void passwordEncode(PasswordEncoder passwordEncoder) {
+    this.password = passwordEncoder.encode(this.password);
   }
 }
