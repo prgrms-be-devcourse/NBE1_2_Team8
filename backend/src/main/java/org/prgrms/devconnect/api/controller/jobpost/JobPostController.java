@@ -38,11 +38,35 @@ public class JobPostController {
     JobPostInfoResponseDto jobPost = jobPostQueryService.getJobPost(jobPostId);
     return ResponseEntity.ok().body(jobPost);
   }
-
+  
   @PatchMapping("/{jobPostId}/likes")
   public ResponseEntity<Void> JobPostLikes(@PathVariable Long jobPostId) {
 
     jobPostQueryService.jobPostLikes(jobPostId);
     return ResponseEntity.ok().build();
   }
+
+  // 기술 스택 name으로 공고 조회
+  @GetMapping("/techstack-name/{name}")
+  public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByTechStackName(@PathVariable String name, Pageable pageable) {
+
+    Page<JobPostInfoResponseDto> jobPosts = jobPostQueryService.getJobPostsByTechStackName(name, pageable);
+    return ResponseEntity.ok().body(jobPosts);
+  }
+
+  // 기술 스택 job_code로 공고 조회
+  @GetMapping("/techstack-code/{code}")
+  public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByTechStackCode(@PathVariable String code, Pageable pageable) {
+
+    Page<JobPostInfoResponseDto> jobPosts = jobPostQueryService.getJobPostsByTechStackJobCode(code, pageable);
+    return ResponseEntity.ok().body(jobPosts);
+  }
+
+  // JobPostName 을 (제목별 공고 조회)
+  @GetMapping("/search")
+  public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByJobPostNameContaining(@RequestParam String keyword, Pageable pageable) {
+
+    Page<JobPostInfoResponseDto> jobPosts = jobPostQueryService.getJobPostsByJobPostNameContaining(keyword, pageable);
+    return ResponseEntity.ok().body(jobPosts);
+
 }
