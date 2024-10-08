@@ -38,7 +38,13 @@ public class JobPostController {
     JobPostInfoResponseDto jobPost = jobPostQueryService.getJobPost(jobPostId);
     return ResponseEntity.ok().body(jobPost);
   }
+  
+  @PatchMapping("/{jobPostId}/likes")
+  public ResponseEntity<Void> JobPostLikes(@PathVariable Long jobPostId) {
 
+    jobPostQueryService.jobPostLikes(jobPostId);
+    return ResponseEntity.ok().build();
+  }
 
   // 기술 스택 name으로 공고 조회
   @GetMapping("/techstack-name/{name}")
@@ -62,5 +68,5 @@ public class JobPostController {
 
     Page<JobPostInfoResponseDto> jobPosts = jobPostQueryService.getJobPostsByJobPostNameContaining(keyword, pageable);
     return ResponseEntity.ok().body(jobPosts);
-  }
+
 }

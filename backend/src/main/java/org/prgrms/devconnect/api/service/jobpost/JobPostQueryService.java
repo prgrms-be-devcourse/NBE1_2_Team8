@@ -41,8 +41,12 @@ public class JobPostQueryService {
 
     // 공고 조회
     JobPost jobPost = getJobPostByIdOrThrow(jobPostId);
+
+    // 조회수 증가
+    jobPost.incrementViews();
     return JobPostInfoResponseDto.from(jobPost);
   }
+
 
   // TechStack name으로 공고 조회
   public Page<JobPostInfoResponseDto> getJobPostsByTechStackName(String name, Pageable pageable) {
@@ -57,6 +61,14 @@ public class JobPostQueryService {
   // JobPostName 을 (제목별 공고 조회)
   public Page<JobPostInfoResponseDto> getJobPostsByJobPostNameContaining(String keyword, Pageable pageable) {
     return jobPostRepository.findAllByJobPostNameContaining(keyword, pageable);
+
+  // 공고 좋아요 증가
+  public void jobPostLikes(Long jobPostId) {
+
+    // 공고 조회
+    JobPost jobPost = getJobPostByIdOrThrow(jobPostId);
+
+    jobPost.incrementLikes();
   }
 }
 
