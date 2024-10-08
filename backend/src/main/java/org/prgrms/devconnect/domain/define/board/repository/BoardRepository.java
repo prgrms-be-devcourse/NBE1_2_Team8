@@ -39,10 +39,9 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
   @Query("SELECT b FROM Board b WHERE b.endDate BETWEEN :currentDate AND :deadlineDate AND b.status != 'DELETED'")
   List<Board> findBoardsWithDeadlineApproaching(@Param("currentDate") LocalDateTime currentDate, @Param("deadlineDate") LocalDateTime deadlineDate);
 
-  @Query("SELECT DISTINCT b FROM Board b JOIN b.boardTechStacks ts JOIN ts.techStack t WHERE t IN :techStacks AND b.status = :status")
+  @Query("SELECT DISTINCT b FROM Board b JOIN b.boardTechStacks ts JOIN ts.techStack t WHERE t IN :techStacks AND b.status = 'RECRUITING'")
   List<Board> findAllByTechStacks(
-          @Param("techStacks") List<TechStack> techStacks,
-          @Param("status") BoardStatus status
+          @Param("techStacks") List<TechStack> techStacks
   );
 
   @Modifying
