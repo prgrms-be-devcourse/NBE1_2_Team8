@@ -35,6 +35,9 @@ public enum ExceptionCode {
   DUPLICATED_MEMBER_EMAIL(400, "이미 존재하는 이메일입니다."),
   INVALID_PASSWORD(400, "일치하지 않는 패스워드입니다."),
 
+  //BUGREPORT ERROR
+  NOT_FOUND_BUGREPORT(404, "존재하지 않는 버그리포트입니다."),
+
   //CHATTINGROOM ERROR
   NOT_FOUND_CHATROOM(404, "존재하지 않는 채팅방 입니다"),
   CHATROOM_ALREADY_INACTIVE(400, "채팅방은 이미 INACTIVE 상태입니다"),
@@ -50,7 +53,18 @@ public enum ExceptionCode {
   DUPLICATED_INTEREST_BOARD(400, "이미 등록된 관심 게시글입니다."),
   NOT_FOUND_INTEREST_BOARD(404, "존재하지 않는 관심 게시글입니다."),
   DUPLICATED_INTEREST_JOB_POST(400, "이미 등록된 관심 채용 공고입니다."),
-  NOT_FOUND_INTEREST_JOB_POST(404, "존재하지 않는 관심 채용 공고입니다.");
+  NOT_FOUND_INTEREST_JOB_POST(404, "존재하지 않는 관심 채용 공고입니다."),
+
+  // JWT ERROR
+  JWT_TOKEN_EXPIRED(401, "JWT 토큰이 만료되었습니다."),
+  JWT_TOKEN_UNSUPPORTED(401, "지원하지 않는 JWT 토큰입니다."),
+  JWT_TOKEN_MALFORMED(401, "형식이 잘못된 JWT 토큰입니다."),
+  JWT_SIGNATURE_INVALID(401, "JWT 서명이 유효하지 않습니다."),
+  JWT_ARGUMENT_INVALID(401, "JWT 인자가 잘못되었습니다."),
+  JWT_GENERAL_ERROR(401, "JWT 처리 중 오류가 발생했습니다."),
+
+  // REFRESH TOKEN ERROR
+  NOT_FOUND_REFRESH_TOKEN(404, "존재하지 않는 리프레시 토큰입니다.");
 
   private final int code;
   private final String message;

@@ -7,7 +7,6 @@ import org.prgrms.devconnect.domain.define.board.entity.BoardTechStackMapping;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardCategory;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
 import org.prgrms.devconnect.domain.define.board.entity.constant.ProgressWay;
-import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 
 import java.time.LocalDateTime;
 import java.util.List;

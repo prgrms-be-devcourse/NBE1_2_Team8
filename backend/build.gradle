@@ -66,12 +66,25 @@ dependencies {
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2'
     implementation 'org.jsoup:jsoup:1.14.3'
 
+
     // Mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     //thymeleaf(for email service)
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    // spring security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
 }
 
 // Querydsl 설정

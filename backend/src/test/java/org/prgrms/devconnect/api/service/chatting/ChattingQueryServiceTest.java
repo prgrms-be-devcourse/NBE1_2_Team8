@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.domain.define.chatting;
+package org.prgrms.devconnect.api.service.chatting;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,8 +7,6 @@ import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatPartRespon
 import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatRoomListResponse;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.MessageFullResponse;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.MessageResponse;
-import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
-import org.prgrms.devconnect.api.service.chatting.ChattingQueryService;
 import org.prgrms.devconnect.domain.define.chatting.entity.constant.ChattingRoomStatus;
 import org.prgrms.devconnect.domain.define.fixture.MemberFixture;
 import org.prgrms.devconnect.domain.define.fixture.TechStackFixture;

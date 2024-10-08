@@ -1,14 +1,20 @@
 package org.prgrms.devconnect.api.service.member;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberLoginRequestDto;
 import org.prgrms.devconnect.api.controller.member.dto.response.MemberResponseDto;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.member.MemberException;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
+import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
+import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +41,13 @@ public class MemberQueryService {
     );
   }
 
+  public List<TechStack> getTechStacksByMemberId(Long memberId) {
+    Member member = getMemberByIdWithTechStackOrThrow(memberId);
+    return member.getMemberTechStacks().stream()
+            .map(MemberTechStackMapping::getTechStack)
+            .collect(Collectors.toList());
+  }
+
   public Member getMemberByIdOrThrow(Long memberId){
     return memberRepository.findById(memberId).orElseThrow(
             () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
@@ -45,6 +58,10 @@ public class MemberQueryService {
     return memberRepository.findByEmail(email).orElseThrow(
         () -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER)
     );
+  }
+
+  public Optional<Member> getMemberByEmail(String email) {
+    return memberRepository.findByEmail(email);
   }
 
   public void validateDuplicatedEmail(String email) {

@@ -16,7 +16,6 @@ import org.prgrms.devconnect.domain.define.board.repository.BoardRepository;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,5 +91,10 @@ public class BoardCommandService {
                       .build();
             })
             .collect(Collectors.toList());
+  }
+
+  // 조회수 증가 로직
+  public void increaseViews(Long boardId) {
+    boardRepository.incrementViews(boardId);
   }
 }

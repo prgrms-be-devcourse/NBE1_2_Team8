@@ -1,5 +1,6 @@
 package org.prgrms.devconnect.api.controller.member;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberCreateRequestDto;
@@ -8,10 +9,13 @@ import org.prgrms.devconnect.api.controller.member.dto.request.MemberUpdateReque
 import org.prgrms.devconnect.api.controller.member.dto.response.MemberResponseDto;
 import org.prgrms.devconnect.api.service.member.MemberCommandService;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
+import org.prgrms.devconnect.common.auth.JwtService;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,10 +29,11 @@ public class MemberController {
 
   private final MemberCommandService memberCommandService;
   private final MemberQueryService memberQueryService;
+  private final JwtService jwtService;
 
-  @GetMapping("/{memberId}")
-  public ResponseEntity<MemberResponseDto> getMember(@PathVariable Long memberId) {
-    MemberResponseDto responseDto = memberQueryService.getMember(memberId);
+  @GetMapping
+  public ResponseEntity<MemberResponseDto> getMember(@AuthenticationPrincipal Member member) {
+    MemberResponseDto responseDto = memberQueryService.getMember(member.getMemberId());
     return ResponseEntity.ok(responseDto);
   }
 
@@ -39,16 +44,27 @@ public class MemberController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<Void> login(@RequestBody @Valid MemberLoginRequestDto dto) {
-    memberQueryService.loginMember(dto);
+  public void login(@RequestBody @Valid MemberLoginRequestDto dto) {
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout(@AuthenticationPrincipal Member member) {
+    memberCommandService.logout(member.getEmail());
     return ResponseEntity.ok().build();
   }
 
-  @PutMapping("/{memberId}")
-  public ResponseEntity<Void> updateMember(@PathVariable Long memberId,
+  @PutMapping()
+  public ResponseEntity<Void> updateMember(@AuthenticationPrincipal Member member,
       @RequestBody @Valid MemberUpdateRequestDto dto) {
-    memberCommandService.updateMember(memberId, dto);
+    memberCommandService.updateMember(member.getMemberId(), dto);
     return ResponseEntity.ok().build();
   }
 
+  @GetMapping("/reissue")
+  public ResponseEntity<Void> reissueAccessToken(
+      @CookieValue(value = "Authorization-refresh", defaultValue = "") String refreshToken,
+      HttpServletResponse response) {
+    jwtService.reIssueAccessToken(response, refreshToken);
+    return ResponseEntity.ok().build();
+  }
 }

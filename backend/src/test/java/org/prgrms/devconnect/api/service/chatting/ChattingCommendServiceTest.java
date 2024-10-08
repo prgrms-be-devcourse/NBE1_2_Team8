@@ -1,10 +1,9 @@
-package org.prgrms.devconnect.domain.define.chatting;
+package org.prgrms.devconnect.api.service.chatting;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.prgrms.devconnect.api.controller.chatting.dto.response.ChatPartResponse;
-import org.prgrms.devconnect.api.service.chatting.ChattingCommandService;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChatParticipation;
 import org.prgrms.devconnect.domain.define.chatting.entity.ChattingRoom;
 import org.prgrms.devconnect.domain.define.chatting.entity.Message;

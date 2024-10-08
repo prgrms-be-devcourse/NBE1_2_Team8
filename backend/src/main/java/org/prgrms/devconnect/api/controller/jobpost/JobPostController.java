@@ -38,4 +38,11 @@ public class JobPostController {
     JobPostInfoResponseDto jobPost = jobPostQueryService.getJobPost(jobPostId);
     return ResponseEntity.ok().body(jobPost);
   }
+
+  @PatchMapping("/{jobPostId}/likes")
+  public ResponseEntity<Void> JobPostLikes(@PathVariable Long jobPostId) {
+
+    jobPostQueryService.jobPostLikes(jobPostId);
+    return ResponseEntity.ok().build();
+  }
 }

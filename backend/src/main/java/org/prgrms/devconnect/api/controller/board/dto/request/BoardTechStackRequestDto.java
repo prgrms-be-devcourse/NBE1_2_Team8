@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.Positive;
 import org.prgrms.devconnect.domain.define.board.entity.BoardTechStackMapping;
-import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
 import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
