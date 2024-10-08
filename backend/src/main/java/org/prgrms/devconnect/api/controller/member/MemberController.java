@@ -61,4 +61,5 @@ public class MemberController {
     jwtService.reIssueAccessToken(response, refreshToken);
     return ResponseEntity.ok().build();
   }
+
 }

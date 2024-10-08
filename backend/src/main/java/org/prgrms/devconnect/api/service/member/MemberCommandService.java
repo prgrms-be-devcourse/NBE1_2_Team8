@@ -104,7 +104,6 @@ public class MemberCommandService {
                       .build())
               .collect(Collectors.toList());
 
-//      em.merge(member);
       mappingToSave.forEach(mapping -> mapping.assignMember(member));
 
       memberTechStackMappingRepository.saveAll(mappingToSave);
