@@ -10,7 +10,6 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record InterestJobPostRequestDto(
-    Long memberId,
     Long jobPostId
 ) {
 

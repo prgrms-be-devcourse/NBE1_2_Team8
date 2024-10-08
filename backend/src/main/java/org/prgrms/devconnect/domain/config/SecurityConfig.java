@@ -69,6 +69,8 @@ public class SecurityConfig {
                 // 댓글
                 .requestMatchers(HttpMethod.GET, "/api/v1/comments/**").permitAll()
                 .requestMatchers("/api/v1/comments/**").authenticated()
+                // 관심
+                .requestMatchers("/api/v1/interests/**").authenticated()
                 .anyRequest().permitAll()
         );
 

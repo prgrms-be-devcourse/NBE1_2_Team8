@@ -28,8 +28,8 @@ public class InterestCommandService {
   private final JobPostQueryService jobPostQueryService;
   private final InterestQueryService interestQueryService;
 
-  public void addInterestBoard(InterestBoardRequestDto requestDto) {
-    Member member = memberQueryService.getMemberByIdOrThrow(requestDto.memberId());
+  public void addInterestBoard(InterestBoardRequestDto requestDto, Long memberId) {
+    Member member = memberQueryService.getMemberByIdOrThrow(memberId);
     Board board = boardQueryService.getBoardByIdOrThrow(requestDto.boardId());
 
     interestQueryService.validateDuplicatedInterestBoard(member, board);
@@ -45,8 +45,8 @@ public class InterestCommandService {
     interestBoardRepository.delete(interestBoard);
   }
 
-  public void addInterestJobPost(InterestJobPostRequestDto requestDto) {
-    Member member = memberQueryService.getMemberByIdOrThrow(requestDto.memberId());
+  public void addInterestJobPost(InterestJobPostRequestDto requestDto, Long memberId) {
+    Member member = memberQueryService.getMemberByIdOrThrow(memberId);
     JobPost jobPost = jobPostQueryService.getJobPostByIdOrThrow(requestDto.jobPostId());
 
     interestQueryService.validateDuplicatedInterestJobPost(member, jobPost);
