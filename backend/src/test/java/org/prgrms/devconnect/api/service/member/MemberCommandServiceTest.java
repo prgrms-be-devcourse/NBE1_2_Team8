@@ -26,6 +26,7 @@ import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.member.MemberException;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class MemberCommandServiceTest {
@@ -38,6 +39,9 @@ class MemberCommandServiceTest {
 
   @Mock
   private MemberQueryService memberQueryService;
+
+  @Mock
+  private PasswordEncoder passwordEncoder;
 
   @InjectMocks
   private MemberCommandService memberCommandService;
