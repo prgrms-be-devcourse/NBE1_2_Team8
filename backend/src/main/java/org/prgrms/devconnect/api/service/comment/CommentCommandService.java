@@ -8,12 +8,11 @@ import org.prgrms.devconnect.api.service.board.BoardQueryService;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.comment.CommentException;
+import org.prgrms.devconnect.domain.define.alarm.aop.RegisterPublisher;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.Comment;
 import org.prgrms.devconnect.domain.define.board.repository.CommentRepository;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +24,8 @@ public class CommentCommandService {
   private final BoardQueryService boardQueryService;
   private final CommentQueryService commentQueryService;
 
-  public void createComment(CommentCreateRequestDto commentCreateRequestDto) {
+  @RegisterPublisher
+  public Comment createComment(CommentCreateRequestDto commentCreateRequestDto) {
     Member member = memberQueryService.getMemberByIdOrThrow(commentCreateRequestDto.memberId());
     Board board = boardQueryService.getBoardByIdOrThrow(commentCreateRequestDto.boardId());
 
@@ -39,6 +39,8 @@ public class CommentCommandService {
 
     Comment comment = commentCreateRequestDto.toEntity(member, board, parentComment);
     commentRepository.save(comment);
+
+    return comment;
   }
 
   public void updateComment(Long commentId,CommentUpdateRequestDto commentUpdateRequestDto){
