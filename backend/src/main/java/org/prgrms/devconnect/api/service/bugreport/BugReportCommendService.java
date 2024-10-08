@@ -32,7 +32,7 @@ public class BugReportCommendService {
 
     bugReportRepository.save(bugReport);
 
-    return BugReportResponse.toDTO(bugReport);
+    return BugReportResponse.from(bugReport);
   }
 
   // 버그리포트 삭제
@@ -46,7 +46,7 @@ public class BugReportCommendService {
     bugReport.updateReport(url, content, bugType);
     bugReportRepository.save(bugReport);
 
-    return BugReportResponse.toDTO(bugReport);
+    return BugReportResponse.from(bugReport);
   }
 
 

@@ -65,7 +65,7 @@ public class BugReportController {
   @GetMapping("/{reportId}")
   public ResponseEntity<BugReportResponse> getBugReportById(@PathVariable("reportId") Long reportId) {
     BugReport bugReport = bugReportQueryService.getBugReport(reportId);
-    BugReportResponse response = BugReportResponse.toDTO(bugReport);
+    BugReportResponse response = BugReportResponse.from(bugReport);
     return ResponseEntity.status(OK).body(response);
   }
 

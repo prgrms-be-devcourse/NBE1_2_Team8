@@ -29,7 +29,7 @@ public class BugReportQueryService {
   public List<BugReportResponse> getAllBugReport(){
     return bugReportRepository.findAllByOrderByBugReportIdDesc()
             .stream()
-            .map(BugReportResponse::toDTO)
+            .map(BugReportResponse::from)
             .collect(Collectors.toList());
   }
 
@@ -38,7 +38,7 @@ public class BugReportQueryService {
   public List<BugReportResponse> getAllBugReportByMemberId(Long memberId){
     return bugReportRepository.findAllByMember_MemberId(memberId)
             .stream()
-            .map(BugReportResponse::toDTO)
+            .map(BugReportResponse::from)
             .collect(Collectors.toList());
   }
 }
