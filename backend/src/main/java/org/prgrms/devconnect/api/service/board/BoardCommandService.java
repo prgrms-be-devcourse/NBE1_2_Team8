@@ -32,8 +32,8 @@ public class BoardCommandService {
   private final TechStackQueryService techStackQueryService;
   private final BoardQueryService boardQueryService;
 
-  public Long createBoard(BoardCreateRequestDto boardCreateRequestDto) {
-    Member member = memberQueryService.getMemberByIdOrThrow(boardCreateRequestDto.memberId());
+  public Long createBoard(BoardCreateRequestDto boardCreateRequestDto, Long memberId) {
+    Member member = memberQueryService.getMemberByIdOrThrow(memberId);
 
     JobPost jobPost =null;
     if(boardCreateRequestDto.jobPostId()!=null){

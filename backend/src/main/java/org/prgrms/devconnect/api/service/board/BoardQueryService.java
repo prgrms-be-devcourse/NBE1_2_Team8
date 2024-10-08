@@ -1,5 +1,9 @@
 package org.prgrms.devconnect.api.service.board;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.BoardFilterDto;
 import org.prgrms.devconnect.api.controller.board.dto.response.BoardResponseDto;
@@ -17,11 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,16 +31,16 @@ public class BoardQueryService {
 
   public Board getBoardByIdOrThrow(Long boardId) {
     return boardRepository.findByIdAndStatusNotDeleted(boardId)
-            .orElseThrow(() -> new BoardException(ExceptionCode.NOT_FOUND_BOARD));
+        .orElseThrow(() -> new BoardException(ExceptionCode.NOT_FOUND_BOARD));
   }
 
-  public BoardResponseDto getBoardById(Long boardId){
+  public BoardResponseDto getBoardById(Long boardId) {
     Board board = getBoardByIdOrThrow(boardId);
     return BoardResponseDto.from(board);
   }
 
-  public Page<BoardResponseDto> getAllBoards(Pageable pageable){
-    Page<Board>boards=boardRepository.findAllWithTechStackByStatusNotDeleted(pageable);
+  public Page<BoardResponseDto> getAllBoards(Pageable pageable) {
+    Page<Board> boards = boardRepository.findAllWithTechStackByStatusNotDeleted(pageable);
     return boards.map(BoardResponseDto::from);
   }
 
@@ -49,13 +48,14 @@ public class BoardQueryService {
     return boardRepository.findAllByEndDateAndStatus(LocalDateTime.now(), BoardStatus.RECRUITING);
   }
 
-  public Page<BoardResponseDto> getBoardsByFilter(BoardCategory category, BoardStatus status, List<Long> techStackIds, ProgressWay progressWay, Pageable pageable){
+  public Page<BoardResponseDto> getBoardsByFilter(BoardCategory category, BoardStatus status,
+      List<Long> techStackIds, ProgressWay progressWay, Pageable pageable) {
     BoardFilterDto filterDto = BoardFilterDto.builder()
-            .category(category)
-            .status(status)
-            .techStackIds(techStackIds)
-            .progressWay(progressWay)
-            .build();
+        .category(category)
+        .status(status)
+        .techStackIds(techStackIds)
+        .progressWay(progressWay)
+        .build();
     if (filterDto.isEmpty()) {
       return getAllBoards(pageable);
     }
@@ -63,17 +63,19 @@ public class BoardQueryService {
     return filteredBoards.map(BoardResponseDto::from);
   }
 
-  public List<BoardResponseDto>getTop10PopularBoardsThisWeek(){
-    LocalDateTime startOfWeek = LocalDateTime.now().with(DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
-    LocalDateTime endOfWeek = LocalDateTime.now().with(DayOfWeek.SUNDAY).toLocalDate().atTime(23, 59, 59);
+  public List<BoardResponseDto> getTop10PopularBoardsThisWeek() {
+    LocalDateTime startOfWeek = LocalDateTime.now().with(DayOfWeek.MONDAY).toLocalDate()
+        .atStartOfDay();
+    LocalDateTime endOfWeek = LocalDateTime.now().with(DayOfWeek.SUNDAY).toLocalDate()
+        .atTime(23, 59, 59);
     List<Board> boards = boardRepository.findTop10PopularBoardsThisWeek(startOfWeek, endOfWeek);
     return boards.stream()
-            .map(BoardResponseDto::from)
-            .collect(Collectors.toList());
+        .map(BoardResponseDto::from)
+        .collect(Collectors.toList());
   }
 
   public List<BoardResponseDto> getBoardsByMemberInterests(Long memberId) {
-  List<TechStack>memberTechStacks=memberQueryService.getTechStacksByMemberId(memberId);
+    List<TechStack> memberTechStacks = memberQueryService.getTechStacksByMemberId(memberId);
     List<Board> boards = boardRepository.findAllByTechStacks(memberTechStacks);
     return boards.stream().map(BoardResponseDto::from).collect(Collectors.toList());
   }
@@ -81,26 +83,29 @@ public class BoardQueryService {
   public List<BoardResponseDto> getBoardsByJobPostId(Long jobPostId) {
     List<Board> boards = boardRepository.findAllByJobPostId(jobPostId);
     return boards.stream()
-            .map(BoardResponseDto::from)
-            .collect(Collectors.toList());
+        .map(BoardResponseDto::from)
+        .collect(Collectors.toList());
   }
 
   public List<BoardResponseDto> getBoardsWithPopularTagCondition() {
-    LocalDateTime startOfWeek = LocalDateTime.now().with(DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
-    LocalDateTime endOfWeek = LocalDateTime.now().with(DayOfWeek.SUNDAY).toLocalDate().atTime(23, 59, 59);
+    LocalDateTime startOfWeek = LocalDateTime.now().with(DayOfWeek.MONDAY).toLocalDate()
+        .atStartOfDay();
+    LocalDateTime endOfWeek = LocalDateTime.now().with(DayOfWeek.SUNDAY).toLocalDate()
+        .atTime(23, 59, 59);
     List<Board> boards = boardRepository.findBoardsWithPopularTagCondition(startOfWeek, endOfWeek);
     return boards.stream()
-            .map(BoardResponseDto::from)
-            .collect(Collectors.toList());
+        .map(BoardResponseDto::from)
+        .collect(Collectors.toList());
   }
 
   public List<BoardResponseDto> getBoardsWithDeadlineApproaching() {
     LocalDateTime currentDate = LocalDateTime.now();
     LocalDateTime deadlineDate = currentDate.plusDays(2);
-    List<Board> boards = boardRepository.findBoardsWithDeadlineApproaching(currentDate, deadlineDate);
+    List<Board> boards = boardRepository.findBoardsWithDeadlineApproaching(currentDate,
+        deadlineDate);
     return boards.stream()
-            .map(BoardResponseDto::from)
-            .collect(Collectors.toList());
+        .map(BoardResponseDto::from)
+        .collect(Collectors.toList());
   }
 }
 
