@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.alarm.dto.response.AlarmsGetResponse;
 import org.prgrms.devconnect.api.service.alarm.AlarmCommandService;
 import org.prgrms.devconnect.api.service.alarm.AlarmQueryService;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,27 +24,28 @@ public class AlarmController {
   private final AlarmQueryService alarmQueryService;
   private final AlarmCommandService alarmCommandService;
 
-  @GetMapping("/{memberId}")
-  public ResponseEntity<AlarmsGetResponse> getAlarms(@PathVariable Long memberId) {
+  @GetMapping
+  public ResponseEntity<AlarmsGetResponse> getAlarms(@AuthenticationPrincipal Member member) {
     return ResponseEntity.status(OK)
-            .body(alarmQueryService.getAlarmsByMemberIdOrThrow(memberId));
+        .body(alarmQueryService.getAlarmsByMemberIdOrThrow(member.getMemberId()));
   }
 
-  @DeleteMapping("/{memberId}")
-  public ResponseEntity<Void> deleteAlarmsByMemberId(@PathVariable Long memberId) {
+  @DeleteMapping()
+  public ResponseEntity<Void> deleteAlarmsByMemberId(@AuthenticationPrincipal Member member) {
     return ResponseEntity.status(NO_CONTENT)
-            .body(alarmCommandService.deleteAlarmsByMemberId(memberId));
+        .body(alarmCommandService.deleteAlarmsByMemberId(member.getMemberId()));
   }
 
-  @DeleteMapping("/{memberId}/{alarmId}")
-  public ResponseEntity<Void> deleteAlarm(@PathVariable Long memberId, @PathVariable Long alarmId) {
+  @DeleteMapping("/{alarmId}")
+  public ResponseEntity<Void> deleteAlarm(@AuthenticationPrincipal Member member,
+      @PathVariable Long alarmId) {
     return ResponseEntity.status(NO_CONTENT)
-            .body(alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarmId, memberId));
+        .body(alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarmId, member.getMemberId()));
   }
 
-  @GetMapping("/counts/{memberId}")
-  public ResponseEntity<Integer> getUnReadAlarmsCount(@PathVariable Long memberId) {
+  @GetMapping("/counts")
+  public ResponseEntity<Integer> getUnReadAlarmsCount(@AuthenticationPrincipal Member member) {
     return ResponseEntity.status(OK)
-            .body(alarmQueryService.getUnReadAlarmsCountByMemberId(memberId));
+        .body(alarmQueryService.getUnReadAlarmsCountByMemberId(member.getMemberId()));
   }
 }
