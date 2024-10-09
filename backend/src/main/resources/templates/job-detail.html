@@ -25,6 +25,9 @@
       <p><strong>좋아요 수:</strong> <span id="likes">좋아요</span></p>
       <h5>기술 스택</h5>
       <ul id="tech_stack_list" class="list-group"></ul> <!-- 기술 스택 목록을 표시할 영역 -->
+
+      <!-- 관심 등록/해제 버튼 -->
+      <button class="btn btn-warning mt-3" id="interestButton" onclick="toggleInterest()">관심 공고에 추가</button>
     </div>
   </div>
 </div>
@@ -32,6 +35,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
   const jobPostId = window.location.pathname.split('/').pop(); // URL에서 jobPostId 추출
+  let isInterested = false; // 사용자가 이미 관심 목록에 등록했는지 여부
 
   // 채용 공고 상세 정보를 가져오는 함수
   async function fetchJobPostDetail() {
@@ -64,12 +68,78 @@
         `;
         techStackList.appendChild(listItem);
       });
+
+      // 관심 상태 확인 함수 호출
+      checkInterestStatus();
     } catch (error) {
       console.error('채용 공고 정보를 가져오는 중 오류가 발생했습니다.', error);
     }
   }
 
-  // 페이지 로드 시 채용 공고 상세 정보를 가져옴
+  // 관심 등록 상태 확인 함수
+  async function checkInterestStatus() {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
+      const response = await axios.get(`/api/v1/interests`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const interestJobs = response.data.interestJobPosts;
+      isInterested = interestJobs.some(job => job.jobPostId === Number(jobPostId));
+
+      // 버튼 텍스트 업데이트
+      document.getElementById('interestButton').innerText = isInterested ? '관심 공고에서 해제' : '관심 공고에 추가';
+    } catch (error) {
+      console.error('관심 공고 상태 확인 실패:', error);
+    }
+  }
+
+  // 관심 공고에 추가 또는 해제하는 함수
+  async function toggleInterest() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    try {
+      if (isInterested) {
+        // 관심 공고에서 해제
+        await axios.delete(`/api/v1/interests/job-posts/${jobPostId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        alert('관심 공고에서 해제되었습니다.');
+        isInterested = false;
+      } else {
+        // 관심 공고에 추가
+        await axios.post('/api/v1/interests/job-posts', { job_post_id: jobPostId }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        alert('관심 공고에 추가되었습니다.');
+        isInterested = true;
+      }
+
+      // 버튼 텍스트 업데이트
+      document.getElementById('interestButton').innerText = isInterested ? '관심 공고에서 해제' : '관심 공고에 추가';
+
+    } catch (error) {
+      console.error('관심 공고 처리 중 오류가 발생했습니다.', error);
+      alert('관심 공고 처리 중 오류가 발생했습니다.');
+    }
+  }
+
+  // 페이지 로드 시 채용 공고 상세 정보 및 관심 상태 확인
   fetchJobPostDetail();
 </script>
 </body>
