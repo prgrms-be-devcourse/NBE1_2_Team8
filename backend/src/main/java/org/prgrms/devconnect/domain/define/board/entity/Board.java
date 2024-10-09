@@ -140,4 +140,19 @@ public class Board extends Timestamp {
 
 
   }
+
+//  조회수 1 증가
+  public void increaseViews() {
+    this.views += 1;
+  }
+
+  //  좋아요수 1 증가
+  public void increaseLikes() {
+    this.likes += 1;
+  }
+
+  //  좋아요수 1 감소
+  public void decreaseLikes() {
+    this.likes -= 1;
+  }
 }
