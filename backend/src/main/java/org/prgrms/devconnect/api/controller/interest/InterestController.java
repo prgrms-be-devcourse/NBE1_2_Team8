@@ -36,11 +36,9 @@ public class InterestController {
   @GetMapping
   @Operation(summary = "전체 관심 게시물 조회", description = "관심 게시물로 등록된 모든 게시물을 조회합니다.")
   @ApiResponse(responseCode = "200", description = "관심 게시물이 성공적으로 조회되었습니다.", content = @Content(schema = @Schema(implementation = InterestResponseDto.class)))
-  @GetMapping("/{memberId}")
   public ResponseEntity<InterestResponseDto> getInterestBoards(
       @AuthenticationPrincipal Member member) {
-    InterestResponseDto responseDto = interestQueryService.getInterestsByMemberId(
-        member.getMemberId());
+    InterestResponseDto responseDto = interestQueryService.getInterestsByMemberId(member.getMemberId());
   
     return ResponseEntity.ok(responseDto);
   }
@@ -48,8 +46,7 @@ public class InterestController {
   @Operation(summary = "관심 게시물로 등록", description = "관심 게시물로 등록합니다.")
   @ApiResponse(responseCode = "201", description = "관심 게시물 등록에 성공하였습니다.")
   @PostMapping("/boards")
-  public ResponseEntity<Void> addInterestBoard(
-      @Valid @RequestBody InterestBoardRequestDto requestDto,
+  public ResponseEntity<Void> addInterestBoard(@Valid @RequestBody InterestBoardRequestDto requestDto,
       @AuthenticationPrincipal Member member) {
     interestCommandService.addInterestBoard(requestDto, member.getMemberId());
     return ResponseEntity.status(HttpStatus.CREATED).build();

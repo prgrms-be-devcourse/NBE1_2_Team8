@@ -51,6 +51,9 @@ public class AlarmController {
   @DeleteMapping("/{alarmId}")
   public ResponseEntity<Void> deleteAlarm(@AuthenticationPrincipal Member member,
       @PathVariable Long alarmId) {
+    return ResponseEntity.status(NO_CONTENT)
+        .body(alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarmId, member.getMemberId()));
+  }
 
 
   @Operation(summary = "읽지 않은 알림 수 조회", description = "읽지 않은 알림의 수를 조회합니다.")
