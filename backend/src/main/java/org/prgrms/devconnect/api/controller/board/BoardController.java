@@ -121,7 +121,7 @@ public class BoardController {
   @ApiResponses({
           @ApiResponse(responseCode = "200", description = "게시물 조회 성공")
   })
-  public ResponseEntity<Page<BoardResponseDto>> getAllBoards(@PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable){
+  public ResponseEntity<Page<BoardResponseDto>> getAllBoards(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
     Page<BoardResponseDto> boards = boardQueryService.getAllBoards(pageable);
     return ResponseEntity.status(HttpStatus.OK).body(boards);
   }
