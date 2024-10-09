@@ -43,8 +43,4 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
   List<Board> findAllByTechStacks(
           @Param("techStacks") List<TechStack> techStacks
   );
-
-  @Modifying
-  @Query("UPDATE Board b SET b.views = b.views + 1 WHERE b.boardId = :boardId")
-  void incrementViews(@Param("boardId") Long boardId);
 }
