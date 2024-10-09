@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import org.prgrms.devconnect.api.controller.member.dto.request.MemberUpdateRequestDto;
 import org.prgrms.devconnect.domain.define.Timestamp;
 import org.prgrms.devconnect.domain.define.member.entity.constant.Interest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "member")
@@ -42,7 +42,7 @@ public class Member extends Timestamp {
   @Column(name = "career")
   private int career;
 
-  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<MemberTechStackMapping> memberTechStacks = new ArrayList<>();
 
   @Column(name = "self_introduction")
