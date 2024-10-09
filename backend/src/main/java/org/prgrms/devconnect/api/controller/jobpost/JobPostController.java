@@ -49,15 +49,6 @@ public class JobPostController {
     return ResponseEntity.ok().body(jobPost);
   }
 
-  @Operation(summary = "채용 공고 좋아요", description = "특정 채용 공고에 좋아요를 추가합니다.")
-  @ApiResponse(responseCode = "200", description = "채용 공고에 좋아요가 성공적으로 추가되었습니다.")
-  @PatchMapping("/{jobPostId}/likes")
-  public ResponseEntity<Void> JobPostLikes(@PathVariable Long jobPostId) {
-
-    jobPostCommandService.jobPostLikes(jobPostId);
-    return ResponseEntity.ok().build();
-  }
-
   // 기술 스택 name으로 공고 조회
   @GetMapping("/techstack-name/{name}")
   public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByTechStackName(@PathVariable String name, Pageable pageable) {
