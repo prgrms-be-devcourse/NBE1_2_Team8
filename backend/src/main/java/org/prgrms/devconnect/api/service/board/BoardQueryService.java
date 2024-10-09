@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.board.dto.BoardFilterDto;
 import org.prgrms.devconnect.api.controller.board.dto.response.BoardResponseDto;
+import org.prgrms.devconnect.api.service.jobpost.JobPostQueryService;
 import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.board.BoardException;
@@ -28,6 +29,7 @@ public class BoardQueryService {
 
   private final BoardRepository boardRepository;
   private final MemberQueryService memberQueryService;
+  private final JobPostQueryService jobPostQueryService;
 
   public Board getBoardByIdOrThrow(Long boardId) {
     return boardRepository.findByIdAndStatusNotDeleted(boardId)
@@ -81,6 +83,7 @@ public class BoardQueryService {
   }
 
   public List<BoardResponseDto> getBoardsByJobPostId(Long jobPostId) {
+    jobPostQueryService.getJobPostByIdOrThrow(jobPostId);
     List<Board> boards = boardRepository.findAllByJobPostId(jobPostId);
     return boards.stream()
         .map(BoardResponseDto::from)
