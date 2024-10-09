@@ -193,14 +193,19 @@
       projects.forEach(item => {
         const listItem = document.createElement('li');
         listItem.className = 'list-group-item ' + (item.type === 'project' ? 'project' : 'study');
+
+        // 상세 페이지로 이동하는 링크 추가
         listItem.innerHTML = `
+        <a href="/boards/${item.boardId}" class="text-decoration-none">
           <strong>${item.title}</strong> (${item.category})<br>
           작성자: ${item.author}<br>
           모집 인원: ${item.recruitNum}<br>
           진행 방식: ${item.progressWay}<br>
           마감일: ${new Date(item.endDate).toLocaleDateString()}<br>
           상태: ${item.status}
-        `;
+        </a>
+      `;
+
         allProjectsList.appendChild(listItem);
       });
 
@@ -225,16 +230,21 @@
       jobListings.forEach(job => {
         const listItem = document.createElement('li');
         listItem.className = 'list-group-item';
+
+        // 상세 페이지로 이동하는 링크 추가
         listItem.innerHTML = `
-                <strong>${job.job_post_name}</strong><br>
-                회사: ${job.company_name}<br>
-                주소: ${job.company_address}<br>
-                공고 시작일: ${new Date(job.open_date).toLocaleDateString()}<br>
-                마감일: ${new Date(job.end_date).toLocaleDateString()}<br>
-                급여: ${job.salary}<br>
-                상태: ${job.status}<br>
-                조회수: ${job.views} | 좋아요: ${job.likes}
-            `;
+        <a href="/job-posts/${job.job_post_id}" class="text-decoration-none">
+          <strong>${job.job_post_name}</strong><br>
+          회사: ${job.company_name}<br>
+          주소: ${job.company_address}<br>
+          공고 시작일: ${new Date(job.open_date).toLocaleDateString()}<br>
+          마감일: ${new Date(job.end_date).toLocaleDateString()}<br>
+          급여: ${job.salary}<br>
+          상태: ${job.status}<br>
+          조회수: ${job.views} | 좋아요: ${job.likes}
+        </a>
+      `;
+
         jobListingsList.appendChild(listItem);
       });
 
@@ -246,6 +256,7 @@
       showErrorBanner('채용 공고를 로드하는 데 실패했습니다.');
     }
   }
+
 
   document.getElementById('prevPage').addEventListener('click', (event) => {
     event.preventDefault();
