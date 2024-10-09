@@ -22,9 +22,6 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
 public record BoardCreateRequestDto(
-        @Schema(description = "회원 ID", example = "1")
-        @NotNull(message = "회원 ID는 필수입니다.")
-        Long memberId,
 
         @Schema(description = "직업 공고 ID", example = "1")
         Long jobPostId,

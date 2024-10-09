@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/jobPosts")
+@RequestMapping("/api/v1/job-posts")
 @Tag(name = "채용 공고 API", description = "채용 관련 공고를 관리하는 API")
 public class JobPostController {
 
@@ -54,7 +54,7 @@ public class JobPostController {
   @PatchMapping("/{jobPostId}/likes")
   public ResponseEntity<Void> JobPostLikes(@PathVariable Long jobPostId) {
 
-    jobPostQueryService.jobPostLikes(jobPostId);
+    jobPostCommandService.jobPostLikes(jobPostId);
     return ResponseEntity.ok().build();
   }
 

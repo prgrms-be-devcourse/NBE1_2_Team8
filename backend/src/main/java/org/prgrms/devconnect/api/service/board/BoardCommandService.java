@@ -38,8 +38,8 @@ public class BoardCommandService {
   private final TechStackRepository techStackRepository;
   private final EntityManager em;
 
-  public Long createBoard(BoardCreateRequestDto boardCreateRequestDto) {
-    Member member = memberQueryService.getMemberByIdOrThrow(boardCreateRequestDto.memberId());
+  public Long createBoard(BoardCreateRequestDto boardCreateRequestDto, Long memberId) {
+    Member member = memberQueryService.getMemberByIdOrThrow(memberId);
 
     JobPost jobPost =null;
     if(boardCreateRequestDto.jobPostId()!=null){

@@ -25,8 +25,8 @@ public class CommentCommandService {
   private final CommentQueryService commentQueryService;
 
   @RegisterPublisher
-  public Comment createComment(CommentCreateRequestDto commentCreateRequestDto) {
-    Member member = memberQueryService.getMemberByIdOrThrow(commentCreateRequestDto.memberId());
+  public Comment createComment(CommentCreateRequestDto commentCreateRequestDto, Long memberId) {
+    Member member = memberQueryService.getMemberByIdOrThrow(memberId);
     Board board = boardQueryService.getBoardByIdOrThrow(commentCreateRequestDto.boardId());
 
     Comment parentComment = null;

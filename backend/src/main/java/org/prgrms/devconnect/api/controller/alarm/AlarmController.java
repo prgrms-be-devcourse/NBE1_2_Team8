@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.alarm.dto.response.AlarmsGetResponse;
 import org.prgrms.devconnect.api.service.alarm.AlarmCommandService;
 import org.prgrms.devconnect.api.service.alarm.AlarmQueryService;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,30 +32,36 @@ public class AlarmController {
 
   @Operation(summary = "알림 전체 조회", description = "사용자 아이디별 수신된 모든 알림을 반환합니다.")
   @ApiResponse(responseCode = "200", description = "수신된 모든 알림을 성공적으로 반환합니다.", content = @Content(schema = @Schema(implementation = AlarmsGetResponse.class)))
-  @GetMapping("/{memberId}")
-  public ResponseEntity<AlarmsGetResponse> getAlarms(@PathVariable Long memberId) {
-    return ResponseEntity.status(OK).body(alarmQueryService.getAlarmsByMemberIdOrThrow(memberId));
+  @GetMapping
+  public ResponseEntity<AlarmsGetResponse> getAlarms(@AuthenticationPrincipal Member member) {
+    return ResponseEntity.status(OK)
+        .body(alarmQueryService.getAlarmsByMemberIdOrThrow(member.getMemberId()));
   }
-
+  
   @Operation(summary = "알림 전체 삭제", description = "사용자 아이디별 수신된 모든 알림을 삭제합니다.")
   @ApiResponse(responseCode = "204", description = "수신된 전체 알림 목록을 성공적으로 삭제했습니다.")
-  @DeleteMapping("/{memberId}")
-  public ResponseEntity<Void> deleteAlarmsByMemberId(@PathVariable Long memberId) {
-    return ResponseEntity.status(NO_CONTENT).body(alarmCommandService.deleteAlarmsByMemberId(memberId));
+  @DeleteMapping
+  public ResponseEntity<Void> deleteAlarmsByMemberId(@AuthenticationPrincipal Member member) {
+    return ResponseEntity.status(NO_CONTENT)
+        .body(alarmCommandService.deleteAlarmsByMemberId(member.getMemberId()));
   }
 
   @Operation(summary = "알림 단일 삭제", description = "특정 알림 id를 가진 알림을 삭제합니다.")
   @ApiResponse(responseCode = "204", description = "특정 알림 id를 가진 알림을 성공적으로 삭제했습니다.")
-  @DeleteMapping("/{memberId}/{alarmId}")
-  public ResponseEntity<Void> deleteAlarm(@PathVariable Long memberId, @PathVariable Long alarmId) {
+  @DeleteMapping("/{alarmId}")
+  public ResponseEntity<Void> deleteAlarm(@AuthenticationPrincipal Member member,
+      @PathVariable Long alarmId) {
     return ResponseEntity.status(NO_CONTENT)
-            .body(alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarmId, memberId));
+        .body(alarmCommandService.deleteAlarmByAlarmIdAndMemberId(alarmId, member.getMemberId()));
   }
+
 
   @Operation(summary = "읽지 않은 알림 수 조회", description = "읽지 않은 알림의 수를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "읽지 않은 알림의 수를 성공적으로 조회했습니다.", content = @Content(schema = @Schema(implementation = Integer.class)))
-  @GetMapping("/counts/{memberId}")
-  public ResponseEntity<Integer> getUnReadAlarmsCount(@PathVariable Long memberId) {
-    return ResponseEntity.status(OK).body(alarmQueryService.getUnReadAlarmsCountByMemberId(memberId));
+  @GetMapping("/counts")
+  public ResponseEntity<Integer> getUnReadAlarmsCount(@AuthenticationPrincipal Member member) {
+    return ResponseEntity.status(OK)
+        .body(alarmQueryService.getUnReadAlarmsCountByMemberId(member.getMemberId()));
   }
+    
 }

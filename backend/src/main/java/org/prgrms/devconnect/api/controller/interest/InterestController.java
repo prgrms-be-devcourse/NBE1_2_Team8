@@ -12,8 +12,10 @@ import org.prgrms.devconnect.api.controller.interest.dto.request.InterestJobPost
 import org.prgrms.devconnect.api.controller.interest.dto.response.InterestResponseDto;
 import org.prgrms.devconnect.api.service.interest.InterestCommandService;
 import org.prgrms.devconnect.api.service.interest.InterestQueryService;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,29 +33,32 @@ public class InterestController {
   private final InterestQueryService interestQueryService;
   private final InterestCommandService interestCommandService;
 
+  @GetMapping
   @Operation(summary = "전체 관심 게시물 조회", description = "관심 게시물로 등록된 모든 게시물을 조회합니다.")
   @ApiResponse(responseCode = "200", description = "관심 게시물이 성공적으로 조회되었습니다.", content = @Content(schema = @Schema(implementation = InterestResponseDto.class)))
-  @GetMapping("/{memberId}")
-  public ResponseEntity<InterestResponseDto> getInterestBoards(@PathVariable Long memberId) {
-    InterestResponseDto responseDto = interestQueryService.getInterestsByMemberId(memberId);
+  public ResponseEntity<InterestResponseDto> getInterestBoards(
+      @AuthenticationPrincipal Member member) {
+    InterestResponseDto responseDto = interestQueryService.getInterestsByMemberId(member.getMemberId());
+  
     return ResponseEntity.ok(responseDto);
   }
 
   @Operation(summary = "관심 게시물로 등록", description = "관심 게시물로 등록합니다.")
   @ApiResponse(responseCode = "201", description = "관심 게시물 등록에 성공하였습니다.")
   @PostMapping("/boards")
-  public ResponseEntity<Void> addInterestBoard(
-      @Valid @RequestBody InterestBoardRequestDto requestDto) {
-    interestCommandService.addInterestBoard(requestDto);
+  public ResponseEntity<Void> addInterestBoard(@Valid @RequestBody InterestBoardRequestDto requestDto,
+      @AuthenticationPrincipal Member member) {
+    interestCommandService.addInterestBoard(requestDto, member.getMemberId());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @DeleteMapping("/boards/{boardId}")
   @Operation(summary = "관심 게시물에서 해제", description = "관심 게시물에서 해제합니다.")
   @ApiResponse(responseCode = "204", description = "관심 게시물에서 성공적으로 삭제되었습니다.")
-  @DeleteMapping("/boards/{memberId}/{boardId}")
-  public ResponseEntity<Void> removeInterestBoard(@PathVariable Long memberId,
+  public ResponseEntity<Void> removeInterestBoard(@AuthenticationPrincipal Member member,
       @PathVariable Long boardId) {
-    interestCommandService.removeInterestBoard(memberId, boardId);
+    interestCommandService.removeInterestBoard(member.getMemberId(), boardId);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -61,18 +66,18 @@ public class InterestController {
   @ApiResponse(responseCode = "201", description = "관심 채용공고 등록에 성공했습니다.")
   @PostMapping("/job-posts")
   public ResponseEntity<Void> addInterestJob(
-      @Valid @RequestBody InterestJobPostRequestDto requestDto) {
-    interestCommandService.addInterestJobPost(requestDto);
+      @Valid @RequestBody InterestJobPostRequestDto requestDto,
+      @AuthenticationPrincipal Member member) {
+    interestCommandService.addInterestJobPost(requestDto, member.getMemberId());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @DeleteMapping("/job-posts/{jobPostId}")
   @Operation(summary = "관심 채용공고에서 해제", description = "관심 채용공고에서 해제합니다.")
   @ApiResponse(responseCode = "204", description = "관심 채용공고에서 성공적으로 삭제되었습니다.")
-  @DeleteMapping("/job-posts/{memberId}/{jobPostId}")
-  public ResponseEntity<Void> removeInterestJobPost(@PathVariable Long memberId,
+  public ResponseEntity<Void> removeInterestJobPost(@AuthenticationPrincipal Member member,
       @PathVariable Long jobPostId) {
-    interestCommandService.removeInterestJobPost(memberId, jobPostId);
-
+    interestCommandService.removeInterestJobPost(member.getMemberId(), jobPostId);
     return ResponseEntity.noContent().build();
   }
 

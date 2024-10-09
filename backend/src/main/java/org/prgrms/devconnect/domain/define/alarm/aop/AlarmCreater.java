@@ -39,10 +39,10 @@ public class AlarmCreater {
       }
     } else if ("createComment".equals(methodName)) {
       Comment comment = (Comment) object;
-      if (comment.getParent().isRootComment()) {
-        publisher.publishEvent(new RegisteredCommentOnBoardEvent(comment));
+      publisher.publishEvent(new RegisteredCommentOnBoardEvent(comment));
+      if (comment.getParent() != null) {
+        publisher.publishEvent(new RegisteredReplyCommentEvent(comment));
       }
-      publisher.publishEvent(new RegisteredReplyCommentEvent(comment));
     } else if ("createMember".equals(methodName)) {
       publisher.publishEvent(new RegisteredWelcomeEvent((Member) object));
     }

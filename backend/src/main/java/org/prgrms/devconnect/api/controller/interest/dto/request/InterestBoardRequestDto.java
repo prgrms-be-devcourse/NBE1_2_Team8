@@ -15,10 +15,6 @@ import org.prgrms.devconnect.domain.define.member.entity.Member;
 @Schema(description = "관심 게시글 등록 요청 정보")
 public record InterestBoardRequestDto(
 
-        @NotNull(message = "사용자 ID는 필수입니다.")
-        @Schema(description = "사용자 ID", example = "2")
-        Long memberId,
-
         @NotNull(message = "게시물 ID는 필수입니다.")
         @Schema(description = "게시물 ID", example = "1")
         Long boardId
