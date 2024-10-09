@@ -7,6 +7,7 @@ import org.prgrms.devconnect.common.exception.ExceptionCode;
 import org.prgrms.devconnect.common.exception.jobpost.JobPostException;
 import org.prgrms.devconnect.domain.define.jobpost.entity.JobPost;
 import org.prgrms.devconnect.domain.define.jobpost.repository.JobPostRepository;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,13 @@ public class JobPostQueryService {
   // JobPostName 을 (제목별 공고 조회)
   public Page<JobPostInfoResponseDto> getJobPostsByJobPostNameContaining(String keyword, Pageable pageable) {
     return jobPostRepository.findAllByJobPostNameContaining(keyword, pageable);
+  }
+
+  // 사용자 관심스택별 공고 조회
+  public Page<JobPostInfoResponseDto> getJobPostsByMemberInterestsTechStack(Member member) {
+
+    Pageable pageable = Pageable.ofSize(5);
+    return jobPostRepository.findAllByMemberInterests(member, pageable);
   }
 }
 

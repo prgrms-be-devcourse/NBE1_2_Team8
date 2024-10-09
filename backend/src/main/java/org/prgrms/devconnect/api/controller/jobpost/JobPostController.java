@@ -2,15 +2,19 @@ package org.prgrms.devconnect.api.controller.jobpost;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.jobpost.dto.response.JobPostInfoResponseDto;
 import org.prgrms.devconnect.api.service.jobpost.JobPostCommandService;
 import org.prgrms.devconnect.api.service.jobpost.JobPostQueryService;
+import org.prgrms.devconnect.api.service.member.MemberQueryService;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +25,7 @@ public class JobPostController {
 
   private final JobPostQueryService jobPostQueryService;
   private final JobPostCommandService jobPostCommandService;
+  private final MemberQueryService memberQueryService;
 
   @Operation(summary = "채용 공고 삭제", description = "특정 채용 공고를 삭제합니다.")
   @ApiResponse(responseCode = "200", description = "채용 공고가 성공적으로 삭제되었습니다.")
@@ -49,7 +54,10 @@ public class JobPostController {
     return ResponseEntity.ok().body(jobPost);
   }
 
+
   // 기술 스택 name으로 공고 조회
+  @Operation(summary = "기술 스택 이름으로 공고 조회", description = "특정 기술 스택 이름으로 채용 공고를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "채용 공고 목록을 성공적으로 반환합니다.")
   @GetMapping("/techstack-name/{name}")
   public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByTechStackName(@PathVariable String name, Pageable pageable) {
 
@@ -57,7 +65,8 @@ public class JobPostController {
     return ResponseEntity.ok().body(jobPosts);
   }
 
-  // 기술 스택 job_code로 공고 조회
+  @Operation(summary = "기술 스택 코드로 공고 조회", description = "특정 기술 스택 코드로 채용 공고를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "채용 공고 목록을 성공적으로 반환합니다.")
   @GetMapping("/techstack-code/{code}")
   public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByTechStackCode(@PathVariable String code, Pageable pageable) {
 
@@ -65,11 +74,24 @@ public class JobPostController {
     return ResponseEntity.ok().body(jobPosts);
   }
 
-  // JobPostName 을 (제목별 공고 조회)
+  @Operation(summary = "제목으로 공고 검색", description = "제목에 특정 키워드가 포함된 채용 공고를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "채용 공고 목록을 성공적으로 반환합니다.")
   @GetMapping("/search")
   public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByJobPostNameContaining(@RequestParam String keyword, Pageable pageable) {
 
     Page<JobPostInfoResponseDto> jobPosts = jobPostQueryService.getJobPostsByJobPostNameContaining(keyword, pageable);
+    return ResponseEntity.ok().body(jobPosts);
+  }
+
+  @Operation(summary = "사용자의 관심 기술 스택으로 공고 조회", description = "사용자의 관심 기술 스택에 맞는 채용 공고를 조회합니다.", parameters = {
+          @Parameter(name = "memberId", description = "멤버 ID", required = true, example = "1")
+  })
+  @ApiResponse(responseCode = "200", description = "사용자의 관심 기술 스택에 맞는 채용 공고 목록을 성공적으로 반환합니다.")
+  @GetMapping("/interests")
+  public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByMemberInterestsTechStack(@AuthenticationPrincipal Member member) {
+
+    memberQueryService.getMemberByIdOrThrow(member.getMemberId());
+    Page<JobPostInfoResponseDto> jobPosts = jobPostQueryService.getJobPostsByMemberInterestsTechStack(member);
     return ResponseEntity.ok().body(jobPosts);
   }
 }
