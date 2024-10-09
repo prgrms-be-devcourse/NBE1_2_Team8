@@ -72,11 +72,20 @@ public class JobPostCommandService {
   }
 
   // 공고 좋아요 증가
-  public void jobPostLikes(Long jobPostId) {
+  public void likeJobPost(Long jobPostId) {
 
     // 공고 조회
     JobPost jobPost = jobPostQueryService.getJobPostByIdOrThrow(jobPostId);
 
-    jobPost.incrementLikes();
+    jobPost.increaseLikes();
+  }
+
+  // 공고 좋아요 감소
+  public void unlikeJobPost(Long jobPostId) {
+
+    // 공고 조회
+    JobPost jobPost = jobPostQueryService.getJobPostByIdOrThrow(jobPostId);
+
+    jobPost.decreaseLikes();
   }
 }

@@ -44,7 +44,7 @@ public class JobPostQueryService {
     JobPost jobPost = getJobPostByIdOrThrow(jobPostId);
 
     // 조회수 증가
-    jobPost.incrementViews();
+    jobPost.increaseViews();
     return JobPostInfoResponseDto.from(jobPost);
   }
 

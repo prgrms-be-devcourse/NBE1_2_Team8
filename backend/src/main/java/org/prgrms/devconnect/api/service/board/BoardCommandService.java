@@ -142,8 +142,17 @@ public class BoardCommandService {
             .collect(Collectors.toList());
   }
 
-  // 조회수 증가 로직
-  public void increaseViews(Long boardId) {
-    boardRepository.incrementViews(boardId);
+  // 게시물 좋아요 증가
+  public void likeBoard(Long boardId) {
+    // 게시물 조회
+    Board board = boardQueryService.getBoardByIdOrThrow(boardId);
+    board.increaseLikes();
+  }
+
+  //게시물 좋아요 감소
+  public void unlikeBoard(Long boardId) {
+    // 게시물 조회
+    Board board = boardQueryService.getBoardByIdOrThrow(boardId);
+    board.decreaseLikes();
   }
 }
