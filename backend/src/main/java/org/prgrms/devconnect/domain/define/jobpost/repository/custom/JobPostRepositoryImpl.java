@@ -4,13 +4,18 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.api.controller.jobpost.dto.response.JobPostInfoResponseDto;
 import org.prgrms.devconnect.api.controller.techstack.dto.response.TechStackResponseDto;
+import org.prgrms.devconnect.domain.define.member.entity.MemberTechStackMapping;
 import org.prgrms.devconnect.domain.define.jobpost.entity.QJobPost;
 import org.prgrms.devconnect.domain.define.jobpost.entity.QJobPostTechStackMapping;
 import org.prgrms.devconnect.domain.define.jobpost.entity.constant.Status;
+import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.techstack.entity.QTechStack;
+import org.prgrms.devconnect.domain.define.techstack.entity.TechStack;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class JobPostRepositoryImpl implements JobPostRepositoryCustom {
@@ -191,6 +196,60 @@ public class JobPostRepositoryImpl implements JobPostRepositoryCustom {
             () -> queryFactory
                     .selectFrom(jobPost)
                     .where(jobPost.jobPostName.contains(keyword)
+                            .and(jobPost.status.eq(Status.RECRUITING)))
+                    .fetchCount()
+    );
+  }
+
+  @Override
+  public Page<JobPostInfoResponseDto> findAllByMemberInterests(Member member, Pageable pageable) {
+    QJobPost jobPost = QJobPost.jobPost;
+    QJobPostTechStackMapping jobPostMapping = QJobPostTechStackMapping.jobPostTechStackMapping;
+    QTechStack techStack = QTechStack.techStack;
+
+    // 사용자의 관심 기술 스택 추출
+    List<TechStack> memberTechStacks = member.getMemberTechStacks().stream()
+            .map(MemberTechStackMapping::getTechStack)
+            .toList();
+
+    // 사용자의 관심 기술 스택을 기준으로 공고 조회
+    return PageableExecutionUtils.getPage(
+            queryFactory
+                    .selectFrom(jobPost)
+                    .join(jobPost.jobPostTechStackMappings, jobPostMapping)
+                    .join(jobPostMapping.techStack, techStack)
+                    .where(techStack.in(memberTechStacks)
+                            .and(jobPost.status.eq(Status.RECRUITING)))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch()
+                    .stream()
+                    .map(post -> JobPostInfoResponseDto.builder()
+                            .jobPostId(post.getJobPostId())
+                            .postId(post.getPostId())
+                            .jobPostName(post.getJobPostName())
+                            .companyName(post.getCompanyName())
+                            .companyAddress(post.getCompanyAddress())
+                            .companyLink(post.getCompanyLink())
+                            .jobType(post.getJobType())
+                            .status(post.getStatus())
+                            .postDate(post.getPostDate())
+                            .openDate(post.getOpenDate())
+                            .endDate(post.getEndDate())
+                            .salary(post.getSalary())
+                            .likes(post.getLikes())
+                            .views(post.getViews())
+                            .techStacks(post.getJobPostTechStackMappings().stream()
+                                    .map(mappingTechStack -> TechStackResponseDto.from(mappingTechStack.getTechStack()))
+                                    .toList())
+                            .build())
+                    .toList(),
+            pageable,
+            () -> queryFactory
+                    .selectFrom(jobPost)
+                    .join(jobPost.jobPostTechStackMappings, jobPostMapping)
+                    .join(jobPostMapping.techStack, techStack)
+                    .where(techStack.in(memberTechStacks)
                             .and(jobPost.status.eq(Status.RECRUITING)))
                     .fetchCount()
     );
