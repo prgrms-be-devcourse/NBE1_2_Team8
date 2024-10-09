@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <h2>로그인</h2>
+  <div class="mb-3">
+    <label for="username" class="form-label">사용자 이름</label>
+    <input type="text" class="form-control" id="username" required>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">비밀번호</label>
+    <input type="password" class="form-control" id="password" required>
+  </div>
+  <button id="loginButton" class="btn btn-primary">로그인</button>
+  <div id="message" class="mt-3"></div>
+</div>
+
+<script>
+  document.getElementById('loginButton').addEventListener('click', async () => {
+    const email = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const response = await axios.post('/api/v1/members/login', {
+        email: email,
+        password: password
+      });
+
+      const token = response.headers['authorization'];
+      localStorage.setItem('token', token.split(' ')[1]);
+      document.getElementById('message').innerText = '로그인 성공!';
+      window.location.href = '/';
+    } catch (error) {
+      document.getElementById('message').innerText = '로그인 실패: ' + (error.response?.data?.message || '알 수 없는 오류');
+    }
+  });
+</script>
+</body>
+</html>

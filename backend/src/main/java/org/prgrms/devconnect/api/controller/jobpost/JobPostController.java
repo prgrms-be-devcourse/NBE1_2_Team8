@@ -33,7 +33,7 @@ public class JobPostController {
 
   @Operation(summary = "모든 채용 공고 조회", description = "모든 채용 공고를 페이징 처리하여 조회합니다.")
   @ApiResponse(responseCode = "200", description = "채용 공고 목록을 성공적으로 반환합니다.")
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<Page<JobPostInfoResponseDto>> getAllJobPosts(Pageable pageable) {
 
     Page<JobPostInfoResponseDto> jobPosts = jobPostQueryService.getAllJobPosts(pageable);
