@@ -36,8 +36,13 @@ public class BoardQueryService {
         .orElseThrow(() -> new BoardException(ExceptionCode.NOT_FOUND_BOARD));
   }
 
+  // 게시물을 조회하면서 조회수 증가도 처리
   public BoardResponseDto getBoardById(Long boardId) {
+    //게시물 조회
     Board board = getBoardByIdOrThrow(boardId);
+
+    //게시물 조회수 증가
+    board.increaseViews();
     return BoardResponseDto.from(board);
   }
 
