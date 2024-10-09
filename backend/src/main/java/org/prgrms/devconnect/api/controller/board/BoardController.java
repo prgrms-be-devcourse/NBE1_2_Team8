@@ -71,7 +71,7 @@ public class BoardController {
           @ApiResponse(responseCode = "204", description = "게시물 삭제 성공"),
           @ApiResponse(responseCode = "404", description = "엔티티 NOT FOUND")
   })
-  public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId) {
+  public ResponseEntity<Void> deleteBoard(@PathVariable("boardId") Long boardId) {
     boardCommandService.deleteBoard(boardId);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
@@ -79,7 +79,7 @@ public class BoardController {
 
   @Operation(summary = "게시물 수정", description = "게시물 ID를 기반으로 게시물을 수정합니다.")
   @PutMapping("/{boardId}")
-  public ResponseEntity<Void> updateBoard(@PathVariable Long boardId,
+  public ResponseEntity<Void> updateBoard(@PathVariable("boardId") Long boardId,
       @RequestBody @Valid BoardUpdateRequestDto boardUpdateRequestDto) {
     boardCommandService.updateBoard(boardId, boardUpdateRequestDto);
     return ResponseEntity.status(HttpStatus.OK).build();
@@ -95,7 +95,7 @@ public class BoardController {
           @ApiResponse(responseCode = "403", description = "이미 마감된 게시물입니다."),
           @ApiResponse(responseCode = "404", description = "존재하지 않는 게시물 또는 삭제된 게시물입니다.")
   })
-  public ResponseEntity<Void> closeBoard(@PathVariable Long boardId) {
+  public ResponseEntity<Void> closeBoard(@PathVariable("boardId") Long boardId) {
     boardCommandService.closeBoardManually(boardId);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
@@ -109,7 +109,7 @@ public class BoardController {
           @ApiResponse(responseCode = "200", description = "게시물 조회 성공"),
           @ApiResponse(responseCode = "404", description = "엔티티 NOT FOUND")
   })
-  public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable Long boardId) {
+  public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable("boardId") Long boardId) {
     // 게시물을 조회하면서 조회수 증가를 동시에 처리
     boardCommandService.increaseViews(boardId); // 조회수 증가 호출
     BoardResponseDto boardResponse = boardQueryService.getBoardById(boardId);
@@ -185,7 +185,7 @@ public class BoardController {
           @ApiResponse(responseCode = "200", description = "게시물 조회 성공"),
           @ApiResponse(responseCode = "404", description = "엔티티 NOT FOUND")
   })
-  public ResponseEntity<List<BoardResponseDto>> getBoardsByJobPostId(@PathVariable Long jobPostId) {
+  public ResponseEntity<List<BoardResponseDto>> getBoardsByJobPostId(@PathVariable("jobPostId") Long jobPostId) {
     List<BoardResponseDto> boards = boardQueryService.getBoardsByJobPostId(jobPostId);
     return ResponseEntity.status(HttpStatus.OK).body(boards);
   }

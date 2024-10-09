@@ -43,7 +43,7 @@ public class JobPostController {
   @Operation(summary = "특정 채용 공고 조회", description = "특정 ID에 해당하는 채용 공고의 상세 정보를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "채용 공고 상세 정보를 성공적으로 반환합니다.")
   @GetMapping("/{jobPostId}")
-  public ResponseEntity<JobPostInfoResponseDto> getJobPost(@PathVariable Long jobPostId) {
+  public ResponseEntity<JobPostInfoResponseDto> getJobPost(@PathVariable("jobPostId") Long jobPostId) {
 
     JobPostInfoResponseDto jobPost = jobPostQueryService.getJobPost(jobPostId);
     return ResponseEntity.ok().body(jobPost);

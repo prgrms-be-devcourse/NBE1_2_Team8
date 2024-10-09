@@ -39,7 +39,7 @@ public class InterestController {
   public ResponseEntity<InterestResponseDto> getInterestBoards(
       @AuthenticationPrincipal Member member) {
     InterestResponseDto responseDto = interestQueryService.getInterestsByMemberId(member.getMemberId());
-  
+
     return ResponseEntity.ok(responseDto);
   }
 
@@ -56,7 +56,7 @@ public class InterestController {
   @Operation(summary = "관심 게시물에서 해제", description = "관심 게시물에서 해제합니다.")
   @ApiResponse(responseCode = "204", description = "관심 게시물에서 성공적으로 삭제되었습니다.")
   public ResponseEntity<Void> removeInterestBoard(@AuthenticationPrincipal Member member,
-      @PathVariable Long boardId) {
+      @PathVariable("boardId") Long boardId) {
     interestCommandService.removeInterestBoard(member.getMemberId(), boardId);
 
     return ResponseEntity.noContent().build();
