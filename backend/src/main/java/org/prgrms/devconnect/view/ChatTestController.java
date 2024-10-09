@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.api.controller.test;
+package org.prgrms.devconnect.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
