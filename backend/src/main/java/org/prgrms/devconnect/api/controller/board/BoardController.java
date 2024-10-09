@@ -110,8 +110,6 @@ public class BoardController {
           @ApiResponse(responseCode = "404", description = "엔티티 NOT FOUND")
   })
   public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable Long boardId) {
-    // 게시물을 조회하면서 조회수 증가를 동시에 처리
-    boardCommandService.increaseViews(boardId); // 조회수 증가 호출
     BoardResponseDto boardResponse = boardQueryService.getBoardById(boardId);
     return ResponseEntity.status(HttpStatus.OK).body(boardResponse);
   }
