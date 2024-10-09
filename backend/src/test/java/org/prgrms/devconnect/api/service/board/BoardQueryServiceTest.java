@@ -12,6 +12,7 @@ import org.prgrms.devconnect.api.service.member.MemberQueryService;
 import org.prgrms.devconnect.common.exception.board.BoardException;
 import org.prgrms.devconnect.domain.define.board.entity.Board;
 import org.prgrms.devconnect.domain.define.board.entity.constant.BoardCategory;
+import org.prgrms.devconnect.domain.define.board.entity.constant.BoardStatus;
 import org.prgrms.devconnect.domain.define.board.repository.BoardRepository;
 import org.prgrms.devconnect.domain.define.fixture.BoardFixture;
 import org.prgrms.devconnect.domain.define.member.entity.Member;
@@ -93,11 +94,10 @@ public class BoardQueryServiceTest {
     Pageable pageable = Pageable.ofSize(10);
     List<Board> boardList = createBoards();
     Page<Board> boards=new PageImpl<>(boardList,pageable,boardList.size());
-    BoardFilterDto filterDto = BoardFilterDto.builder().build();
     when(boardRepository.findAllWithTechStackByStatusNotDeleted(pageable)).thenReturn(boards);
 
     // when
-    Page<BoardResponseDto> result = boardQueryService.getBoardsByFilter(pageable, filterDto);
+    Page<BoardResponseDto> result = boardQueryService.getBoardsByFilter(null, null, null, null, pageable);
 
     // then
     verify(boardRepository).findAllWithTechStackByStatusNotDeleted(pageable);
@@ -108,17 +108,16 @@ public class BoardQueryServiceTest {
   void 필터조건으로_게시물_조회_성공() {
     // given
     Pageable pageable = Pageable.ofSize(10);
-    BoardFilterDto filterDto = BoardFilterDto.builder().category(BoardCategory.STUDY).build();
     List<Board> boardList = createBoards();
     Page<Board> boards = new PageImpl<>(boardList, pageable, boardList.size());
-
-    when(boardRepository.findByFilter(filterDto, pageable)).thenReturn(boards);
+    BoardFilterDto filterDto = BoardFilterDto.builder().category(BoardCategory.STUDY).status(BoardStatus.RECRUITING).build();
+    when(boardRepository.findByFilter(eq(filterDto), eq(pageable))).thenReturn(boards);
 
     // when
-    Page<BoardResponseDto> result = boardQueryService.getBoardsByFilter(pageable, filterDto);
+    Page<BoardResponseDto> result = boardQueryService.getBoardsByFilter(BoardCategory.STUDY,BoardStatus.RECRUITING, null, null, pageable);
 
     // then
-    verify(boardRepository).findByFilter(filterDto, pageable);
+    verify(boardRepository).findByFilter(eq(filterDto), eq(pageable));
     assertThat(result.getTotalElements()).isEqualTo(boardList.size());
   }
 
