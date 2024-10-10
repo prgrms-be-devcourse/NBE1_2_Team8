@@ -1,5 +1,7 @@
 package org.prgrms.devconnect.api.controller.board.dto.response;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import org.prgrms.devconnect.api.controller.techstack.dto.response.TechStackResponseDto;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record BoardResponseDto(
         @Schema(description = "게시물 ID", example = "1")
         Long boardId,

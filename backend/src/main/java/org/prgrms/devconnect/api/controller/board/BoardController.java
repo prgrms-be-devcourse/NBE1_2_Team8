@@ -161,9 +161,7 @@ public class BoardController {
   }
 
   @GetMapping("/interests")
-  @Operation(summary = "사용자 관심사 기반 게시물 조회", description = "특정 사용자의 관심사를 기반으로 추천 게시물을 조회합니다.", parameters = {
-          @Parameter(name = "memberId", description = "멤버 ID", required = true, example = "1")
-  })
+  @Operation(summary = "사용자 관심사 기반 게시물 조회", description = "특정 사용자의 관심사를 기반으로 추천 게시물을 조회합니다.")
   @ApiResponses({
           @ApiResponse(responseCode = "200", description = "게시물 조회 성공"),
           @ApiResponse(responseCode = "404", description = "엔티티 NOT FOUND")
