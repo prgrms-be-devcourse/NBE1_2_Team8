@@ -45,6 +45,10 @@ public class InterestBoard {
   public boolean isUrgent() {
     LocalDate today = LocalDate.now();
     LocalDate endDate = this.board.getEndDate().toLocalDate();
+    // 종료 날짜가 이미 지났으면 false
+    if (endDate.isBefore(today)) {
+      return false;
+    }
     return endDate.isBefore(today.plusDays(3L));
   }
 }
