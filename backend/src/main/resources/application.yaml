@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ola
+    name: devconnect
 
   datasource:
     url: ${DATABASE_URL}
@@ -10,17 +10,60 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
+
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USER}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          debug : true
+          auth: true
+          timeout: 5000 #5초
+          starttls:
+            enables: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      timeout: 3000
+
+jwt:
+  secretKey: ${SECRETKEY}
+
+  access:
+    expiration: 1800000 # 30분 (1000L(ms -> s) * 60L(s -> m) * 30L)
+    header: "Authorization"
+
+  refresh:
+    expiration: 1209600000 # 2주 (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    header: "Authorization-refresh"
+
 
 logging:
   level:
     org.hibernate.SQL: trace
     org.hibernate.type.descriptor: trace
     root: info
+    org.springframework.data.redis: trace
 
-server:
-  port: 8080
+springdoc:
+  swagger-ui:
+    path: /devconnect
+
+
+## 사람인 api key
+api:
+  key: ${API_KEY}
+
 

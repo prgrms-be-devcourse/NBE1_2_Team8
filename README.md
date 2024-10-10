@@ -2,13 +2,13 @@
 
 <br></br>
 <p align="left">  
-  <img src="https://github.com/user-attachments/assets/9d9bf638-7c59-421a-aaed-c3f1b7bc625c" align="left" width="70" height="44">  
+  <img src="https://github.com/user-attachments/assets/de3e6a75-b182-4103-ad63-5914c3789a8b" align="left" width="88" height="42">  
   <h2>TEAM</h2>
 </p>
 
 |Backend|Backend|Backend|Backend|Backend|
 |:---:|:---:|:---:|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/52716ea1-8b2c-4376-b76d-8c1c3ad88891" width=100 height=100></a> | <a href="https://github.com/j-ra1n"> <img src = "https://avatars.githubusercontent.com/u/86824224?v=4" width=100 height=100></a> | <a href="https://github.com/rndudals"> <img src="https://avatars.githubusercontent.com/u/150119998?v=4" width=100 height=100></a> | <a href="https://github.com/j-ra1n"> <img src="https://avatars.githubusercontent.com/u/111877048?v=4" width=100 height=100></a> | <a href="https://github.com/jusung-c"> <img src="https://avatars.githubusercontent.com/u/82310788?v=4" width="100" height="100"></a> |<a href="https://github.com/ghdcksgml1"> 
+| <img src="https://github.com/user-attachments/assets/52716ea1-8b2c-4376-b76d-8c1c3ad88891" width=100 height=100></a> <a href="https://github.com/j-ra1n"> | <img src = "https://avatars.githubusercontent.com/u/86824224?v=4" width=100 height=100></a> <a href="https://github.com/leebs0521"> | <img src="https://avatars.githubusercontent.com/u/150119998?v=4" width=100 height=100></a> <a href="https://github.com/InaJeong73"> | <img src="https://avatars.githubusercontent.com/u/111877048?v=4" width=100 height=100></a>  <a href="https://github.com/eundeang"> | <img src="https://avatars.githubusercontent.com/u/82310788?v=4" width="100" height="100"></a> <a href="https://github.com/Iecorn">|
 |[이정우](https://github.com/j-ra1n)|[이범수](https://github.com/leebs0521)|[정인아](https://github.com/InaJeong73)|[허은정](https://github.com/eundeang)|[윤이건](https://github.com/Iecorn)|
 
 
@@ -26,18 +26,18 @@
 • Commit Type ✏️
 | Type     | 설명                                                                 |
 |----------|----------------------------------------------------------------------|
-| Init     | 프로젝트 초기 생성                                                   |
-| Fix      | 버그 수정 또는 typo                                                  |
-| Feat     | 새로운 기능 추가                                                     |
-| Rename   | 파일 혹은 폴더명 수정하거나 옮기는 경우                              |
-| Remove   | 파일을 삭제하는 작업만 수행하는 경우                                 |
-| Refactor | 리팩토링                                                             |
-| Comment  | 필요한 주석 추가 및 변경                                             |
-| Test     | 테스트(테스트 코드 추가, 수정, 삭제, 비즈니스 로직에 변경이 없는 경우) |
-| Style    | 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우                    |
-| Chore    | 위에 걸리지 않는 기타 변경사항(빌드 스크립트 수정, assets image, 패키지 매니저 등) |
-| Design   | CSS 등 사용자 UI 디자인 변경                                          |
-| Docs     | 이슈템플릿이나 리드미와 같은 서비스에는 영향이 없지만 편의를 위해 작성하는 파일을 관리하는 경우 |
+| init     | 프로젝트 초기 생성                                                   |
+| fix      | 버그 수정 또는 typo                                                  |
+| feat     | 새로운 기능 추가                                                     |
+| rename   | 파일 혹은 폴더명 수정하거나 옮기는 경우                              |
+| remove   | 파일을 삭제하는 작업만 수행하는 경우                                 |
+| refactor | 리팩토링                                                             |
+| comment  | 필요한 주석 추가 및 변경                                             |
+| test     | 테스트(테스트 코드 추가, 수정, 삭제, 비즈니스 로직에 변경이 없는 경우) |
+| style    | 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우                    |
+| chore    | 위에 걸리지 않는 기타 변경사항(빌드 스크립트 수정, assets image, 패키지 매니저 등) |
+| design   | CSS 등 사용자 UI 디자인 변경                                          |
+| docs     | 이슈템플릿이나 리드미와 같은 서비스에는 영향이 없지만 편의를 위해 작성하는 파일을 관리하는 경우 |
 
 • Subject Rule 🐭
 ```

@@ -1,0 +1,40 @@
+spring:
+
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  data:
+    redis:
+      host: 1234
+      port: 1234
+      password: 1234
+
+jwt:
+  secretKey: 1234
+
+  access:
+    expiration: 1800000 # 30분 (1000L(ms -> s) * 60L(s -> m) * 30L)
+    header: "Authorization"
+
+  refresh:
+    expiration: 1209600000 # 2주 (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    header: "Authorization-refresh"
+
+## 사람인 api key
+api:
+  key: test
