@@ -635,6 +635,9 @@ CREATE INDEX idx_message_created_at_desc ON message (created_at DESC);
 ## ✏️ 요구사항 정의서
 [요구사항 정의서](doc/srs-chart.md)
 
+## 시퀀스 다이어그램
+[시퀀스 다이어그램](doc/sequence-diagram.md)
+
 ## 📄 API 문서
 [API 문서](doc/api-doc.md)
 
