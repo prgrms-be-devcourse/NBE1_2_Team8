@@ -83,9 +83,7 @@ public class JobPostController {
     return ResponseEntity.ok().body(jobPosts);
   }
 
-  @Operation(summary = "사용자의 관심 기술 스택으로 공고 조회", description = "사용자의 관심 기술 스택에 맞는 채용 공고를 조회합니다.", parameters = {
-          @Parameter(name = "memberId", description = "멤버 ID", required = true, example = "1")
-  })
+  @Operation(summary = "사용자의 관심 기술 스택으로 공고 조회", description = "사용자의 관심 기술 스택에 맞는 채용 공고를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "사용자의 관심 기술 스택에 맞는 채용 공고 목록을 성공적으로 반환합니다.")
   @GetMapping("/interests")
   public ResponseEntity<Page<JobPostInfoResponseDto>> getJobPostsByMemberInterestsTechStack(@AuthenticationPrincipal Member member) {
