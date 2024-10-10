@@ -17,4 +17,14 @@ public class ViewController {
   public String login() {
     return "login";
   }
+
+  @GetMapping("/boards/{boardId}")
+  public String getBoardDetail() {
+    return "board-detail";
+  }
+
+  @GetMapping("/job-posts/{jobPostId}")
+  public String getJobPostDetail() {
+    return "job-detail";
+  }
 }
