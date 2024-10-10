@@ -50,6 +50,7 @@ public class JobPostController {
   @GetMapping("/{jobPostId}")
   public ResponseEntity<JobPostInfoResponseDto> getJobPost(@PathVariable Long jobPostId) {
 
+    jobPostCommandService.increaseViews(jobPostId);
     JobPostInfoResponseDto jobPost = jobPostQueryService.getJobPost(jobPostId);
     return ResponseEntity.ok().body(jobPost);
   }
