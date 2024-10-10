@@ -54,11 +54,6 @@
     <h1>안녕하세요, 개발자 여러분!</h1>
   </div>
 
-  <div id="errorBanner" class="alert alert-danger">
-    <span id="errorMessage"></span>
-    <button id="retryButton" class="btn btn-link">로그인 페이지로 이동</button>
-  </div>
-
   <div id="guestContent" style="display: none;">
     <section class="mt-4">
       <h2>DevConnect 소개</h2>
@@ -67,25 +62,25 @@
     </section>
   </div>
 
-  <div id="userContent" style="display: none;">
-    <section class="mt-4" id="userInterestBoardsSection">
-      <h2>관심 스터디/프로젝트</h2>
-      <div class="row" id="userInterestBoardsList"></div>
-    </section>
-
-    <section class="mt-4" id="userInterestJobPostsSection">
-      <h2>관심 채용 공고</h2>
-      <div class="row" id="interestJobListings"></div>
-    </section>
-  </div>
-
   <section class="mt-4" id="popularBoardsSection">
     <h2>이번주 핫 모집글</h2>
     <div class="row" id="popularBoardsList"></div>
   </section>
 
+  <div id="userContent" style="display: none;">
+    <section class="mt-4" id="userInterestBoardsSection">
+      <h2>맞춤 추천 모집글</h2>
+      <div class="row" id="userInterestBoardsList"></div>
+    </section>
+
+    <section class="mt-4" id="userInterestJobPostsSection">
+      <h2>맞춤 추천 채용 공고</h2>
+      <div class="row" id="interestJobListings"></div>
+    </section>
+  </div>
+
   <section class="mt-4">
-    <h2>스터디/팀 프로젝트 리스트</h2>
+    <h2>모집글 리스트</h2>
     <div class="row" id="allProjectsList"></div>
     <nav aria-label="Page navigation">
       <ul class="pagination justify-content-center" id="pagination">
@@ -235,8 +230,9 @@
       const allProjectsList = document.getElementById('allProjectsList');
       allProjectsList.innerHTML = projects.map(item => `
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-          <div class="card ${item.category === 'STUDY' ? 'border-primary' : 'border-danger'}" onclick="location.href='/boards/${item.board_id}'">
+          <div class="card" onclick="location.href='/boards/${item.board_id}'">
             <div class="card-body">
+              <span class="badge ${item.category === 'STUDY' ? 'bg-info' : 'bg-danger'}">${item.category === 'STUDY' ? '스터디' : '프로젝트'}</span>
               <h5 class="card-title">${item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title}</h5>
               <h6 class="card-subtitle mb-2 text-muted">작성자: ${item.author}</h6>
               <p class="card-text">마감일: ${new Date(item.end_date).toLocaleDateString()}</p>
@@ -251,8 +247,9 @@
       const jobListingsList = document.getElementById('jobListingsList');
       jobListingsList.innerHTML = jobs.map(job => `
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-          <div class="card border-info" onclick="location.href='/job-posts/${job.job_post_id}'">
+          <div class="card" onclick="location.href='/job-posts/${job.job_post_id}'">
             <div class="card-body">
+              <span class="badge bg-success">채용 공고</span>
               <h5 class="card-title">${job.job_post_name.length > 15 ? job.job_post_name.substring(0, 15) + '...' : job.job_post_name}</h5>
               <h6 class="card-subtitle mb-2 text-muted">회사: ${job.company_name.length > 10 ? job.company_name.substring(0, 10) + '...' : job.company_name}</h6>
               <p class="card-text">마감일: ${new Date(job.end_date).toLocaleDateString()}</p>
@@ -314,10 +311,6 @@
       logout();
     });
 
-    document.getElementById('retryButton').addEventListener('click', () => {
-      window.location.href = '/login';
-    });
-
     async function fetchNotifications() {
       const token = localStorage.getItem('token');
       if (token) {
@@ -362,8 +355,9 @@
       const userInterestBoardsList = document.getElementById('userInterestBoardsList');
       userInterestBoardsList.innerHTML = interests.slice(0, 4).map(item => `
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-          <div class="card ${item.category === 'STUDY' ? 'border-primary' : 'border-danger'}" onclick="location.href='/boards/${item.board_id}'">
+          <div class="card" onclick="location.href='/boards/${item.board_id}'">
             <div class="card-body">
+              <span class="badge ${item.category === 'STUDY' ? 'bg-info' : 'bg-danger'}">${item.category === 'STUDY' ? '스터디' : '프로젝트'}</span>
               <h5 class="card-title">${item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title}</h5>
               <h6 class="card-subtitle mb-2 text-muted">작성자: ${item.author}</h6>
               <p class="card-text">마감일: ${new Date(item.end_date).toLocaleDateString()}</p>
@@ -391,8 +385,9 @@
       const interestJobListings = document.getElementById('interestJobListings');
       interestJobListings.innerHTML = jobPosts.slice(0, 4).map(job => `
       <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-        <div class="card border-info" onclick="location.href='/job-posts/${job.job_post_id}'">
+        <div class="card" onclick="location.href='/job-posts/${job.job_post_id}'">
           <div class="card-body">
+            <span class="badge bg-success">채용 공고</span>
             <h5 class="card-title">${job.job_post_name.length > 15 ? job.job_post_name.substring(0, 15) + '...' : job.job_post_name}</h5>
             <h6 class="card-subtitle mb-2 text-muted">회사: ${job.company_name.length > 10 ? job.company_name.substring(0, 10) + '...' : job.company_name}</h6>
             <p class="card-text">마감일: ${new Date(job.end_date).toLocaleDateString()}</p>
@@ -436,9 +431,9 @@
       const boardsList = document.getElementById('popularBoardsList');
       boardsList.innerHTML = boards.map(item => `
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-          <div class="card ${item.category === 'STUDY' ? 'border-primary'
-          : 'border-danger'}" onclick="location.href='/boards/${item.board_id}'">
+          <div class="card" onclick="location.href='/boards/${item.board_id}'">
             <div class="card-body">
+              <span class="badge ${item.category === 'STUDY' ? 'bg-info' : 'bg-danger'}">${item.category === 'STUDY' ? '스터디' : '프로젝트'}</span>
               <h5 class="card-title">${item.title.length > 15 ? item.title.substring(0, 15) + '...'
           : item.title}</h5>
               <h6 class="card-subtitle mb-2 text-muted">작성자: ${item.author}</h6>

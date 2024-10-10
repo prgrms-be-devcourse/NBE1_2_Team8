@@ -88,4 +88,10 @@ public class JobPostCommandService {
 
     jobPost.decreaseLikes();
   }
+
+  // 공고 조회수 증가
+  public void increaseViews(Long jobPostId) {
+    JobPost jobPost = jobPostQueryService.getJobPostByIdOrThrow(jobPostId);
+    jobPost.increaseViews();
+  }
 }
