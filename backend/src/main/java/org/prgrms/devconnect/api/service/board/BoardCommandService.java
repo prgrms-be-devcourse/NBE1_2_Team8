@@ -155,4 +155,9 @@ public class BoardCommandService {
     Board board = boardQueryService.getBoardByIdOrThrow(boardId);
     board.decreaseLikes();
   }
+
+  public void increaseViews(Long boardId) {
+    Board board = boardQueryService.getBoardByIdOrThrow(boardId);
+    board.increaseViews();
+  }
 }

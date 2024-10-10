@@ -41,8 +41,6 @@ public class BoardQueryService {
     //게시물 조회
     Board board = getBoardByIdOrThrow(boardId);
 
-    //게시물 조회수 증가
-    board.increaseViews();
     return BoardResponseDto.from(board);
   }
 

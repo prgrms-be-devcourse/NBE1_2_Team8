@@ -110,6 +110,7 @@ public class BoardController {
           @ApiResponse(responseCode = "404", description = "엔티티 NOT FOUND")
   })
   public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable Long boardId) {
+    boardCommandService.increaseViews(boardId);
     BoardResponseDto boardResponse = boardQueryService.getBoardById(boardId);
     return ResponseEntity.status(HttpStatus.OK).body(boardResponse);
   }
