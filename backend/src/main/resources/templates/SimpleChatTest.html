@@ -160,6 +160,10 @@
     let stompClient = null;
     let currentRoomId = null;
     let chatPartId = null;
+    let currentPage = 0;
+    const pageSize = 20;
+    let isLoading = false;
+    let allMessagesLoaded = false;
 
     // 간단 로그인 (Member ID 저장)
     function login() {
@@ -221,7 +225,9 @@
         document.getElementById('currentRoomId').innerText = roomId;
         document.getElementById('currentChatRoomSection').style.display = 'block';
         connectWebSocket(roomId);
-        loadMessages(roomId);
+        currentPage = 0;  // 페이지 초기화
+        allMessagesLoaded = false;  // 모든 메시지 로드 상태 초기화
+        loadMessages(roomId, true);  // 첫 로딩 시 true 전달
     }
 
     // 채팅방 참여
@@ -242,12 +248,11 @@
 
     // 채팅방 나가기
     function leaveChatRoom() {
-        if (!chatPartId) {  // 이제 chatPartId를 사용합니다
+        if (!chatPartId) {
             alert('No chat participation selected.');
             return;
         }
 
-        // WebSocket 메시지로 chatPartId를 전송
         stompClient.send(`/app/chat/leave/${chatPartId}`, {}, JSON.stringify({}));
         alert('Left chat room with chatPartId: ' + chatPartId);
 
@@ -269,16 +274,72 @@
         });
     }
 
-    // 메시지 목록 불러오기
-    function loadMessages(roomId) {
-        fetch(`/api/v1/chat/rooms/${roomId}/messages`)
+    // 메시지 목록 불러오기 (스크롤 페이징 적용)
+    function loadMessages(roomId, isInitialLoad = false) {
+        if (isLoading || allMessagesLoaded) return;  // 이미 로딩 중이거나 모든 메시지를 불러왔으면 중단
+
+        isLoading = true;
+
+        fetch(`/api/v1/chat/rooms/${roomId}/messages?page=${currentPage}&size=${pageSize}`)
             .then(response => response.json())
             .then(response => {
                 const messageContainer = document.getElementById('messages');
-                messageContainer.innerHTML = '';
-                response.message_list.content.forEach(message => showMessage(message));
+
+                // 첫 로딩이면 메시지 컨테이너 초기화
+                if (isInitialLoad) {
+                    messageContainer.innerHTML = '';
+                    messageContainer.scrollTop = messageContainer.scrollHeight;  // 가장 최근 메시지로 스크롤
+                }
+
+                // 메시지 추가
+                response.message_list.content.forEach(message => showMessageAtTop(message));
+
+                // 모든 메시지를 불러왔는지 확인
+                if (response.message_list.content.length < pageSize) {
+                    allMessagesLoaded = true;
+                }
+
+                // 페이지 증가
+                currentPage++;
+
+                // 로딩 완료 상태로 변경
+                isLoading = false;
+
+                // 스크롤을 맨 아래로 유지 (최초 로딩 시)
+                if (isInitialLoad) {
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                }
             });
     }
+
+    // 메시지를 위로 추가 (과거 메시지 불러올 때)
+    function showMessageAtTop(message) {
+        const messageContainer = document.getElementById('messages');
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.innerText = `${message.nickname}: ${message.content} (${message.created_at})`;
+        messageContainer.insertBefore(messageElement, messageContainer.firstChild);
+    }
+
+    // 메시지 화면에 표시 및 자동 스크롤
+    function showMessage(message) {
+        const messageContainer = document.getElementById('messages');
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.innerText = `${message.nickname}: ${message.content} (${message.created_at})`;
+        messageContainer.appendChild(messageElement);
+
+        // 메시지가 추가될 때 자동으로 스크롤 하단으로 이동
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+
+    // 스크롤 이벤트 리스너 추가
+    document.getElementById('messages').addEventListener('scroll', function() {
+        if (this.scrollTop === 0 && !isLoading && !allMessagesLoaded) {
+            // 스크롤이 맨 위에 도달하면 이전 메시지를 불러옴
+            loadMessages(currentRoomId);
+        }
+    });
 
     // 메시지 전송
     function sendMessage() {
@@ -291,15 +352,6 @@
             stompClient.send(`/app/chat/${currentRoomId}`, {}, JSON.stringify(messageRequest));
             document.getElementById('messageInput').value = '';
         }
-    }
-
-    // 메시지 화면에 표시
-    function showMessage(message) {
-        const messageContainer = document.getElementById('messages');
-        const messageElement = document.createElement('div');
-        messageElement.className = 'message';
-        messageElement.innerText = `${message.nickname}: ${message.content} (${message.created_at})`;
-        messageContainer.appendChild(messageElement);
     }
 </script>
 </body>
