@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.domain.config;
+package org.prgrms.devconnect.common.config;
 
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;

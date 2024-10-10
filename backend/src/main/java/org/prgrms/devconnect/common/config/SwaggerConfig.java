@@ -1,4 +1,4 @@
-package org.prgrms.devconnect.domain.config;
+package org.prgrms.devconnect.common.config;
 
 
 import io.swagger.v3.oas.models.Components;
