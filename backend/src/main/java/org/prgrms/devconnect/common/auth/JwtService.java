@@ -1,8 +1,16 @@
 package org.prgrms.devconnect.common.auth;
 
+import static org.prgrms.devconnect.common.exception.ExceptionCode.JWT_SIGNATURE_INVALID;
+import static org.prgrms.devconnect.common.exception.ExceptionCode.JWT_TOKEN_EXPIRED;
+import static org.prgrms.devconnect.common.exception.ExceptionCode.JWT_TOKEN_MALFORMED;
+import static org.prgrms.devconnect.common.exception.ExceptionCode.NOT_FOUND_MEMBER;
+import static org.prgrms.devconnect.common.exception.ExceptionCode.NOT_FOUND_REFRESH_TOKEN;
+
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,10 +23,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.prgrms.devconnect.common.auth.redis.RefreshToken;
 import org.prgrms.devconnect.common.auth.redis.RefreshTokenRepository;
-import org.prgrms.devconnect.common.exception.ExceptionCode;
+import org.prgrms.devconnect.common.exception.jwt.JwtException;
 import org.prgrms.devconnect.common.exception.member.MemberException;
 import org.prgrms.devconnect.common.exception.refresh.RefreshTokenException;
-import org.prgrms.devconnect.domain.define.member.entity.Member;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -73,7 +80,7 @@ public class JwtService {
 
     RefreshToken refreshToken = RefreshToken.builder()
         .refreshToken(token)
-        .authKey(username)
+        .userEmail(username)
         .build();
 
     refreshTokenRepository.save(refreshToken);
@@ -112,8 +119,17 @@ public class JwtService {
   }
 
   public boolean isTokenValid(String token) {
-    getClaimsJws(token);
-    return true;
+    try {
+      Jws<Claims> claimsJws = getClaimsJws(token);
+      Date expiration = claimsJws.getPayload().getExpiration();
+      return expiration.after(new Date());
+    } catch (ExpiredJwtException e) {
+      throw new JwtException(JWT_TOKEN_EXPIRED);
+    } catch (MalformedJwtException e) {
+      throw new JwtException(JWT_TOKEN_MALFORMED);
+    } catch (Exception e) {
+      throw new JwtException(JWT_SIGNATURE_INVALID);
+    }
   }
 
   private Jws<Claims> getClaimsJws(String token) {
@@ -127,16 +143,17 @@ public class JwtService {
     log.info("Access Token 재발급 시도: {}", refreshToken);
     refreshTokenRepository.findByRefreshToken(refreshToken)
         .ifPresentOrElse(token -> {
-          String username = token.getAuthKey();
-          Member member = memberRepository.findByEmail(username)
-              .orElseThrow(() -> new MemberException(ExceptionCode.NOT_FOUND_MEMBER));
-          String reIssueAccessToken = this.createAccessToken(username);
-          this.setAccessTokenHeader(response, reIssueAccessToken);
-
+          isTokenValid(token.getRefreshToken());
+          String username = token.getUserEmail();
+          if (memberRepository.existsByEmail(username)) {
+            throw new MemberException(NOT_FOUND_MEMBER);
+          }
+          String accessToken = this.createAccessToken(username);
+          this.setAccessTokenHeader(response, accessToken);
           log.info("Access Token 재발급 성공");
         }, () -> {
           log.warn("Access Token 발급 실패");
-          throw new RefreshTokenException(ExceptionCode.NOT_FOUND_REFRESH_TOKEN);
+          throw new RefreshTokenException(NOT_FOUND_REFRESH_TOKEN);
         });
   }
 }
