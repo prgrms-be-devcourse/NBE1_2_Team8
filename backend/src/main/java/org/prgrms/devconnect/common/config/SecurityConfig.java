@@ -1,11 +1,17 @@
-package org.prgrms.devconnect.domain.config;
+package org.prgrms.devconnect.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devconnect.common.auth.CustomerMemberDetailsService;
 import org.prgrms.devconnect.common.auth.JwtService;
+import org.prgrms.devconnect.common.auth.filter.JwtExceptionFilter;
 import org.prgrms.devconnect.common.auth.filter.JwtTokenAuthenticationFilter;
 import org.prgrms.devconnect.common.auth.filter.LoginAuthenticationFilter;
+import org.prgrms.devconnect.common.auth.handler.CustomAuthenticationEntryPoint;
 import org.prgrms.devconnect.common.auth.handler.LoginFailureHandler;
 import org.prgrms.devconnect.common.auth.handler.LoginSuccessHandler;
 import org.prgrms.devconnect.domain.define.member.repository.MemberRepository;
@@ -23,8 +29,10 @@ import org.springframework.security.config.annotation.web.configurers.FormLoginC
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
@@ -49,6 +57,8 @@ public class SecurityConfig {
         .sessionManagement(it ->
             it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
+        .exceptionHandling(it ->
+            it.authenticationEntryPoint(authenticationEntryPoint()))
         .authorizeHttpRequests(
             authorize -> authorize
                 .requestMatchers("/", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -78,6 +88,8 @@ public class SecurityConfig {
 
     http.addFilterAfter(loginAuthenticationFilter(), LogoutFilter.class);
     http.addFilterBefore(jwtAuthenticationFilter(), LoginAuthenticationFilter.class);
+    http.addFilterBefore(jwtExceptionFilter(), JwtTokenAuthenticationFilter.class);
+
     return http.build();
   }
 
@@ -101,14 +113,14 @@ public class SecurityConfig {
 
   @Bean
   LoginAuthenticationFilter loginAuthenticationFilter() {
-    LoginAuthenticationFilter customUsernamePasswordAuthenticationFilter
-        = new LoginAuthenticationFilter(objectMapper);
-    customUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
-    customUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(
-        loginSuccessHandler());
-    customUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(
-        loginFailureHandler());
-    return customUsernamePasswordAuthenticationFilter;
+    LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(
+        objectMapper);
+    loginAuthenticationFilter.setAuthenticationManager(authenticationManager());
+    loginAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
+    loginAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
+    loginAuthenticationFilter.setFilterProcessesUrl("/api/v1/members/login");
+
+    return loginAuthenticationFilter;
   }
 
   @Bean
@@ -119,6 +131,16 @@ public class SecurityConfig {
   @Bean
   public LoginFailureHandler loginFailureHandler() {
     return new LoginFailureHandler();
+  }
+
+  @Bean
+  public JwtExceptionFilter jwtExceptionFilter() {
+    return new JwtExceptionFilter();
+  }
+
+  @Bean
+  public AuthenticationEntryPoint authenticationEntryPoint() {
+    return new CustomAuthenticationEntryPoint();
   }
 
 }

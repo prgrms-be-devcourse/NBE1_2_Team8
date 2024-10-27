@@ -15,8 +15,8 @@ public enum ExceptionCode {
   EMAIL_SERVER_ERROR(500, "이메일을 전송하던 중에 오류가 발생했습니다."),
   //Board Error
   NOT_FOUND_BOARD(404, "존재하지 않는 게시물입니다."),
-  ALREADY_CLOSED_BOARD(403,"마감된 게시물입니다."),
-  ALREADY_DELETED_BOARD(400,"이미 삭제된 게시물입니다."),
+  ALREADY_CLOSED_BOARD(403, "마감된 게시물입니다."),
+  ALREADY_DELETED_BOARD(400, "이미 삭제된 게시물입니다."),
 
 
   //BoardTechStack Error
@@ -59,11 +59,8 @@ public enum ExceptionCode {
 
   // JWT ERROR
   JWT_TOKEN_EXPIRED(401, "JWT 토큰이 만료되었습니다."),
-  JWT_TOKEN_UNSUPPORTED(401, "지원하지 않는 JWT 토큰입니다."),
   JWT_TOKEN_MALFORMED(401, "형식이 잘못된 JWT 토큰입니다."),
   JWT_SIGNATURE_INVALID(401, "JWT 서명이 유효하지 않습니다."),
-  JWT_ARGUMENT_INVALID(401, "JWT 인자가 잘못되었습니다."),
-  JWT_GENERAL_ERROR(401, "JWT 처리 중 오류가 발생했습니다."),
 
   // REFRESH TOKEN ERROR
   NOT_FOUND_REFRESH_TOKEN(404, "존재하지 않는 리프레시 토큰입니다.");

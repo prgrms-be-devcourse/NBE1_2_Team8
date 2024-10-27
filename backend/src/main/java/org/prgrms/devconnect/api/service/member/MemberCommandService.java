@@ -111,7 +111,7 @@ public class MemberCommandService {
   }
   public void logout(String email) {
     log.info("[REDIS] Refresh Token 삭제 시도: {}", email);
-    RefreshToken token = refreshTokenRepository.findByAuthKey(email).orElseThrow(
+    RefreshToken token = refreshTokenRepository.findByUserEmail(email).orElseThrow(
         () -> new RefreshTokenException(ExceptionCode.NOT_FOUND_REFRESH_TOKEN)
     );
     refreshTokenRepository.delete(token);
